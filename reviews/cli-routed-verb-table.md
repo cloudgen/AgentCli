@@ -4,8 +4,8 @@ This file is the kept list of commands `app_main` actually runs: name, function,
 
 **Ship unit:** `src/grok-cli`  
 **Dispatcher:** `app_main`  
-**Scan date:** 2026-09-22  
-**Mode:** incremental (`sync-auth-to-remote` verb + main-menu row)  
+**Scan date:** 2026-09-22 (handlers); menu paragraph refreshed 2026-10-10  
+**Mode:** incremental (menu paragraph only; handlers not re-walked)  
 **Copied:** prior live · **Re-checked:** `sync-auth-to-remote` (`gc_sync_auth_to_remote`) · `app_default` menu tokens  
 **Inventory:** dispatcher `case "${COMMAND}"` — not `app_help` for routing; help one-liners copied into **human-readable**
 
@@ -40,7 +40,7 @@ This file is the kept list of commands `app_main` actually runs: name, function,
 | version | `app_version` | you (Type 0) | missing | `version: Show local version` |
 | where-is-me | `app_where_is_me` | you (Type 0) | 2026-08-03 | `where-is-me: Show running and install paths` |
 
-A TTY main menu **MUST** print a numbered **top** list of families, then **9** Exit. The top list **MUST NOT** print **Back**. Multi-user: **1** `grok-auth`, **5** `language`, **7** `sudoers`, **8** `self-management`. This-login-only: **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management` (no **7**). Front **6** is not a row. `language` is menu-only, not a dispatcher token. The language board is **51–63** (reserved **50** and **64–69** are not printed). Submenus print **0** Back and **9** Exit. Auth submenu **11–16** (hide **11** backup on this-login-only, hide **12** when logged in, hide **13** when logged out). Self-management **91–94**. Sudoers submenu is the five grant/draft verbs. Header is **`APP_NAME(APP_VERSION)`**; the next line is **logged in** / **timeout** / **logged out**. grok-cli is **case 3**: verb **`menu`** (alias **`main`**). Off-TTY empty argv is Type O ensure (not this list). **Exclude** from every numbered list: `help`, `menu`/`main`, `check-session` (status is under the title), `update-grok`, diagnostics (`version`, `about`), and test-purpose. **`setup`** and **`reinstall`** are on the grok-auth submenu. Self-managed verbs are on the self-management submenu. **`sudoers` is not a live dispatcher token.** **0** / `back` on the top list is an invalid choice. **9** leaves from every layer. Internal `ensure` is not a help verb.
+A TTY main menu **MUST** print a numbered **top** list of families, then **9** Exit. The top list **MUST NOT** print **Back**. Multi-user: **1** `grok-auth`, **5** `language`, **7** `sudoers`, **8** `self-management`. This-login-only: **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management` (no **7**). Front **6** is not a row. `language` is menu-only, not a dispatcher token. The language board is **51–63** (reserved **50** and **64–69** are not printed). Submenus print **0** Back and **9** Exit. Auth submenu **11–16**. On a multi-user host, **11** is `backup` when logged in and `sync-auth` when logged out or timeout. **12** `sync-auth-from-remote` is listed only when the session is not logged in. **13** is listed only when logged in. This-login-only hides **11**. **14–16** do not slide. **17** is not a row. Self-management **91–94**. Sudoers submenu is the five grant/draft verbs. Header is **`APP_NAME(APP_VERSION)`**; the next line is **logged in** / **timeout** / **logged out**. grok-cli is **case 3**: verb **`menu`** (alias **`main`**). Off-TTY empty argv is Type O ensure (not this list). **Exclude** from every numbered list: `help`, `menu`/`main`, `check-session` (status is under the title), `update-grok`, diagnostics (`version`, `about`), and test-purpose. **`setup`** and **`reinstall`** are on the grok-auth submenu. Self-managed verbs are on the self-management submenu. **`sudoers` is not a live dispatcher token.** **0** / `back` on the top list is an invalid choice. **9** leaves from every layer. Internal `ensure` is not a help verb.
 
 ## Not yet wired
 
@@ -50,5 +50,5 @@ A TTY main menu **MUST** print a numbered **top** list of families, then **9** E
 
 ---
 
-**Last Updated:** 2026-10-02 (front **5** language, **51–63**; front **6** is not a row; **9** Exit; submenu Back stays **0**)  
+**Last Updated:** 2026-10-10 (logged-out auth **11** is `sync-auth` and **12** is `sync-auth-from-remote`; logged-in **11** is `backup`; **17** is not a row)  
 **Alignment:** term `cli-routed-verb-table` · **`SK-CLI-ROUTED-VERB-TABLE`** · **`SK-CLI-DEFAULT-INTERACTION`**
