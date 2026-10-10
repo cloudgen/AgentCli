@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-cli-language.md
-**Status**: Active (Version 1.1.1)
+**Status**: Active (Version 1.1.2)
 **Area**: shell
 **Key**: `requirement-shell-cli-language`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -87,7 +87,7 @@ The front board also accepts the displayed category short: `grok-auth`, `grok �
 
 **MUST** keep each leaf short as the English verb in every language (`backup`, `run`, `setup`, `reinstall`, `generate-sudoer-request`, and the other leaf tokens). The sudoers category short stays `sudoers` in every language.
 
-English (`APP_LANG=en`, or unset) **MUST** keep these literals so the existing menu tests still match: `logged in`, `timeout`, `logged out`, `Choice: `, `Not a menu choice`, `9. Exit`, `0. Back`, `Alternative online installer for xAI grok`, and the three hide sentences `backup, sync-auth and sudoers features are not available in {{label}}.`, `sync-auth and sync-auth-from-remote features are not available for logged-in environment.`, and `backup and sync-auth-to-remote features are not available for logged-out environment.` The English choose-prompt stays `Choice: ` (trailing space). The English unknown line stays `Not a menu choice`.
+English (`APP_LANG=en`, or unset) **MUST** keep these literals so the existing menu tests still match: `logged in`, `timeout`, `logged out`, `Choice: `, `Not a menu choice`, `9. Exit`, `0. Back`, `Alternative online installer for xAI grok`, and the three hide sentences `backup, sync-auth and sudoers features are not available in {{label}}.`, `sync-auth and sync-auth-from-remote features are not available for logged-in environment.`, and `backup features are not available for logged-out environment.` The English choose-prompt stays `Choice: ` (trailing space). The English unknown line stays `Not a menu choice`.
 
 Category shorts:
 
@@ -149,6 +149,6 @@ A failed write warns in the language that was current before the failed write, l
 
 ---
 
-**Last Updated**: 2026-10-10 (1.1.1 — third hide sentence for logged-out backup and sync-auth-to-remote. 1.1.0 was front **5** / **51–63**.)
+**Last Updated**: 2026-10-10 (1.1.2 — logged-out hide sentence names `backup`. 1.1.1 also named `sync-auth-to-remote`.)
 **Owner**: product
 **Alignment**: `requirement-shell-cli-default-interaction` · `requirement-shell-cli-storage` · `requirement-shell-cli-interface` · CIAO / CIAO-Lite

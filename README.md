@@ -1,6 +1,6 @@
 # grok-cli - Alternative online installer for xAI grok
 
-![Version](https://img.shields.io/badge/Version-1.8.43-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.8.45-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![CIAO](https://img.shields.io/badge/Philosophy-CIAO%20(Caution%20%E2%80%A2%20Intentional%20%E2%80%A2%20Anti--fragile%20%E2%80%A2%20Over--engineered)-purple.svg)](https://github.com/cloudgen/ciao)
 [![Stars](https://img.shields.io/github/stars/cloudgen/grok-cli?style=flat-square)](https://github.com/cloudgen/grok-cli)
@@ -68,7 +68,7 @@ If grok already **runs** on this host, a real terminal offers keep / reinstall /
 
 ```text
 $ grok-cli setup
-[INFO] **grok-cli**(*1.8.43*) — setup
+[INFO] **grok-cli**(*1.8.45*) — setup
 [INFO] grok is already installed at ~/.grok/bin/grok.
 1. keep: Leave the existing grok
 2. reinstall: Remove existing grok and install again
@@ -138,9 +138,9 @@ After install, on a terminal:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.43*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
 [INFO] logged out
-[INFO] backup and sync-auth-to-remote features are not available for logged-out environment.
+[INFO] backup features are not available for logged-out environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
 5. language: *display language for this menu*
 7. sudoers: *Grant and drafts*
@@ -148,11 +148,11 @@ $ grok-cli menu
 9. Exit
 ```
 
-Pick **1** for the auth list. Numbers **12–16** stay put when a row is hidden. Logged out lists **11** `sync-auth` and **12** `sync-auth-from-remote`, and hides **13**. Logged in lists **11** `backup` and hides **12**:
+Pick **1** for the auth list. Numbers **14–16** stay put when a row is hidden. Logged out lists **12** `sync-auth-from-remote` and **13** `sync-auth`, and hides **11**. Logged in lists **11** `backup` and hides **12** and **13**. `sync-auth-to-remote` is a typed command, not a row:
 
 ```text
-11. sync-auth: *Copy /var/grok-cli/auth.* into ~/.grok*
 12. sync-auth-from-remote: *Copy a remote host's auth.* into ~/.grok*
+13. sync-auth: *Copy /var/grok-cli/auth.* into ~/.grok*
 14. add-crontab: *Add backup and sync-auth jobs to this login's crontab*
 15. setup: *Install grok from x.ai*
 16. reinstall: *Remove existing grok and install again*
@@ -160,14 +160,14 @@ Pick **1** for the auth list. Numbers **12–16** stay put when a row is hidden.
 9. Exit
 ```
 
-On Termux / Git Bash / Windows cmd, **backup**, **sync-auth**, and **sudoers** are omitted. Each of those notices is its own `[INFO]` line. The top list is **1** grok-auth, **2** run (start grok without auto-update), **5** language, **8** self-management, and **9** Exit. Row **5** is on every host. Front **6** is not a row. There is no Back row. When the session is **logged out** or **timeout**, an `[INFO]` line is **appended**: `backup and sync-auth-to-remote features are not available for logged-out environment.` Auth row **11** is `sync-auth` on a multi-user host and **13** is omitted. When the session is **logged in**, that logged-out line is omitted, auth row **12** is omitted, **11** is `backup` and **13** is listed on a multi-user host, and a second `[INFO]` line is **appended**: `sync-auth and sync-auth-from-remote features are not available for logged-in environment.` Neither line replaces the host line. Termux, logged out:
+On Termux / Git Bash / Windows cmd, **backup**, **sync-auth**, and **sudoers** are omitted. Each of those notices is its own `[INFO]` line. The top list is **1** grok-auth, **2** run (start grok without auto-update), **5** language, **8** self-management, and **9** Exit. Row **5** is on every host. Front **6** is not a row. There is no Back row. When the session is **logged out** or **timeout**, an `[INFO]` line is **appended**: `backup features are not available for logged-out environment.` Auth **12** is listed. Auth **11** and **13** stay off this class. When the session is **logged in**, that logged-out line is omitted, auth **12** is omitted, and a second `[INFO]` line is **appended**: `sync-auth and sync-auth-from-remote features are not available for logged-in environment.` Neither line replaces the host line. `sync-auth-to-remote` is not a numbered row. Termux, logged out:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.43*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
 [INFO] logged out
 [INFO] backup, sync-auth and sudoers features are not available in termux.
-[INFO] backup and sync-auth-to-remote features are not available for logged-out environment.
+[INFO] backup features are not available for logged-out environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
 2. run: *Start grok without auto-update*
 5. language: *display language for this menu*
@@ -179,7 +179,7 @@ Live capture on a multi-user host that is **logged in**:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.43*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
 [INFO] logged in
 [INFO] sync-auth and sync-auth-from-remote features are not available for logged-in environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
@@ -195,7 +195,7 @@ Choose a number, or type the command name. `5` opens the language list (**51** E
 
 | How you run it | What you get |
 |----------------|--------------|
-| `grok-cli` or `grok-cli --debug` at a real terminal | Numbered start list (**1** grok-auth, **5** language, **7** sudoers, **8** self-management, **9** Exit; no Back on that list; this-login-only shows **2** run and hides sudoers; **5** stays on every host; front **6** is not a row; **logged in** / **timeout** / **logged out** under the title from `grok -p hello`; Termux / Git Bash / Windows cmd hide backup / sync-auth / sudoers; logged-out session hides **backup** and **sync-auth-to-remote** and lists **11** `sync-auth` and **12** `sync-auth-from-remote` on a multi-user host; logged-in session hides sync-auth / sync-auth-from-remote, lists **11** `backup` and **sync-auth-to-remote**, and appends a not-available line; **9** leaves; **0** goes back only inside a submenu). Same as `grok-cli menu`. Overlay switches with no command still follow empty argv. |
+| `grok-cli` or `grok-cli --debug` at a real terminal | Numbered start list (**1** grok-auth, **5** language, **7** sudoers, **8** self-management, **9** Exit; no Back on that list; this-login-only shows **2** run and hides sudoers; **5** stays on every host; front **6** is not a row; **logged in** / **timeout** / **logged out** under the title from `grok -p hello`; Termux / Git Bash / Windows cmd hide backup / sync-auth / sudoers; logged-out session hides **11** `backup` and lists **12** `sync-auth-from-remote` and **13** `sync-auth` on a multi-user host; logged-in session hides **12** and **13** and lists **11** `backup`; `sync-auth-to-remote` is a typed command and is not a numbered row; each session appends its own not-available line; **9** leaves; **0** goes back only inside a submenu). Same as `grok-cli menu`. Overlay switches with no command still follow empty argv. |
 | `curl -fsSL … \| sh` or `grok-cli` in a script (no args) | Install-ensure: places `~/.local/bin/grok-cli` or reports already installed. **Not** help. **Not** the menu. |
 | `grok-cli help` or `grok-cli --json` (no command) | Help / JSON help. `--json` with no command is empty argv **special case**: JSON help even at a prompt |
 | `grok-cli menu` in a script | Help (the list is TTY-only) |
@@ -411,4 +411,4 @@ MIT License — see [`LICENSE.md`](./LICENSE.md).
 
 ## Last Update
 
-2026-10-10 — version **1.8.43**: logged out, auth **11** is `sync-auth` and **12** is `sync-auth-from-remote`. Logged in, **11** is `backup`. Full history: [`CHANGELOG.md`](./CHANGELOG.md).
+2026-10-10 — version **1.8.45**: logged out, the not-available line is `backup features are not available for logged-out environment.` Full history: [`CHANGELOG.md`](./CHANGELOG.md).

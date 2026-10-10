@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.45] - 2026-10-10
+
+### Changed
+
+- **Logged-out not-available line.** The main list and the auth list append `[INFO]` `backup features are not available for logged-out environment.` The line names **backup**, the row hidden when the session is **logged out** or **timeout**. It does not name `sync-auth-to-remote`. The logged-in line and the host line stay the same sentences. Law: `requirement-shell-cli-default-interaction` **2.26.0** · `requirement-shell-cli-language` **1.1.2** · `requirement-grok-auth-backup` **1.10.3** · `requirement-domain-grok-cli` **1.10.3** · `requirement-shell-cli-interface` **2.15.6**. Suite **TP-CLI-13** · **TP-CLI-17** · **TP-CLI-19** · **TP-CLI-23**.
+
+## [1.8.44] - 2026-10-10
+
+### Changed
+
+- **Auth menu numbers stay fixed.** **11** is `backup` on a multi-user host when the session is **logged in**. **12** is `sync-auth-from-remote` when the session is **logged out** or **timeout**. **13** is `sync-auth` on a multi-user host when the session is **logged out** or **timeout**. `sync-auth` copies `/var/grok-cli/auth.*` into `~/.grok`. **14** `add-crontab`, **15** `setup`, and **16** `reinstall` do not slide. **17** is not a row. `sync-auth-to-remote` stays a typed command and is not a numbered row. Logged out hides **11**. Logged in hides **12** and **13**. Termux / Git Bash / Windows cmd omit **11** and **13**. The logged-out and logged-in `[INFO]` lines stay the same sentences and do not replace each other or the host line. Direct `grok-cli backup`, `grok-cli sync-auth`, and `grok-cli sync-auth-to-remote` stay routed. Law: `requirement-shell-cli-default-interaction` **2.25.0** · `requirement-grok-auth-backup` **1.10.2** · `requirement-domain-grok-cli` **1.10.2** · `requirement-shell-cli-interface` **2.15.5**. Suite **TP-CLI-13** · **TP-CLI-17** · **TP-CLI-19** · **TP-CLI-20** · **TP-CLI-31**.
+
 ## [1.8.43] - 2026-10-10
 
 ### Changed

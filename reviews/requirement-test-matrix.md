@@ -1,7 +1,7 @@
 # Requirement ↔ test matrix — grok-cli
 
-**Updated:** 2026-10-10 (1.8.43 logged-out auth 11 sync-auth and 12 sync-auth-from-remote; logged-in auth 11 backup)  
-**Product VERSION:** 1.8.43
+**Updated:** 2026-10-10 (1.8.45 logged-out not-available line names backup)  
+**Product VERSION:** 1.8.45
 **Suite:** `tests/run.sh`
 
 | Requirement key | Area | TP families | Coverage notes |
@@ -16,7 +16,7 @@
 | requirement-grok-crontab | domain | TP-GROK-CLI-26..29 · TP-CLI-04 · TP-CLI-13 | Per-login crontab jobs; grant gate is this `id -un` |
 | requirement-shell-cli-interface | shell | TP-CLI-* · TP-VCLI-01 · TP-VCLI-33 · TP-VCLI-37..42 · TP-ONL-* · TP-GROK-CLI-46 | Commands, flags, dispatch; `setup` (TTY reinstall); `update-grok`; `reinstall`; `run`; online verbs; TP-CLI-18 no frozen login in Active REQ samples; `--debug` dual mention TP-CLI-25..28 |
 | requirement-shell-cli-zero-arguments | shell | TP-CLI-07 · TP-CLI-13 · TP-CLI-29 · TP-ONL-01 | TTY numbered menu; off-TTY Type O ensure; overlay `--debug` / `--quiet` follow empty argv |
-| requirement-shell-cli-default-interaction | shell | TP-CLI-13 · TP-CLI-07 · TP-CLI-17 · TP-CLI-19 · TP-CLI-20 · TP-CLI-21 · TP-CLI-22 · TP-CLI-23 · TP-CLI-25 · TP-CLI-26 · TP-CLI-29 · TP-CLI-30 · TP-CLI-31 · TP-CLI-32 | Case 3 `menu`/`main` + TTY empty argv (including overlay `--debug`); top list is **1** grok-auth, **5** language, **7** sudoers, **8** self-management, **9** Exit, no Back; front **6** is not a row; this-login-only adds **2** run and hides sudoers; session and not-available lines are independent `[INFO]`; hide backup/sync-auth/sudoers on that class; logged-out lists **11** `sync-auth` and **12** `sync-auth-from-remote` and hides `backup` and `sync-auth-to-remote`; logged-in hides pull verbs and lists **11** `backup` and `sync-auth-to-remote`; **0** on the top list retries; submenu **0** is Back; invalid pick retries this layer |
+| requirement-shell-cli-default-interaction | shell | TP-CLI-13 · TP-CLI-07 · TP-CLI-17 · TP-CLI-19 · TP-CLI-20 · TP-CLI-21 · TP-CLI-22 · TP-CLI-23 · TP-CLI-25 · TP-CLI-26 · TP-CLI-29 · TP-CLI-30 · TP-CLI-31 · TP-CLI-32 | Case 3 `menu`/`main` + TTY empty argv (including overlay `--debug`); top list is **1** grok-auth, **5** language, **7** sudoers, **8** self-management, **9** Exit, no Back; front **6** is not a row; this-login-only adds **2** run and hides sudoers; session and not-available lines are independent `[INFO]`; hide backup/sync-auth/sudoers on that class; logged-out lists **12** `sync-auth-from-remote` and **13** `sync-auth` and hides **11** `backup`; logged-in hides **12** and **13** and lists **11** `backup`; `sync-auth-to-remote` is not a row; **0** on the top list retries; submenu **0** is Back; invalid pick retries this layer |
 | requirement-shell-cli-language | shell | TP-CLI-32 · TP-CLI-13 · TP-CLI-19 · TP-CLI-20 · TP-CLI-30 | Thirteen codes on front **5** / **51–63**; **50** and **64–69** unprinted; front **6** does not open the board; persistence leaf `language` mode 0600; `GROK_CLI_LANG` does not write; human help and about follow the code; English menu literals stay |
 | requirement-shell-path-and-shell-support | shell | TP-LC-11..14 · 20..22 · 25..33 · rc-test | bash PATH + profile; zsh PATH **points** at zshenv |
 | requirement-shell-zshenv | shell | TP-LC-23 · 24 · 34 · 35 · 36 · rc-test `--file zshenv` | zsh PATH on `.zshenv` (not `.zshrc`) |

@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-grok-auth-backup.md  
-**Status**: Active (Version 1.10.1)  
+**Status**: Active (Version 1.10.3)  
 **Area**: backup  
 **Key**: `requirement-grok-auth-backup`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -89,7 +89,7 @@ A file under grok home can look valid while grok cannot talk to xAI (revoked ref
 
 1. `sync-auth` **MUST NOT** call `sudo`.  
 2. Source is `GROK_CLI_ROOT` (default `/var/grok-cli`). Dest is the invoking login’s grok home.  
-2b. **Logged-in skip (mandatory):** **MUST** run the live session probe (`grok -p hello` / `gc_session_status_word`) **before** any copy from the store. When the session is **valid**, **MUST NOT** copy from `/var/grok-cli` (or `GROK_CLI_ROOT`). Print **`No sync-auth for logged-in environment.`** and return success (exit 0). JSON: type `sync-auth`, status `skipped`, `reason` `logged-in`. From the TTY main menu, **MAY** reuse the session word already printed under the title (`GC_SESSION_STATUS_CACHE`) instead of probing a second time. Direct CLI with no cache **MUST** probe. `--force` **MUST NOT** override this skip. The grok-auth submenu **MUST** list this verb as **11** only when the session is not **valid** on a multi-user host, and **MUST NOT** list it when the session is **valid** (`requirement-shell-cli-default-interaction` **2.24.0** — hide + **append** the logged-in not-available line).  
+2b. **Logged-in skip (mandatory):** **MUST** run the live session probe (`grok -p hello` / `gc_session_status_word`) **before** any copy from the store. When the session is **valid**, **MUST NOT** copy from `/var/grok-cli` (or `GROK_CLI_ROOT`). Print **`No sync-auth for logged-in environment.`** and return success (exit 0). JSON: type `sync-auth`, status `skipped`, `reason` `logged-in`. From the TTY main menu, **MAY** reuse the session word already printed under the title (`GC_SESSION_STATUS_CACHE`) instead of probing a second time. Direct CLI with no cache **MUST** probe. `--force` **MUST NOT** override this skip. The grok-auth submenu **MUST** list this verb as **13** only when the session is not **valid** on a multi-user host, and **MUST NOT** list it when the session is **valid** (`requirement-shell-cli-default-interaction` **2.26.0** — hide + **append** the logged-in not-available line).  
 3. When the session is **not** valid (invalid / missing peer), **MUST** fail closed if the store is missing, empty, or unreadable without sudo.  
 4. **MUST** create dest grok home if needed (dir mode `0700` when possible).  
 5. Dest `auth.json` **MUST** be mode `0600` after copy.
@@ -111,7 +111,7 @@ A file under grok home can look valid while grok cannot talk to xAI (revoked ref
 8. Dest is this login’s grok home. Dest `auth.json` **MUST** be mode `0600`. Dest dir mode `0700` when created.  
 9. **MUST NOT** print token values. JSON **MAY** name host/user/count/paths only.  
 10. Core tests **MUST NOT** open a real SSH session.  
-11. **Logged-in skip (mandatory):** same gate as §2.4 rule 2b. When the session is **valid**, **MUST NOT** prompt for SPEC, **MUST NOT** `scp`, **MUST NOT** write dest `auth.*`. Print **`No sync-auth for logged-in environment.`** and return success. JSON: type `sync-auth-from-remote`, status `skipped`, `reason` `logged-in`. Menu **MAY** reuse `GC_SESSION_STATUS_CACHE`. `--force` **MUST NOT** override. The grok-auth submenu **MUST** list this verb as **12** only when the session is not **valid**, and **MUST NOT** list it when the session is **valid** (`requirement-shell-cli-default-interaction` **2.24.0** — hide + **append** the logged-in not-available line).
+11. **Logged-in skip (mandatory):** same gate as §2.4 rule 2b. When the session is **valid**, **MUST NOT** prompt for SPEC, **MUST NOT** `scp`, **MUST NOT** write dest `auth.*`. Print **`No sync-auth for logged-in environment.`** and return success. JSON: type `sync-auth-from-remote`, status `skipped`, `reason` `logged-in`. Menu **MAY** reuse `GC_SESSION_STATUS_CACHE`. `--force` **MUST NOT** override. The grok-auth submenu **MUST** list this verb as **12** only when the session is not **valid**, and **MUST NOT** list it when the session is **valid** (`requirement-shell-cli-default-interaction` **2.26.0** — hide + **append** the logged-in not-available line).
 
 ### 2.4c sync-auth-to-remote (no sudo)
 
@@ -122,7 +122,7 @@ A file under grok home can look valid while grok cannot talk to xAI (revoked ref
 5. Source **MUST** be this login’s grok home `auth.json` (regular, non-empty file). Optional `auth.json.lock` when it is a regular non-empty file. Missing or symlink `auth.json` **MUST** fail closed. Next: `grok login`, then `grok-cli sync-auth-to-remote USER@HOST`.  
 6. Transport **MUST** be `ssh` and `scp` in **BatchMode** (no password hang). Overrides `GROK_CLI_SSH` and `GROK_CLI_SCP` for tests. Missing either binary **MUST** fail closed.  
 7. Remote dest **MUST** be that SSH login’s `~/.grok` (scp path `.grok/auth.json`). Before the copy, **MUST** `mkdir -p .grok` and `chmod 0700 .grok` on that host. After `auth.json` lands, **MUST** `chmod 0600 .grok/auth.json`. A failed prepare, copy, or `auth.json` chmod **MUST** fail closed.  
-8. **MUST NOT** skip because this login’s grok session is **valid**. A logged-in session is a reason to push, not a reason to refuse. **MUST NOT** print **`No sync-auth for logged-in environment.`** for this verb. `--force` is not required. The grok-auth submenu **MUST** list this verb as **13** when the session is **valid** and **MUST NOT** list it when the session is not valid (`requirement-shell-cli-default-interaction` **2.24.0**). Direct CLI stays routed in both cases.  
+8. **MUST NOT** skip because this login’s grok session is **valid**. A logged-in session is a reason to push, not a reason to refuse. **MUST NOT** print **`No sync-auth for logged-in environment.`** for this verb. `--force` is not required. The grok-auth submenu **MUST NOT** list this verb (`requirement-shell-cli-default-interaction` **2.26.0**). Direct CLI stays routed in both sessions and still runs when the session is **valid**.  
 9. **MUST NOT** print token values. JSON **MAY** name host/user/count/paths only. Type `sync-auth-to-remote`, status `ok` on success.  
 10. Core tests **MUST NOT** open a real SSH session.
 
@@ -218,7 +218,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 12. Report a live probe that hit `GROK_PROMPT_TIMEOUT` as **logged out** / `invalid` only. That word **MUST** be **timeout**. Default bound **MUST** stay **14** unless the operator overrides the env.  
 13. Delete `GROK_PROMPT_TIMEOUT` / `GROK_PROMPT_KILL_AFTER` or the live-probe functions (`gc_grok_prompt_run_bounded`, `gc_grok_p_once_run`, `gc_grok_prompt_int`) because PRoot skips them today. They stay **protected** for future / non-PRoot use.  
 14. Run live `grok -p hello` for login checking when `proot` is on PATH or the host is Termux. That class **MUST** use local auth cookies.  
-15. Skip `sync-auth-to-remote` because this login is already logged in, hide auth **13** when the session is **valid**, list auth **13** when the session is not valid, write the remote `/var/grok-cli` store, or leave remote `auth.json` without mode `0600`.  
+15. Skip `sync-auth-to-remote` because this login is already logged in, list `sync-auth-to-remote` on any numbered menu, write the remote `/var/grok-cli` store, or leave remote `auth.json` without mode `0600`.  
 
 
 ## 5. Acceptance criteria
@@ -283,6 +283,8 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-09-07 | Active (1.9.0) | PRoot/Termux login checking uses local auth cookies; live grok -p hello bound stays protected for future / non-PRoot |
 | 2026-09-22 | Active (1.10.0) | `sync-auth-to-remote` pushes this login’s `auth.*` onto the remote login’s `~/.grok` (no sudo; still runs when logged in) |
 | 2026-10-10 | Active (1.10.1) | Menu dual mention: grok-auth **11** `sync-auth` and **12** `sync-auth-from-remote` only when logged out; **13** `sync-auth-to-remote` only when logged in (`requirement-shell-cli-default-interaction` 2.24.0) |
+| 2026-10-10 | Active (1.10.2) | Grok-auth **11** `backup` when logged in; **12** `sync-auth-from-remote` and **13** `sync-auth` when logged out; `sync-auth-to-remote` is not a numbered row (`requirement-shell-cli-default-interaction` 2.25.0) |
+| 2026-10-10 | Active (1.10.3) | Logged-out not-available line follows default-interaction **2.26.0** (`backup` only) |
 
 ---
 
@@ -311,6 +313,6 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`.
 
-**Last Updated**: 2026-10-10 (1.10.1 — grok-auth **11** / **12** / **13** follow session. 1.10.0 was `sync-auth-to-remote`.)  
+**Last Updated**: 2026-10-10 (1.10.3 — logged-out not-available line follows default-interaction **2.26.0** (`backup` only). 1.10.2 fixed grok-auth **11** `backup`, **12** `sync-auth-from-remote`, **13** `sync-auth`.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

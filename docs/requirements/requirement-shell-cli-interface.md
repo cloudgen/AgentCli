@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-cli-interface.md  
-**Status**: Active (Version 2.15.4)  
+**Status**: Active (Version 2.15.6)  
 **Area**: shell  
 **Key**: `requirement-shell-cli-interface`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -174,7 +174,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (host not-available line: `requirement-shell-cli-default-interaction` **2.24.0**). Auth **11** stays off this class. When **logged in**, that REQ also omits auth **12** `sync-auth-from-remote`, **lists** auth **13** `sync-auth-to-remote`, and **appends** the logged-in not-available line. When **logged out**, that REQ omits auth **13** and **appends** the logged-out not-available line. Do not add sudo verbs because Linux has them.
+**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (host not-available line: `requirement-shell-cli-default-interaction` **2.26.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. When **logged in**, that REQ also omits auth **12** `sync-auth-from-remote` and **appends** the logged-in not-available line. When **logged out**, that REQ lists auth **12** and **appends** the logged-out not-available line. `sync-auth-to-remote` is not a numbered row. Do not add sudo verbs because Linux has them.
 
 ---
 
@@ -222,7 +222,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | AC-8 | `menu` / `main` routed; match `requirement-shell-cli-default-interaction` |
 | AC-9 | `add-crontab` is Type 0, routed, listed in help; does not write `/etc`; dual mention `requirement-grok-crontab` |
 | AC-10 | `sync-auth-from-remote` is Type 0, routed, listed in help; dual mention `requirement-grok-auth-backup` |
-| AC-10b | `sync-auth-to-remote` is Type 0, routed, listed in help, and on grok-auth **13** only when logged in; dual mention `requirement-grok-auth-backup` · `requirement-shell-cli-default-interaction` |
+| AC-10b | `sync-auth-to-remote` is Type 0, routed, listed in help, and not a numbered row; direct CLI still runs when logged in; dual mention `requirement-grok-auth-backup` · `requirement-shell-cli-default-interaction` |
 | AC-11 | `setup` is Type 0, routed, listed in help; dual mention `requirement-grok-setup`; **MUST NOT** fetch or exec `install.sh` |
 | AC-11b | `update-grok` is Type 0, routed, listed in help (distinct from `self-update`); dual mention `requirement-grok-setup` |
 | AC-11c | `reinstall` is Type 0, routed, listed in help and on the TTY numbered main menu; dual mention `requirement-grok-setup` · `requirement-shell-cli-default-interaction` |
@@ -265,10 +265,10 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | **TP-VCLI-33**–**35** | `tests/test_grok_setup.sh` | have |
 | **TP-VCLI-37**–**39** | `tests/test_grok_setup.sh` | have |
 | **TP-VCLI-40**–**42** | `tests/test_grok_setup.sh` | have — `reinstall` |
-| **TP-CLI-31** | `tests/test_cli.sh` | have — TTY menu lists `reinstall`; `setup` stays off |
+| **TP-CLI-31** | `tests/test_cli.sh` | have — grok-auth **15** `setup` and **16** `reinstall` |
 | **TP-GROK-CLI-46** | `tests/test_domain_grok_cli.sh` | have — `run` `--no-auto-update` |
 | **TP-GROK-CLI-50** | `tests/test_domain_grok_cli.sh` | have — `sync-auth-to-remote` |
-| **TP-CLI-04**, **TP-CLI-13**, **TP-CLI-19**, **TP-CLI-20** | `tests/test_cli.sh` | have — help + main-menu row for `sync-auth-to-remote` |
+| **TP-CLI-04**, **TP-CLI-13**, **TP-CLI-19**, **TP-CLI-20** | `tests/test_cli.sh` | have — help lists `sync-auth-to-remote`; the numbered menu does not |
 
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`
@@ -313,9 +313,11 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-09-28 | Active 2.15.2 | `language` is menu-only (front **6**), not an argv verb. Human `help` and human `about` follow `requirement-shell-cli-language`. JSON stays English |
 | 2026-10-02 | Active 2.15.3 | Menu language is front **5** / block **50–69** assigned **51–63** (dual mention `requirement-shell-cli-language` 1.1.0). 2.15.2 was front **6** / **61–68**. |
 | 2026-10-10 | Active 2.15.4 | This-login-only menu dual mention follows `requirement-shell-cli-default-interaction` **2.24.0** (logged-out not-available line; auth **11** omitted; auth **13** only when logged in) |
+| 2026-10-10 | Active 2.15.5 | This-login-only menu follows default-interaction **2.25.0** (auth **11** and **13** omitted; auth **12** when logged out; `sync-auth-to-remote` is not a row) |
+| 2026-10-10 | Active 2.15.6 | Logged-out not-available line follows default-interaction **2.26.0** (`backup features are not available for logged-out environment.`) |
 
 ---
 
-**Last Updated**: 2026-10-10 (2.15.4 — this-login-only menu follows default-interaction **2.24.0**. 2.15.3 was front **5** / **51–63**.)  
+**Last Updated**: 2026-10-10 (2.15.6 — logged-out not-available line follows default-interaction **2.26.0**. 2.15.5 followed **2.25.0**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

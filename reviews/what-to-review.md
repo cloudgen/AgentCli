@@ -5,7 +5,7 @@
 **Always load first:** `reviews/lessons.md`
 
 **Last plan update:** 2026-10-10 (logged-out auth **11** `sync-auth`, **12** `sync-auth-from-remote`; logged-in **11** `backup`)  
-**Ship unit VERSION:** 1.8.43  
+**Ship unit VERSION:** 1.8.45  
 **Suite baseline:** `reviews/test-plan.md`
 
 ---
@@ -15,7 +15,7 @@
 | # | Check | Notes |
 |---|--------|--------|
 | P1 | Read `docs/requirements/index.md` | Class + architecture + shell + domain grok-cli + grok-auth-backup + three-layer |
-| P2 | Confirm ship unit `src/grok-cli` | `APP_NAME` / `VERSION` hard-assign (**1.8.43**) |
+| P2 | Confirm ship unit `src/grok-cli` | `APP_NAME` / `VERSION` hard-assign (**1.8.45**) |
 | P3 | Load `reviews/lessons.md` and re-check every open L-* | Mandatory (esp. **L-MAP-01** · **L-EXPOSE-01** · **L-SUDOERS-01/02** · **L-SUDOERS-06** · **L-OUTPUT-01** · **L-AUTH-01** · **L-PROMPT-CAPTURE-01** · **L-MENU-06**) |
 | P4 | Run `./tests/run.sh` | Record PASS/FAIL/SKIP; **must include TP-GROK-CLI-22e** and **TP-24*/25*** when generate/submit is in scope |
 | P5 | Confirm install **channel** | `SCRIPT_URL` default github raw `src/grok-cli`; companion `.sha256`; dual-mode matrix |
@@ -26,11 +26,11 @@
 | P10 | **Independent generate dest** | TP-GROK-CLI-24* |
 | P11 | **Operator-readable errors** | TP-GROK-CLI-25* |
 | P12 | **Session gate + sync-auth** | TP-GROK-CLI-03..10 · 12 |
-| P13 | **sync-auth-from-remote** / **sync-auth-to-remote** | TP-GROK-CLI-30..34 · **41** (preferred SPEC) · **42/43** (skip pull when logged in) · **50** (push to remote `~/.grok`; still runs when logged in) · **TP-CLI-13/19/20** (menu lists the push only when logged in) |
+| P13 | **sync-auth-from-remote** / **sync-auth-to-remote** | TP-GROK-CLI-30..34 · **41** (preferred SPEC) · **42/43** (skip pull when logged in) · **50** (push to remote `~/.grok`; still runs when logged in) · **TP-CLI-13/19/20** (`sync-auth-to-remote` is not a numbered row; **12** only when logged out) |
 | P14 | **Empty argv split** | TTY menu; off-TTY Type O; TP-CLI-07/13 · TP-ONL-01 |
 | P15 | **Online lifecycle** | version-check / self-update (start line names local and remote VERSION) / self-uninstall; TP-ONL-02..05 · TP-CLI-10 |
 | P16 | **Human-readable law** | Every Active REQ has §1.1 Human-facing; grant samples use `id -un`; no frozen login (TP-CLI-18) |
-| P17 | **Command line for normal user only** | Related shell REQs print that exact heading; Termux/Git Bash/Windows cmd stay this-login; main menu hides backup/sync-auth/sudoers, lists **2** `run` (row **1** stays grok-auth), and prints the not-available line (TP-CLI-19); logged-out session hides **backup** and **sync-auth-to-remote** and lists auth **11** `sync-auth` and **12** `sync-auth-from-remote` on a multi-user host (TP-CLI-13 · TP-CLI-17 · TP-CLI-19); logged-in session hides sync-auth / sync-auth-from-remote, lists **11** `backup` and **sync-auth-to-remote**, and **appends** the logged-in not-available line (TP-CLI-20) |
+| P17 | **Command line for normal user only** | Related shell REQs print that exact heading; Termux/Git Bash/Windows cmd stay this-login; main menu hides backup/sync-auth/sudoers, lists **2** `run` (row **1** stays grok-auth), and prints the not-available line (TP-CLI-19); logged-out session hides **11** `backup` and lists auth **12** `sync-auth-from-remote` and **13** `sync-auth` on a multi-user host (TP-CLI-13 · TP-CLI-17 · TP-CLI-19); logged-in session hides **12** and **13** and lists **11** `backup`; `sync-auth-to-remote` is not a row; the logged-in not-available line is **appended** (TP-CLI-20) |
 | P18 | **`run` without auto-update** | Dispatcher `gc_run_grok`; inject `--no-auto-update`; `--json` fail-closed Next `run`; missing grok Next `setup`; dual mention grok-setup + CLI-interface + domain; TP-GROK-CLI-46 · TP-CLI-04 |
 | P18b | **TTY `setup` reinstall** | Already-installed TTY list keep / reinstall / Exit; `--json` skip; `--force` skips list; no `$()` of `prompt_ask`; no wipe of `auth.*`; TP-VCLI-37..39 |
 | P18c | **`reinstall` verb + menu** | Routed Type 0; grok-auth **16**; missing grok still fetches; `auth.*` kept; JSON `reinstall`/`reinstalled`; `setup` is grok-auth **15**; TP-VCLI-40..42 · TP-CLI-31 |

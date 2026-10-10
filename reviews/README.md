@@ -12,7 +12,7 @@ Public product review surface (peer of `tests/`).
 | `cli-routed-verb-table.md` | Kept live-command list: name, function, who may run, comment date, help one-liner (**`SK-CLI-ROUTED-VERB-TABLE`**) |
 | `reports/` | Dated review run reports |
 
-**Ship unit:** `src/grok-cli` (**VERSION 1.8.43**)  
+**Ship unit:** `src/grok-cli` (**VERSION 1.8.45**)  
 **Suite:** `./tests/run.sh`  
 **Last suite baseline:** see `test-plan.md` and `reports/`  
 

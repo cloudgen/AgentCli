@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-domain-grok-cli.md  
-**Status**: Active (Version 1.10.1)  
+**Status**: Active (Version 1.10.3)  
 **Area**: domain  
 **Key**: `requirement-domain-grok-cli`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -40,7 +40,7 @@ This file lists the grok-cli commands a login types after install: place the xAI
 | Push shared auth | After a valid session, grok-cli copies `auth.*` into `/var/grok-cli` as root | `grok-cli backup` |
 | Pull shared auth | A normal login copies from `/var/grok-cli` into `~/.grok` with no sudo | `grok-cli sync-auth` |
 | Pull from another host | `scp` that host’s store into `~/.grok` | `grok-cli sync-auth-from-remote user@192.0.2.10` |
-| Push to another host | `ssh` + `scp` this login’s `~/.grok/auth.*` onto that login’s `~/.grok`. Grok-auth **13** shows only when grok is logged in | `grok-cli sync-auth-to-remote user@192.0.2.10` |
+| Push to another host | `ssh` + `scp` this login’s `~/.grok/auth.*` onto that login’s `~/.grok`. Typed command. Not a numbered row. Still runs when grok is logged in | `grok-cli sync-auth-to-remote user@192.0.2.10` |
 | Install the timers | This login’s crontab gets backup every 30 minutes and sync-auth at minute 45 | `grok-cli add-crontab` |
 
 ---
@@ -59,7 +59,7 @@ This file lists the grok-cli commands a login types after install: place the xAI
 | `backup` | none | `gc_*` | Check session, then elevated deposit of `auth.*` into `/var/grok-cli` | **`requirement-grok-auth-backup`** |
 | `sync-auth` | none | `gc_*` | Copy `/var/grok-cli/auth.*` into `~/.grok` **without sudo**; skip when already logged in | **`requirement-grok-auth-backup`** |
 | `sync-auth-from-remote` | SPEC (`user@IPv4`, IPv4, domain, `user@domain`) | `gc_*` | `scp` remote `/var/grok-cli/auth.*` into `~/.grok` **without sudo**; skip when already logged in | **`requirement-grok-auth-backup`** |
-| `sync-auth-to-remote` | SPEC (same four forms) | `gc_*` | `ssh` + `scp` this login’s `~/.grok/auth.*` onto the remote login’s `~/.grok` **without sudo**; still runs when already logged in; grok-auth **13** only when logged in | **`requirement-grok-auth-backup`** · **`requirement-shell-cli-default-interaction`** |
+| `sync-auth-to-remote` | SPEC (same four forms) | `gc_*` | `ssh` + `scp` this login’s `~/.grok/auth.*` onto the remote login’s `~/.grok` **without sudo**; still runs when already logged in; not a numbered row | **`requirement-grok-auth-backup`** · **`requirement-shell-cli-default-interaction`** |
 | `add-crontab` | none | `gc_*` | Install this login’s crontab jobs (backup every 30 min; sync-auth at :45) after **this** login’s backup grant exists | **`requirement-grok-crontab`** |
 | `print-sudoers` | optional output path; `--allow-test-local` when test_local | `gc_*` | Emit **project-sudoers-file** (draft; no `/etc` write) | **`requirement-three-layer-privilege-model`** |
 | `print-sudoers-install-script` | optional script path; same trust gate | `gc_*` | Admin handoff script under `/dev/shm` or temp | **`requirement-three-layer-privilege-model`** |
@@ -224,7 +224,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list is **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management`, and **9** Exit, and it prints the host not-available line (`requirement-shell-cli-default-interaction` **2.24.0**). Auth **11** stays off this class. Logged out also appends the logged-out not-available line and omits auth **13**. Logged in omits auth **12** and appends the logged-in not-available line. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
+**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list is **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management`, and **9** Exit, and it prints the host not-available line (`requirement-shell-cli-default-interaction` **2.26.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. Logged out lists auth **12** and appends the logged-out not-available line. Logged in omits auth **12** and appends the logged-in not-available line. `sync-auth-to-remote` is not a numbered row. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
 
 ---
 
@@ -305,6 +305,8 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-09-14 | Active (1.9.0) | `reinstall` (dual mention `requirement-grok-setup` 2.15.0) |
 | 2026-09-22 | Active (1.10.0) | `sync-auth-to-remote` (dual mention `requirement-grok-auth-backup` 1.10.0); TTY main menu lists it only when logged in (`requirement-shell-cli-default-interaction` 2.18.0) |
 | 2026-10-10 | Active (1.10.1) | Grok-auth **13** only when logged in; **16** `reinstall`; this-login-only start list follows default-interaction **2.24.0** |
+| 2026-10-10 | Active (1.10.2) | `sync-auth-to-remote` is not a numbered row; this-login-only omits auth **11** and **13** and lists **12** only when logged out (default-interaction **2.25.0**) |
+| 2026-10-10 | Active (1.10.3) | Logged-out not-available line follows default-interaction **2.26.0** |
 
 ---
 
@@ -329,6 +331,6 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`.
 
-**Last Updated**: 2026-10-10 (1.10.1 — grok-auth **13** / **16** and the this-login-only start list follow default-interaction **2.24.0**. 1.10.0 was `sync-auth-to-remote`.)  
+**Last Updated**: 2026-10-10 (1.10.3 — logged-out not-available line follows default-interaction **2.26.0**. 1.10.2 followed **2.25.0**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).
