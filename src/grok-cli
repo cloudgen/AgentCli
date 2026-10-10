@@ -45,7 +45,7 @@
 # Single-file ship unit under src/; local install to ~/.local/bin.
 #
 # APP NAME: hard-assign APP_NAME="grok-cli"
-# VERSION: hard-assign VERSION="1.8.42"
+# VERSION: hard-assign VERSION="1.8.43"
 #
 # =============================================================================
 set -u  # Treat unset variables as error (defensive)
@@ -61,8 +61,8 @@ APP_NAME="grok-cli"
 : "${SHORT_DESCRIPTION:=${APP_DESC}}"
 : "${DESCRIPTION:=POSIX /bin/sh CLI: install, uninstall, where-is-me, version, about, help, menu, version-check, self-update, self-uninstall, setup, update-grok, reinstall, run, check-session, backup, sync-auth, sync-auth-from-remote, sync-auth-to-remote, add-crontab, print-sudoers, print-sudoers-install-script, remove-project-sudoers, generate-sudoer-request, submit-sudoer-request, rc-test.}"
 # Product version SSOT (semver). Extractors use: grep '^VERSION="'
-VERSION="1.8.42"
-: "${VERSION:=1.8.42}"
+VERSION="1.8.43"
+: "${VERSION:=1.8.43}"
 APP_VERSION="${VERSION}"
 # Repository identity SSOT (git host owner/repo for project-repository alignment).
 : "${REPO_USER:=cloudgen}"
@@ -8071,6 +8071,23 @@ app_menu_text() {
                 *) _mt_out="sync-auth and sync-auth-from-remote features are not available for logged-in environment." ;;
             esac
             ;;
+        hidden_logout)
+            case "${_mt_lang}" in
+                zh-Hant) _mt_out="已登出環境無法使用 backup 與 sync-auth-to-remote。" ;;
+                zh-Hans) _mt_out="已登出环境无法使用 backup 与 sync-auth-to-remote。" ;;
+                es) _mt_out="backup y sync-auth-to-remote no están disponibles con la sesión cerrada." ;;
+                fr) _mt_out="backup et sync-auth-to-remote ne sont pas disponibles lorsque la session est déconnectée." ;;
+                de) _mt_out="backup und sync-auth-to-remote sind bei abgemeldeter Sitzung nicht verfügbar." ;;
+                ja) _mt_out="未ログインの環境では backup と sync-auth-to-remote は使えません。" ;;
+                ko) _mt_out="로그아웃된 환경에서는 backup 와 sync-auth-to-remote 를 사용할 수 없습니다." ;;
+                ar) _mt_out="ميزتا backup وsync-auth-to-remote غير متاحتين عند تسجيل الخروج." ;;
+                pt) _mt_out="backup e sync-auth-to-remote não estão disponíveis com a sessão terminada." ;;
+                ru) _mt_out="backup и sync-auth-to-remote недоступны без выполненного входа." ;;
+                nl) _mt_out="backup en sync-auth-to-remote zijn niet beschikbaar bij een uitgelogde sessie." ;;
+                el) _mt_out="τα backup και sync-auth-to-remote δεν είναι διαθέσιμα όταν η συνεδρία είναι αποσυνδεδεμένη." ;;
+                *) _mt_out="backup and sync-auth-to-remote features are not available for logged-out environment." ;;
+            esac
+            ;;
         cat_auth)
             case "${_mt_lang}" in
                 zh-Hant) _mt_out="grok 認證" ;;
@@ -10197,6 +10214,14 @@ gc_menu_print_login_hide() {
     fi
 }
 
+gc_menu_print_logout_hide() {
+    if gc_menu_lang_is_en; then
+        out_info "backup and sync-auth-to-remote features are not available for logged-out environment."
+    else
+        out_info "$(app_menu_text hidden_logout)"
+    fi
+}
+
 # =============================================================================
 # app_about_i18n() - Human about when APP_LANG is not English
 # =============================================================================
@@ -10415,12 +10440,19 @@ gc_menu_main_rows() {
 # gc_menu_auth_rows() - grok-auth submenu "NUMBER TOKEN" (fixed 11-16)
 # =============================================================================
 #
-# Hide backup on this-login-only. Hide sync-auth-from-remote when logged in.
-# Hide sync-auth-to-remote when not logged in. Numbers do not slide.
+# 11 is one token per session on a multi-user host: backup when logged in
+# (push ~/.grok/auth.* to the global store), sync-auth when logged out or
+# timeout (copy the global store into ~/.grok). Hide 11 on this-login-only.
+# 12 sync-auth-from-remote when not logged in. Hide sync-auth-to-remote when
+# not logged in. Numbers 12-16 do not slide. 17 is not a row.
 # =============================================================================
 gc_menu_auth_rows() {
     if ! gc_host_is_normal_user_only; then
-        printf '%s\n' "11 backup"
+        if [ "${GC_SESSION_STATUS_CACHE-}" = "valid" ]; then
+            printf '%s\n' "11 backup"
+        else
+            printf '%s\n' "11 sync-auth"
+        fi
     fi
     if [ "${GC_SESSION_STATUS_CACHE-}" != "valid" ]; then
         printf '%s\n' "12 sync-auth-from-remote"
@@ -10605,6 +10637,8 @@ app_default_print_menu() {
     util_int_timer_debug_begin "logged-in"
     if [ "${_st}" = "valid" ]; then
         gc_menu_print_login_hide
+    else
+        gc_menu_print_logout_hide
     fi
     util_int_timer_debug_end "logged-in"
 
@@ -10722,6 +10756,8 @@ app_default_print_auth_menu() {
     gc_menu_print_host_hide
     if [ "${GC_SESSION_STATUS_CACHE-}" = "valid" ]; then
         gc_menu_print_login_hide
+    else
+        gc_menu_print_logout_hide
     fi
     while read -r _n _tok; do
         [ -n "${_n}" ] || continue
@@ -10738,6 +10774,7 @@ app_default_run_auth_pick() {
     _run=$(gc_menu_auth_rows | gc_menu_row_match "${_pick}" || true)
     case "${_run}" in
         backup) gc_backup ;;
+        sync-auth) gc_sync_auth ;;
         sync-auth-from-remote) gc_sync_auth_from_remote ;;
         sync-auth-to-remote) gc_sync_auth_to_remote ;;
         add-crontab) gc_add_crontab ;;

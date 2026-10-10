@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.43] - 2026-10-10
+
+### Changed
+
+- **Auth menu by session.** On a multi-user host, **11** is `backup` only when the session is **logged in**, and **11** `sync-auth` plus **12** `sync-auth-from-remote` only when the session is **logged out** or **timeout**. `sync-auth` copies `/var/grok-cli/auth.*` into `~/.grok`. Termux / Git Bash / Windows cmd still omit **11**. **13** stays hidden when logged out. **14–16** do not slide. **17** is not a row. When the session is not logged in, the main list and the auth list append `[INFO]` `backup and sync-auth-to-remote features are not available for logged-out environment.` That line does not replace the host line or the logged-in line. Direct `grok-cli backup` and `grok-cli sync-auth` stay routed. Law: `requirement-shell-cli-default-interaction` **2.24.0** · `requirement-shell-cli-language` **1.1.1** · `requirement-grok-auth-backup` **1.10.1** · `requirement-domain-grok-cli` **1.10.1** · `requirement-shell-cli-interface` **2.15.4**. Suite **TP-CLI-13** · **TP-CLI-17** · **TP-CLI-19** · **TP-CLI-20** · **TP-CLI-23**.
+
 ## [1.8.42] - 2026-10-02
 
 ### Changed

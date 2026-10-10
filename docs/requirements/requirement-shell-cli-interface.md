@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-cli-interface.md  
-**Status**: Active (Version 2.15.3)  
+**Status**: Active (Version 2.15.4)  
 **Area**: shell  
 **Key**: `requirement-shell-cli-interface`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -174,7 +174,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (not-available line: `requirement-shell-cli-default-interaction`). When **logged in**, that REQ also omits **sync-auth** / **sync-auth-from-remote**, **lists** **sync-auth-to-remote**, and **appends** the logged-in not-available line. When **logged out**, that REQ omits **sync-auth-to-remote**. Do not add sudo verbs because Linux has them.
+**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (host not-available line: `requirement-shell-cli-default-interaction` **2.24.0**). Auth **11** stays off this class. When **logged in**, that REQ also omits auth **12** `sync-auth-from-remote`, **lists** auth **13** `sync-auth-to-remote`, and **appends** the logged-in not-available line. When **logged out**, that REQ omits auth **13** and **appends** the logged-out not-available line. Do not add sudo verbs because Linux has them.
 
 ---
 
@@ -222,7 +222,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | AC-8 | `menu` / `main` routed; match `requirement-shell-cli-default-interaction` |
 | AC-9 | `add-crontab` is Type 0, routed, listed in help; does not write `/etc`; dual mention `requirement-grok-crontab` |
 | AC-10 | `sync-auth-from-remote` is Type 0, routed, listed in help; dual mention `requirement-grok-auth-backup` |
-| AC-10b | `sync-auth-to-remote` is Type 0, routed, listed in help, and on the TTY main menu only when logged in; dual mention `requirement-grok-auth-backup` · `requirement-shell-cli-default-interaction` |
+| AC-10b | `sync-auth-to-remote` is Type 0, routed, listed in help, and on grok-auth **13** only when logged in; dual mention `requirement-grok-auth-backup` · `requirement-shell-cli-default-interaction` |
 | AC-11 | `setup` is Type 0, routed, listed in help; dual mention `requirement-grok-setup`; **MUST NOT** fetch or exec `install.sh` |
 | AC-11b | `update-grok` is Type 0, routed, listed in help (distinct from `self-update`); dual mention `requirement-grok-setup` |
 | AC-11c | `reinstall` is Type 0, routed, listed in help and on the TTY numbered main menu; dual mention `requirement-grok-setup` · `requirement-shell-cli-default-interaction` |
@@ -312,9 +312,10 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-09-27 | Active 2.15.1 | `about` cache lines follow `requirement-shell-cli-storage` 1.4.0 (used / preferred / 1st / 2nd) |
 | 2026-09-28 | Active 2.15.2 | `language` is menu-only (front **6**), not an argv verb. Human `help` and human `about` follow `requirement-shell-cli-language`. JSON stays English |
 | 2026-10-02 | Active 2.15.3 | Menu language is front **5** / block **50–69** assigned **51–63** (dual mention `requirement-shell-cli-language` 1.1.0). 2.15.2 was front **6** / **61–68**. |
+| 2026-10-10 | Active 2.15.4 | This-login-only menu dual mention follows `requirement-shell-cli-default-interaction` **2.24.0** (logged-out not-available line; auth **11** omitted; auth **13** only when logged in) |
 
 ---
 
-**Last Updated**: 2026-10-02 (2.15.3 — front **5** / **51–63**; 2.15.2 was front **6** / **61–68**)  
+**Last Updated**: 2026-10-10 (2.15.4 — this-login-only menu follows default-interaction **2.24.0**. 2.15.3 was front **5** / **51–63**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

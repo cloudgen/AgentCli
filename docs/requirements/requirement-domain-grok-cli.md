@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-domain-grok-cli.md  
-**Status**: Active (Version 1.10.0)  
+**Status**: Active (Version 1.10.1)  
 **Area**: domain  
 **Key**: `requirement-domain-grok-cli`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -33,14 +33,14 @@ This file lists the grok-cli commands a login types after install: place the xAI
 | You do… | What it means | What you type |
 |---------|---------------|---------------|
 | Place grok | grok-cli fetches xAI’s version pointer and matching `grok` binary (does not run `install.sh`) | `grok-cli setup` |
-| Reinstall grok | Same fetch as `setup --force`; keeps `auth.*`; listed on the start list | `grok-cli reinstall` |
+| Reinstall grok | Same fetch as `setup --force`; keeps `auth.*`; grok-auth **16** | `grok-cli reinstall` |
 | Latest grok | grok-cli fetches the channel again (does not use grok auto-update; not grok-cli `self-update`) | `grok-cli update-grok` |
 | Start grok on Termux | grok-cli starts grok with auto-update off so PRoot is not left hanging | `grok-cli run` |
 | Confirm login | grok-cli runs `grok -p hello` first (a file that only looks valid is not enough). If `proot` is on PATH, that probe uses the PRoot reaper so the menu does not wait on PRoot | `grok-cli check-session` |
 | Push shared auth | After a valid session, grok-cli copies `auth.*` into `/var/grok-cli` as root | `grok-cli backup` |
 | Pull shared auth | A normal login copies from `/var/grok-cli` into `~/.grok` with no sudo | `grok-cli sync-auth` |
 | Pull from another host | `scp` that host’s store into `~/.grok` | `grok-cli sync-auth-from-remote user@192.0.2.10` |
-| Push to another host | `ssh` + `scp` this login’s `~/.grok/auth.*` onto that login’s `~/.grok`. The start list shows this row only when grok is logged in | `grok-cli sync-auth-to-remote user@192.0.2.10` |
+| Push to another host | `ssh` + `scp` this login’s `~/.grok/auth.*` onto that login’s `~/.grok`. Grok-auth **13** shows only when grok is logged in | `grok-cli sync-auth-to-remote user@192.0.2.10` |
 | Install the timers | This login’s crontab gets backup every 30 minutes and sync-auth at minute 45 | `grok-cli add-crontab` |
 
 ---
@@ -53,13 +53,13 @@ This file lists the grok-cli commands a login types after install: place the xAI
 |---------|------------------|----------------|------------------|---------------|
 | `setup` | `--force`; TTY keep / reinstall / Exit when grok already runs | `gc_*` | Fetch xAI channel + artifact and place peer `grok`; **MUST NOT** exec `install.sh`; skip if grok already runs off-TTY / `--json`; on a TTY offer reinstall; Android ET_EXEC may place an exec wrapper | **`requirement-grok-setup`** |
 | `update-grok` | — | `gc_*` | Refresh peer grok from xAI channel + artifact (same as `setup --force`); missing grok Next `setup`; **MUST NOT** exec grok auto-update | **`requirement-grok-setup`** |
-| `reinstall` | — | `gc_*` | Remove existing grok and install again (same as `setup --force`); listed on the TTY main menu; missing grok still fetches; **MUST NOT** delete `auth.*` | **`requirement-grok-setup`** |
+| `reinstall` | — | `gc_*` | Remove existing grok and install again (same as `setup --force`); grok-auth **16**; missing grok still fetches; **MUST NOT** delete `auth.*` | **`requirement-grok-setup`** |
 | `run` | remaining grok argv | `gc_*` | Start peer grok with `--no-auto-update` (unless already passed); missing grok Next `setup`; `--json` does not exec | **`requirement-grok-setup`** |
 | `check-session` | none | `gc_*` | Confirm grok is logged in (`grok -p hello` first; if `proot` on PATH use the reaper, else simple `-p`) | **`requirement-grok-auth-backup`** (procedure) · **`requirement-shell-termux-coding`** (PRoot writing) |
 | `backup` | none | `gc_*` | Check session, then elevated deposit of `auth.*` into `/var/grok-cli` | **`requirement-grok-auth-backup`** |
 | `sync-auth` | none | `gc_*` | Copy `/var/grok-cli/auth.*` into `~/.grok` **without sudo**; skip when already logged in | **`requirement-grok-auth-backup`** |
 | `sync-auth-from-remote` | SPEC (`user@IPv4`, IPv4, domain, `user@domain`) | `gc_*` | `scp` remote `/var/grok-cli/auth.*` into `~/.grok` **without sudo**; skip when already logged in | **`requirement-grok-auth-backup`** |
-| `sync-auth-to-remote` | SPEC (same four forms) | `gc_*` | `ssh` + `scp` this login’s `~/.grok/auth.*` onto the remote login’s `~/.grok` **without sudo**; still runs when already logged in; TTY main menu lists it only when logged in | **`requirement-grok-auth-backup`** · **`requirement-shell-cli-default-interaction`** |
+| `sync-auth-to-remote` | SPEC (same four forms) | `gc_*` | `ssh` + `scp` this login’s `~/.grok/auth.*` onto the remote login’s `~/.grok` **without sudo**; still runs when already logged in; grok-auth **13** only when logged in | **`requirement-grok-auth-backup`** · **`requirement-shell-cli-default-interaction`** |
 | `add-crontab` | none | `gc_*` | Install this login’s crontab jobs (backup every 30 min; sync-auth at :45) after **this** login’s backup grant exists | **`requirement-grok-crontab`** |
 | `print-sudoers` | optional output path; `--allow-test-local` when test_local | `gc_*` | Emit **project-sudoers-file** (draft; no `/etc` write) | **`requirement-three-layer-privilege-model`** |
 | `print-sudoers-install-script` | optional script path; same trust gate | `gc_*` | Admin handoff script under `/dev/shm` or temp | **`requirement-three-layer-privilege-model`** |
@@ -76,7 +76,7 @@ This file lists the grok-cli commands a login types after install: place the xAI
 |--------------|-------------|----------|
 | Peer grok install | Expose `setup` (channel + artifact procedure; not grok-cli install; not `install.sh`) | `requirement-grok-setup` |
 | Peer grok update | Expose `update-grok` (not grok auto-update; not grok-cli `self-update`) | `requirement-grok-setup` |
-| Peer grok reinstall | Expose `reinstall` (listed on the TTY main menu; not grok-cli `self-update`) | `requirement-grok-setup` |
+| Peer grok reinstall | Expose `reinstall` (grok-auth **16**; not grok-cli `self-update`) | `requirement-grok-setup` |
 | Start grok without auto-update | Expose `run` | `requirement-grok-setup` |
 | Grok session gate | Expose `check-session`; backup MUST call the same gate | `requirement-grok-auth-backup` |
 | PRoot-aware one-shot | Same gate: `command -v proot` → reaper; else simple `grok -p hello`. Hang chain is leftover `runsvdir` from `bash -lc` → `start-services.sh` | `requirement-shell-termux-coding` (writing) · `requirement-grok-auth-backup` (procedure) |
@@ -224,7 +224,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list omits those rows, lists **`run` first** then **`reinstall`**, and prints the not-available line (`requirement-shell-cli-default-interaction`). When **logged in**, that REQ also omits **sync-auth-from-remote** and **appends** the logged-in not-available line. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
+**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list is **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management`, and **9** Exit, and it prints the host not-available line (`requirement-shell-cli-default-interaction` **2.24.0**). Auth **11** stays off this class. Logged out also appends the logged-out not-available line and omits auth **13**. Logged in omits auth **12** and appends the logged-in not-available line. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
 
 ---
 
@@ -304,6 +304,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-09-12 | Active (1.8.0) | TTY `setup` keep / reinstall / Exit (dual mention `requirement-grok-setup` 2.14.0) |
 | 2026-09-14 | Active (1.9.0) | `reinstall` (dual mention `requirement-grok-setup` 2.15.0) |
 | 2026-09-22 | Active (1.10.0) | `sync-auth-to-remote` (dual mention `requirement-grok-auth-backup` 1.10.0); TTY main menu lists it only when logged in (`requirement-shell-cli-default-interaction` 2.18.0) |
+| 2026-10-10 | Active (1.10.1) | Grok-auth **13** only when logged in; **16** `reinstall`; this-login-only start list follows default-interaction **2.24.0** |
 
 ---
 
@@ -328,6 +329,6 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`.
 
-**Last Updated**: 2026-09-22 (1.10.0 — `sync-auth-to-remote`; main menu only when logged in)  
+**Last Updated**: 2026-10-10 (1.10.1 — grok-auth **13** / **16** and the this-login-only start list follow default-interaction **2.24.0**. 1.10.0 was `sync-auth-to-remote`.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

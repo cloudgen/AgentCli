@@ -3,9 +3,9 @@
 Maps **TP-*** coverage to `tests/`.  
 **Suite entry:** `./tests/run.sh`  
 **Ship unit:** `src/grok-cli`  
-**Product VERSION:** 1.8.42  
-**Last plan update:** 2026-10-02  
-**Last suite run:** PASS=998 FAIL=56 SKIP=0 (2026-10-02; 1.8.42 menu language front **5** / **51–63**). Language rows **TP-CLI-13** · **TP-CLI-19** · **TP-CLI-20** · **TP-CLI-30** · **TP-CLI-32** passed. The 56 fails are **TP-VCLI-19** through **TP-VCLI-36** (Termux/proot grok place and Windows `.exe` place). That class was already failing on 1.8.41 (then PASS=941 FAIL=71).
+**Product VERSION:** 1.8.43  
+**Last plan update:** 2026-10-10  
+**Last suite run:** CLI surface only, 2026-10-10: `run_test_cli` PASS=485 FAIL=0 SKIP=0 (logged-out auth **11** `sync-auth` and **12** `sync-auth-from-remote`; logged-in **11** `backup`). Full suite was not re-run. Previous full run 2026-10-02 was PASS=998 FAIL=56 SKIP=0; those 56 fails were **TP-VCLI-19** through **TP-VCLI-36** (Termux/proot grok place and Windows `.exe` place).
 
 Status: **have** = automated today · **todo** = needed · **optional** · **n/a** · **skip** (environment)
 
