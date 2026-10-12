@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-domain-grok-cli.md  
-**Status**: Active (Version 1.10.3)  
+**Status**: Active (Version 1.10.4)  
 **Area**: domain  
 **Key**: `requirement-domain-grok-cli`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -224,7 +224,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list is **1** `grok-auth`, **2** `run`, **5** `language`, **8** `self-management`, and **9** Exit, and it prints the host not-available line (`requirement-shell-cli-default-interaction` **2.26.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. Logged out lists auth **12** and appends the logged-out not-available line. Logged in omits auth **12** and appends the logged-in not-available line. `sync-auth-to-remote` is not a numbered row. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
+**This requirement:** `backup` / sudoers verbs stay **unused** on this class. The numbered start list is **1** `grok-auth`, **2** `run`, **6** `self-management`, **7** `language`, and **9** Exit, and it prints the host not-available line (`requirement-shell-cli-default-interaction` **2.27.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. Logged out lists auth **12** and appends the logged-out not-available line. Logged in omits auth **12** and appends the logged-in not-available line. `sync-auth-to-remote` is not a numbered row. `setup`, `update-grok`, `reinstall`, `run`, and `check-session` stay this-login work.
 
 ---
 
@@ -307,6 +307,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-10-10 | Active (1.10.1) | Grok-auth **13** only when logged in; **16** `reinstall`; this-login-only start list follows default-interaction **2.24.0** |
 | 2026-10-10 | Active (1.10.2) | `sync-auth-to-remote` is not a numbered row; this-login-only omits auth **11** and **13** and lists **12** only when logged out (default-interaction **2.25.0**) |
 | 2026-10-10 | Active (1.10.3) | Logged-out not-available line follows default-interaction **2.26.0** |
+| 2026-10-12 | Active (1.10.4) | This-login-only start list follows default-interaction **2.27.0** (**1** grok-auth, **2** run, **6** self-management, **7** language, **9** Exit) |
 
 ---
 
@@ -331,6 +332,6 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`.
 
-**Last Updated**: 2026-10-10 (1.10.3 — logged-out not-available line follows default-interaction **2.26.0**. 1.10.2 followed **2.25.0**.)  
+**Last Updated**: 2026-10-12 (1.10.4 — this-login-only start list follows default-interaction **2.27.0**. 1.10.3 followed **2.26.0**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

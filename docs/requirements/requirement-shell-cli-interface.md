@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-cli-interface.md  
-**Status**: Active (Version 2.15.6)  
+**Status**: Active (Version 2.15.7)  
 **Area**: shell  
 **Key**: `requirement-shell-cli-interface`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -104,7 +104,7 @@ In JSON mode, help **MUST NOT** dump long human text; return a short structured 
 | `version` | Type 0 | `app_version` | Local `VERSION` only; no network |
 | `about` | Type 0 | `app_about` | Diagnostics: install presence, paths, user, shell, TTY; **Cache folder used**, **Cache folder (preferred)**, **Cache folder (1st fallback)**, **Cache folder (2nd fallback)** when that host has one (`requirement-shell-cli-storage`); **Persistence storage** `${HOME}/.local/${APP_NAME}`; grok home, session, deposit dir; **no** channel one-liner. Human labels follow the menu language. JSON stays English |
 | `help` | Type 0 | `app_help` | Full usage in human mode; short JSON note in JSON mode. Human text follows the menu language. JSON stays English |
-| `menu` | Type 0 | `app_default` | Numbered list (`requirement-shell-cli-default-interaction`). Front **5** sets the menu language (`requirement-shell-cli-language` **1.1.0**: block **50–69**, assigned **51–63**). Front **6** is not a row. `language` is **not** an argv verb. `GROK_CLI_LANG` overrides this process and does not write the file. Interactive: **ignore `--json`**. Non-interactive: help, following `--json`. |
+| `menu` | Type 0 | `app_default` | Numbered list (`requirement-shell-cli-default-interaction`). Front **7** sets the menu language (`requirement-shell-cli-language` **1.2.0**: assigned **80–92**). Front **8** is not a row. `language` is **not** an argv verb. `GROK_CLI_LANG` overrides this process and does not write the file. Interactive: **ignore `--json`**. Non-interactive: help, following `--json`. |
 | `main` | Type 0 | `app_default` (alias) | Same as `menu` |
 | `setup` | Type 0 | `gc_setup` (domain) | Perform the studied xAI grok procedure (platform, channel pointer, artifact, `~/.grok` place) so peer `grok` is installed; **MUST NOT** fetch or exec `install.sh`; skip if grok already **runs on this host** unless `--force` **or** a TTY reinstall pick. On a TTY, already-installed grok **MUST** offer keep / reinstall / Exit (`requirement-grok-setup` 9b). `--json` / off-TTY **MUST NOT** prompt. Stale session PATH is not an error. **MUST NOT** install grok-cli |
 | `update-grok` | Type 0 | `gc_update_grok` (domain) | Refresh peer `grok` from the xAI channel + artifact (same place path as `setup --force`). **MUST NOT** exec grok auto-update. **MUST NOT** update grok-cli (`self-update` stays that). Missing grok → Next `{{APP_NAME}} setup`. Dual mention `requirement-grok-setup` · `requirement-domain-grok-cli`. **INC-20260910-002** |
@@ -174,7 +174,7 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 
 Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is set. Git Bash — `MSYSTEM` or `uname -s` is MINGW*/MSYS*. Windows cmd — `OS=Windows_NT` after excluding Git Bash, Cygwin, and WSL.
 
-**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (host not-available line: `requirement-shell-cli-default-interaction` **2.26.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. When **logged in**, that REQ also omits auth **12** `sync-auth-from-remote` and **appends** the logged-in not-available line. When **logged out**, that REQ lists auth **12** and **appends** the logged-out not-available line. `sync-auth-to-remote` is not a numbered row. Do not add sudo verbs because Linux has them.
+**This requirement:** the Type 1 backup/sudoers rows stay **unused** on detect. The main menu **MUST NOT** list `backup`, `sync-auth`, or `sudoers` on detect (host not-available line: `requirement-shell-cli-default-interaction` **2.27.0**). Auth **11** `backup` and auth **13** `sync-auth` stay off this class. When **logged in**, that REQ also omits auth **12** `sync-auth-from-remote` and **appends** the logged-in not-available line. When **logged out**, that REQ lists auth **12** and **appends** the logged-out not-available line. `sync-auth-to-remote` is not a numbered row. Do not add sudo verbs because Linux has them.
 
 ---
 
@@ -315,9 +315,10 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-10-10 | Active 2.15.4 | This-login-only menu dual mention follows `requirement-shell-cli-default-interaction` **2.24.0** (logged-out not-available line; auth **11** omitted; auth **13** only when logged in) |
 | 2026-10-10 | Active 2.15.5 | This-login-only menu follows default-interaction **2.25.0** (auth **11** and **13** omitted; auth **12** when logged out; `sync-auth-to-remote` is not a row) |
 | 2026-10-10 | Active 2.15.6 | Logged-out not-available line follows default-interaction **2.26.0** (`backup features are not available for logged-out environment.`) |
+| 2026-10-12 | Active 2.15.7 | Menu language is front **7** / assigned **80–92** (dual mention `requirement-shell-cli-language` **1.2.0**). Front **8** is not a row. |
 
 ---
 
-**Last Updated**: 2026-10-10 (2.15.6 — logged-out not-available line follows default-interaction **2.26.0**. 2.15.5 followed **2.25.0**.)  
+**Last Updated**: 2026-10-12 (2.15.7 — menu language is front **7** / assigned **80–92**; front **8** is not a row. 2.15.6 followed default-interaction **2.26.0**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

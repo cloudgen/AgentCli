@@ -1,6 +1,6 @@
 # grok-cli - Alternative online installer for xAI grok
 
-![Version](https://img.shields.io/badge/Version-1.8.45-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.8.46-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![CIAO](https://img.shields.io/badge/Philosophy-CIAO%20(Caution%20%E2%80%A2%20Intentional%20%E2%80%A2%20Anti--fragile%20%E2%80%A2%20Over--engineered)-purple.svg)](https://github.com/cloudgen/ciao)
 [![Stars](https://img.shields.io/github/stars/cloudgen/grok-cli?style=flat-square)](https://github.com/cloudgen/grok-cli)
@@ -138,13 +138,13 @@ After install, on a terminal:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
 [INFO] logged out
 [INFO] backup features are not available for logged-out environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
-5. language: *display language for this menu*
-7. sudoers: *Grant and drafts*
-8. self-management: *Check, update, or remove grok-cli*
+5. sudoers: *Grant and drafts*
+6. self-management: *Check, update, or remove grok-cli*
+7. language: *display language for this menu*
 9. Exit
 ```
 
@@ -160,18 +160,18 @@ Pick **1** for the auth list. Numbers **14–16** stay put when a row is hidden.
 9. Exit
 ```
 
-On Termux / Git Bash / Windows cmd, **backup**, **sync-auth**, and **sudoers** are omitted. Each of those notices is its own `[INFO]` line. The top list is **1** grok-auth, **2** run (start grok without auto-update), **5** language, **8** self-management, and **9** Exit. Row **5** is on every host. Front **6** is not a row. There is no Back row. When the session is **logged out** or **timeout**, an `[INFO]` line is **appended**: `backup features are not available for logged-out environment.` Auth **12** is listed. Auth **11** and **13** stay off this class. When the session is **logged in**, that logged-out line is omitted, auth **12** is omitted, and a second `[INFO]` line is **appended**: `sync-auth and sync-auth-from-remote features are not available for logged-in environment.` Neither line replaces the host line. `sync-auth-to-remote` is not a numbered row. Termux, logged out:
+On Termux / Git Bash / Windows cmd, **backup**, **sync-auth**, and **sudoers** are omitted. Each of those notices is its own `[INFO]` line. The top list is **1** grok-auth, **2** run (start grok without auto-update), **6** self-management, **7** language, and **9** Exit. Row **7** is on every host. Front **8** is not a row. There is no Back row. When the session is **logged out** or **timeout**, an `[INFO]` line is **appended**: `backup features are not available for logged-out environment.` Auth **12** is listed. Auth **11** and **13** stay off this class. When the session is **logged in**, that logged-out line is omitted, auth **12** is omitted, and a second `[INFO]` line is **appended**: `sync-auth and sync-auth-from-remote features are not available for logged-in environment.` Neither line replaces the host line. `sync-auth-to-remote` is not a numbered row. Termux, logged out:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
 [INFO] logged out
 [INFO] backup, sync-auth and sudoers features are not available in termux.
 [INFO] backup features are not available for logged-out environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
 2. run: *Start grok without auto-update*
-5. language: *display language for this menu*
-8. self-management: *Check, update, or remove grok-cli*
+6. self-management: *Check, update, or remove grok-cli*
+7. language: *display language for this menu*
 9. Exit
 ```
 
@@ -179,23 +179,62 @@ Live capture on a multi-user host that is **logged in**:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.45*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
 [INFO] logged in
 [INFO] sync-auth and sync-auth-from-remote features are not available for logged-in environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
-5. language: *display language for this menu*
-7. sudoers: *Grant and drafts*
-8. self-management: *Check, update, or remove grok-cli*
+5. sudoers: *Grant and drafts*
+6. self-management: *Check, update, or remove grok-cli*
+7. language: *display language for this menu*
 9. Exit
 ```
 
-Choose a number, or type the command name. `5` opens the language list (**51** English, **52** 简体中文, **53** 繁體中文, **54** Español, **55** العربية, **56** Français, **57** Português, **58** Русский, **59** Deutsch, **60** 日本語, **61** 한국어, **62** Nederlands, **63** Ελληνικά). **50** and **64–69** are reserved and are not printed. The choice is saved under `~/.local/grok-cli/language` and the next run opens in that language. `GROK_CLI_LANG` overrides one run and does not write the file. `language` is not a command you type on the shell. `9` exits from every list. `0` goes back only inside a submenu. The top list has no Back row. The line under the title is an independent `[INFO]` **logged in**, **timeout**, or **logged out**. On Termux/PRoot that line comes from local `auth.json` cookies (no `grok -p hello` wait). On other hosts it is a live `grok -p hello`; a hang that hits the bound prints **timeout**, not **logged out**. On a real terminal the descriptions after the colon are gray and italic. `setup` and `reinstall` are on the grok-auth list (**15** and **16**), not on the top list. Direct `grok-cli reinstall` still works. A later `sync-auth-from-remote` or `sync-auth-to-remote` remembers the last remote in persistence and offers it as the prompt default.
+`5` opens sudoers. `6` opens self-management. `7` opens language. **61** install, **62** version, **63** about, and **67** self-install stay unprinted.
+
+```text
+51. generate-sudoer-request: *Write a JSON grant you can read*
+52. submit-sudoer-request: *Queue the JSON grant inbound*
+53. print-sudoers: *Emit sudoers draft*
+54. print-sudoers-install-script: *Write admin install script*
+55. remove-project-sudoers: *Remove sudoers draft only*
+0. Back
+9. Exit
+```
+
+```text
+64. version-check: *Compare local version with the channel*
+65. self-update: *Re-download grok-cli from the channel*
+66. self-uninstall: *Remove grok-cli*
+68. where-is-me: *Show running and install paths*
+0. Back
+9. Exit
+```
+
+```text
+80. English: *use English for this menu*
+81. 简体中文: *use Simplified Chinese for this menu*
+82. 繁體中文: *use Traditional Chinese for this menu*
+83. Español: *use Spanish for this menu*
+84. العربية: *use Arabic for this menu*
+85. Français: *use French for this menu*
+86. Português: *use Portuguese for this menu*
+87. Русский: *use Russian for this menu*
+88. Deutsch: *use German for this menu*
+89. 日本語: *use Japanese for this menu*
+90. 한국어: *use Korean for this menu*
+91. Nederlands: *use Dutch for this menu*
+92. Ελληνικά: *use Greek for this menu*
+0. Back
+9. Exit
+```
+
+Choose a number, or type the command name. `7` opens the language list (**80** English, **81** 简体中文, **82** 繁體中文, **83** Español, **84** العربية, **85** Français, **86** Português, **87** Русский, **88** Deutsch, **89** 日本語, **90** 한국어, **91** Nederlands, **92** Ελληνικά). **70–79** and **93–98** are reserved and are not printed. The choice is saved under `~/.local/grok-cli/language` and the next run opens in that language. `GROK_CLI_LANG` overrides one run and does not write the file. `language` is not a command you type on the shell. `9` exits from every list. `0` goes back only inside a submenu. The top list has no Back row. The line under the title is an independent `[INFO]` **logged in**, **timeout**, or **logged out**. On Termux/PRoot that line comes from local `auth.json` cookies (no `grok -p hello` wait). On other hosts it is a live `grok -p hello`; a hang that hits the bound prints **timeout**, not **logged out**. On a real terminal the descriptions after the colon are gray and italic. `setup` and `reinstall` are on the grok-auth list (**15** and **16**), not on the top list. Direct `grok-cli reinstall` still works. A later `sync-auth-from-remote` or `sync-auth-to-remote` remembers the last remote in persistence and offers it as the prompt default.
 
 ## Usage
 
 | How you run it | What you get |
 |----------------|--------------|
-| `grok-cli` or `grok-cli --debug` at a real terminal | Numbered start list (**1** grok-auth, **5** language, **7** sudoers, **8** self-management, **9** Exit; no Back on that list; this-login-only shows **2** run and hides sudoers; **5** stays on every host; front **6** is not a row; **logged in** / **timeout** / **logged out** under the title from `grok -p hello`; Termux / Git Bash / Windows cmd hide backup / sync-auth / sudoers; logged-out session hides **11** `backup` and lists **12** `sync-auth-from-remote` and **13** `sync-auth` on a multi-user host; logged-in session hides **12** and **13** and lists **11** `backup`; `sync-auth-to-remote` is a typed command and is not a numbered row; each session appends its own not-available line; **9** leaves; **0** goes back only inside a submenu). Same as `grok-cli menu`. Overlay switches with no command still follow empty argv. |
+| `grok-cli` or `grok-cli --debug` at a real terminal | Numbered start list (**1** grok-auth, **5** sudoers, **6** self-management, **7** language, **9** Exit; no Back on that list; this-login-only shows **2** run and hides sudoers; **7** stays on every host; front **8** is not a row; **logged in** / **timeout** / **logged out** under the title from `grok -p hello`; Termux / Git Bash / Windows cmd hide backup / sync-auth / sudoers; logged-out session hides **11** `backup` and lists **12** `sync-auth-from-remote` and **13** `sync-auth` on a multi-user host; logged-in session hides **12** and **13** and lists **11** `backup`; `sync-auth-to-remote` is a typed command and is not a numbered row; each session appends its own not-available line; **9** leaves; **0** goes back only inside a submenu). Same as `grok-cli menu`. Overlay switches with no command still follow empty argv. |
 | `curl -fsSL … \| sh` or `grok-cli` in a script (no args) | Install-ensure: places `~/.local/bin/grok-cli` or reports already installed. **Not** help. **Not** the menu. |
 | `grok-cli help` or `grok-cli --json` (no command) | Help / JSON help. `--json` with no command is empty argv **special case**: JSON help even at a prompt |
 | `grok-cli menu` in a script | Help (the list is TTY-only) |
@@ -411,4 +450,4 @@ MIT License — see [`LICENSE.md`](./LICENSE.md).
 
 ## Last Update
 
-2026-10-10 — version **1.8.45**: logged out, the not-available line is `backup features are not available for logged-out environment.` Full history: [`CHANGELOG.md`](./CHANGELOG.md).
+2026-10-12 — version **1.8.46**: multi-user front is **1** grok-auth, **5** sudoers, **6** self-management, **7** language (**80** English through **92** Greek), **9** Exit. This-login-only lists **2** run and omits **5**. Front **8** is not a row. Full history: [`CHANGELOG.md`](./CHANGELOG.md).

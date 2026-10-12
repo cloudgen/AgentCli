@@ -45,7 +45,7 @@
 # Single-file ship unit under src/; local install to ~/.local/bin.
 #
 # APP NAME: hard-assign APP_NAME="grok-cli"
-# VERSION: hard-assign VERSION="1.8.45"
+# VERSION: hard-assign VERSION="1.8.46"
 #
 # =============================================================================
 set -u  # Treat unset variables as error (defensive)
@@ -61,7 +61,7 @@ APP_NAME="grok-cli"
 : "${SHORT_DESCRIPTION:=${APP_DESC}}"
 : "${DESCRIPTION:=POSIX /bin/sh CLI: install, uninstall, where-is-me, version, about, help, menu, version-check, self-update, self-uninstall, setup, update-grok, reinstall, run, check-session, backup, sync-auth, sync-auth-from-remote, sync-auth-to-remote, add-crontab, print-sudoers, print-sudoers-install-script, remove-project-sudoers, generate-sudoer-request, submit-sudoer-request, rc-test.}"
 # Product version SSOT (semver). Extractors use: grep '^VERSION="'
-VERSION="1.8.45"
+VERSION="1.8.46"
 : "${VERSION:=1.8.43}"
 APP_VERSION="${VERSION}"
 # Repository identity SSOT (git host owner/repo for project-repository alignment).
@@ -10301,7 +10301,7 @@ app_about_i18n() {
     out_empty_line
     out_info "$(app_menu_text about_useful)"
     out_info "   ${APP_NAME} help            → $(app_menu_text about_full_usage)"
-    out_info "   ${APP_NAME} menu            → 5 / 51-63"
+    out_info "   ${APP_NAME} menu            → 7 / 80-92"
     out_info "   ${APP_NAME} install"
     out_info "   ${APP_NAME} print-sudoers"
     out_info "   ${APP_NAME} generate-sudoer-request"
@@ -10317,16 +10317,17 @@ app_about_i18n() {
 # =============================================================================
 #
 # GENERAL PURPOSE:
-# Front row 5. Rows 51-63 save one of the thirteen codes and return to the
-# front board. 0 / q / empty / back returns without writing. 9 / exit / quit
-# and EOF leave the program (same as the other grok submenus). A bad pick
-# out_error and reprints this layer.
+# Front row 7. Rows 80-92 save one of the thirteen codes and return to the
+# front board. 70-79 and 93-98 stay reserved and are not printed. 0 / q /
+# empty / back returns without writing. 9 / exit / quit and EOF leave the
+# program (same as the other grok submenus). A bad pick out_error and
+# reprints this layer.
 #
 # ALIGNMENT:
 # - requirement-shell-cli-language.md
 # - requirement-shell-cli-default-interaction.md
 #
-# Last updated: 2026-10-02
+# Last updated: 2026-10-12
 # =============================================================================
 app_default_print_language_menu() {
     : "${APP_NAME:=grok-cli}"
@@ -10337,38 +10338,38 @@ app_default_print_language_menu() {
     else
         out_info "$(util_app_ident) — $(app_menu_text cat_language)"
     fi
-    out_menu_choice "51" "English" "$(app_menu_text lang_en_long)"
-    out_menu_choice "52" "简体中文" "$(app_menu_text lang_zh_hans_long)"
-    out_menu_choice "53" "繁體中文" "$(app_menu_text lang_zh_long)"
-    out_menu_choice "54" "Español" "$(app_menu_text lang_es_long)"
-    out_menu_choice "55" "العربية" "$(app_menu_text lang_ar_long)"
-    out_menu_choice "56" "Français" "$(app_menu_text lang_fr_long)"
-    out_menu_choice "57" "Português" "$(app_menu_text lang_pt_long)"
-    out_menu_choice "58" "Русский" "$(app_menu_text lang_ru_long)"
-    out_menu_choice "59" "Deutsch" "$(app_menu_text lang_de_long)"
-    out_menu_choice "60" "日本語" "$(app_menu_text lang_ja_long)"
-    out_menu_choice "61" "한국어" "$(app_menu_text lang_ko_long)"
-    out_menu_choice "62" "Nederlands" "$(app_menu_text lang_nl_long)"
-    out_menu_choice "63" "Ελληνικά" "$(app_menu_text lang_el_long)"
+    out_menu_choice "80" "English" "$(app_menu_text lang_en_long)"
+    out_menu_choice "81" "简体中文" "$(app_menu_text lang_zh_hans_long)"
+    out_menu_choice "82" "繁體中文" "$(app_menu_text lang_zh_long)"
+    out_menu_choice "83" "Español" "$(app_menu_text lang_es_long)"
+    out_menu_choice "84" "العربية" "$(app_menu_text lang_ar_long)"
+    out_menu_choice "85" "Français" "$(app_menu_text lang_fr_long)"
+    out_menu_choice "86" "Português" "$(app_menu_text lang_pt_long)"
+    out_menu_choice "87" "Русский" "$(app_menu_text lang_ru_long)"
+    out_menu_choice "88" "Deutsch" "$(app_menu_text lang_de_long)"
+    out_menu_choice "89" "日本語" "$(app_menu_text lang_ja_long)"
+    out_menu_choice "90" "한국어" "$(app_menu_text lang_ko_long)"
+    out_menu_choice "91" "Nederlands" "$(app_menu_text lang_nl_long)"
+    out_menu_choice "92" "Ελληνικά" "$(app_menu_text lang_el_long)"
     gc_menu_print_back
     gc_menu_print_exit
 }
 
 app_default_language_code() {
     case "${1-}" in
-        51|en|english|English) printf '%s' "en" ;;
-        52|zh-Hans|zh-hans|simplified-chinese|简体中文) printf '%s' "zh-Hans" ;;
-        53|zh-Hant|zh-hant|traditional-chinese|繁體中文) printf '%s' "zh-Hant" ;;
-        54|es|spanish|Español|español) printf '%s' "es" ;;
-        55|ar|arabic|العربية|عربي) printf '%s' "ar" ;;
-        56|fr|french|Français|français) printf '%s' "fr" ;;
-        57|pt|portuguese|Português|português|portugues) printf '%s' "pt" ;;
-        58|ru|russian|Русский|русский) printf '%s' "ru" ;;
-        59|de|german|Deutsch|deutsch) printf '%s' "de" ;;
-        60|ja|japanese|日本語) printf '%s' "ja" ;;
-        61|ko|korean|한국어) printf '%s' "ko" ;;
-        62|nl|dutch|Nederlands|nederlands) printf '%s' "nl" ;;
-        63|el|greek|Ελληνικά|ελληνικά) printf '%s' "el" ;;
+        80|en|english|English) printf '%s' "en" ;;
+        81|zh-Hans|zh-hans|simplified-chinese|简体中文) printf '%s' "zh-Hans" ;;
+        82|zh-Hant|zh-hant|traditional-chinese|繁體中文) printf '%s' "zh-Hant" ;;
+        83|es|spanish|Español|español) printf '%s' "es" ;;
+        84|ar|arabic|العربية|عربي) printf '%s' "ar" ;;
+        85|fr|french|Français|français) printf '%s' "fr" ;;
+        86|pt|portuguese|Português|português|portugues) printf '%s' "pt" ;;
+        87|ru|russian|Русский|русский) printf '%s' "ru" ;;
+        88|de|german|Deutsch|deutsch) printf '%s' "de" ;;
+        89|ja|japanese|日本語) printf '%s' "ja" ;;
+        90|ko|korean|한국어) printf '%s' "ko" ;;
+        91|nl|dutch|Nederlands|nederlands) printf '%s' "nl" ;;
+        92|el|greek|Ελληνικά|ελληνικά) printf '%s' "el" ;;
         *) return 1 ;;
     esac
 }
@@ -10405,7 +10406,7 @@ app_default_language_loop() {
             return 1
         fi
         unset _code
-        gc_menu_bad "${_pick}" "51-63, 0 back, 9 to leave"
+        gc_menu_bad "${_pick}" "80-92, 0 back, 9 to leave"
     done
 }
 
@@ -10414,27 +10415,28 @@ app_default_language_loop() {
 # =============================================================================
 #
 # GENERAL PURPOSE:
-# Top layer is 1 grok-auth, 5 language, 7 sudoers (multi-user),
-# 8 self-management. This-login-only hosts add 2 run and omit 7 sudoers.
-# Row 5 is on every host. Front 6 is not a row. Exit 9 is printed by the caller. The top list
-# has no Back row. Auth commands live under 1 (numbers 11-16).
+# Top layer is 1 grok-auth, 5 sudoers (multi-user), 6 self-management,
+# 7 language. This-login-only hosts add 2 run and omit 5 sudoers.
+# Row 7 is on every host. Front 3, 4, and 8 are not rows.
+# 3 and 4 stay reserved domain. Exit 9 is printed by the caller. The top
+# list has no Back row. Auth commands live under 1 (numbers 11-16).
 #
 # ALIGNMENT:
 # - requirement-shell-cli-default-interaction.md
 # - requirement-shell-cli-language.md
 #
-# Last updated: 2026-10-02
+# Last updated: 2026-10-12
 # =============================================================================
 gc_menu_main_rows() {
     printf '%s\n' "1 grok-auth"
     if gc_host_is_normal_user_only; then
         printf '%s\n' "2 run"
     fi
-    printf '%s\n' "5 language"
     if ! gc_host_is_normal_user_only; then
-        printf '%s\n' "7 sudoers"
+        printf '%s\n' "5 sudoers"
     fi
-    printf '%s\n' "8 self-management"
+    printf '%s\n' "6 self-management"
+    printf '%s\n' "7 language"
 }
 
 # gc_menu_auth_rows() - grok-auth submenu "NUMBER TOKEN" (fixed 11-16)
@@ -10467,13 +10469,15 @@ gc_menu_auth_rows() {
     printf '%s\n' "16 reinstall"
 }
 
-# gc_menu_self_rows() - self-management submenu "NUMBER TOKEN" (91-94)
+# gc_menu_self_rows() - self-management submenu "NUMBER TOKEN"
+# 64 version-check, 65 self-update, 66 self-uninstall, 68 where-is-me.
+# 61 install, 62 version, 63 about, and 67 self-install stay unprinted.
 # =============================================================================
 gc_menu_self_rows() {
-    printf '%s\n' "91 version-check"
-    printf '%s\n' "92 self-update"
-    printf '%s\n' "93 self-uninstall"
-    printf '%s\n' "94 where-is-me"
+    printf '%s\n' "64 version-check"
+    printf '%s\n' "65 self-update"
+    printf '%s\n' "66 self-uninstall"
+    printf '%s\n' "68 where-is-me"
 }
 
 # gc_menu_row_match() - Print the token when pick is its number or name
@@ -10668,7 +10672,7 @@ EOF
 # - requirement-shell-cli-default-interaction.md
 # - requirement-shell-internal-volatile-timer.md
 #
-# Last updated: 2026-09-07
+# Last updated: 2026-10-12
 # =============================================================================
 app_default_print_sudoers_menu() {
     : "${APP_NAME:=grok-cli}"
@@ -10687,17 +10691,17 @@ app_default_print_sudoers_menu() {
 
     util_int_timer_debug_begin "sudoers.rows"
     if gc_menu_lang_is_en; then
-        out_menu_choice "1" "generate-sudoer-request" "Write a JSON grant you can read"
-        out_menu_choice "2" "submit-sudoer-request" "Queue the JSON grant inbound"
-        out_menu_choice "3" "print-sudoers" "Emit sudoers draft"
-        out_menu_choice "4" "print-sudoers-install-script" "Write admin install script"
-        out_menu_choice "5" "remove-project-sudoers" "Remove sudoers draft only"
+        out_menu_choice "51" "generate-sudoer-request" "Write a JSON grant you can read"
+        out_menu_choice "52" "submit-sudoer-request" "Queue the JSON grant inbound"
+        out_menu_choice "53" "print-sudoers" "Emit sudoers draft"
+        out_menu_choice "54" "print-sudoers-install-script" "Write admin install script"
+        out_menu_choice "55" "remove-project-sudoers" "Remove sudoers draft only"
     else
-        out_menu_choice "1" "generate-sudoer-request" "$(app_menu_text long_generate)"
-        out_menu_choice "2" "submit-sudoer-request" "$(app_menu_text long_submit)"
-        out_menu_choice "3" "print-sudoers" "$(app_menu_text long_print)"
-        out_menu_choice "4" "print-sudoers-install-script" "$(app_menu_text long_script)"
-        out_menu_choice "5" "remove-project-sudoers" "$(app_menu_text long_remove)"
+        out_menu_choice "51" "generate-sudoer-request" "$(app_menu_text long_generate)"
+        out_menu_choice "52" "submit-sudoer-request" "$(app_menu_text long_submit)"
+        out_menu_choice "53" "print-sudoers" "$(app_menu_text long_print)"
+        out_menu_choice "54" "print-sudoers-install-script" "$(app_menu_text long_script)"
+        out_menu_choice "55" "remove-project-sudoers" "$(app_menu_text long_remove)"
     fi
     gc_menu_print_back
     gc_menu_print_exit
@@ -10880,7 +10884,7 @@ app_default_self_loop() {
         if app_default_run_self_pick "${_pick}"; then
             return 0
         fi
-        gc_menu_bad "${_pick}" "91-94, 0 back, 9 to leave"
+        gc_menu_bad "${_pick}" "64, 65, 66, 68, 0 back, 9 to leave"
     done
 }
 
@@ -10895,25 +10899,25 @@ app_default_self_loop() {
 # ALIGNMENT:
 # - requirement-shell-cli-default-interaction.md
 #
-# Last updated: 2026-08-23
+# Last updated: 2026-10-12
 # =============================================================================
 app_default_run_sudoers_pick() {
     _pick="${1:-}"
 
     case "${_pick}" in
-        1|generate-sudoer-request)
+        51|generate-sudoer-request)
             gc_generate_sudoer_request
             ;;
-        2|submit-sudoer-request)
+        52|submit-sudoer-request)
             gc_submit_sudoer_request
             ;;
-        3|print-sudoers)
+        53|print-sudoers)
             gc_print_sudoers
             ;;
-        4|print-sudoers-install-script)
+        54|print-sudoers-install-script)
             gc_print_sudoers_install_script
             ;;
-        5|remove-project-sudoers)
+        55|remove-project-sudoers)
             gc_remove_project_sudoers
             ;;
         *)
@@ -10935,7 +10939,7 @@ app_default_run_sudoers_pick() {
 # ALIGNMENT:
 # - requirement-shell-cli-default-interaction.md
 #
-# Last updated: 2026-09-13
+# Last updated: 2026-10-12
 # =============================================================================
 app_default_sudoers_loop() {
     : "${APP_NAME:=grok-cli}"
@@ -10966,7 +10970,7 @@ app_default_sudoers_loop() {
         if app_default_run_sudoers_pick "${_pick}"; then
             return 0
         fi
-        gc_menu_bad "${_pick}" "1-5, 0 back, 9 to leave"
+        gc_menu_bad "${_pick}" "51-55, 0 back, 9 to leave"
     done
 }
 
@@ -11097,9 +11101,9 @@ app_default() {
         QUIET=0
         export JSON QUIET
         if gc_host_is_normal_user_only; then
-            gc_menu_bad "${_pick}" "1, 2, 5, 8, or 9 to leave"
+            gc_menu_bad "${_pick}" "1, 2, 6, 7, or 9 to leave"
         else
-            gc_menu_bad "${_pick}" "1, 5, 7, 8, or 9 to leave"
+            gc_menu_bad "${_pick}" "1, 5, 6, 7, or 9 to leave"
         fi
     done
 }
@@ -11108,7 +11112,7 @@ app_default() {
 # app_help() - Usage (local Type 0 + domain)
 # =============================================================================
 #
-# Last updated: 2026-09-22
+# Last updated: 2026-10-12
 # =============================================================================
 app_help() {
     : "${SHORT_DESCRIPTION:=${APP_DESC:-Alternative online installer for xAI grok}}"
@@ -11275,7 +11279,7 @@ app_help() {
     out_info "Switches without a command (--debug, --quiet) still follow empty argv. ${APP_NAME} --json with no command is empty argv special case: JSON help (even on a TTY). Explicit help stays help."
     out_info "backup runs grok -p hello first, then passwordless sudo ${APP_NAME} backup (sudoer-adm)."
     out_info "sync-auth never uses sudo. Local install + sudoers is TEST MODE ONLY; prefer global."
-    out_info "Menu row 5 sets the display language (51 English through 63 Greek). GROK_CLI_LANG overrides this run and does not write the file."
+    out_info "Menu row 7 sets the display language (80 English through 92 Greek). GROK_CLI_LANG overrides this run and does not write the file."
 }
 
 # =============================================================================

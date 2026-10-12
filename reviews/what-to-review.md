@@ -4,8 +4,8 @@
 **Class:** software-development · domain SSOT present · **dual-mode** install (channel `curl\|sh` primary; checkout `install` secondary).  
 **Always load first:** `reviews/lessons.md`
 
-**Last plan update:** 2026-10-10 (logged-out auth **11** `sync-auth`, **12** `sync-auth-from-remote`; logged-in **11** `backup`)  
-**Ship unit VERSION:** 1.8.45  
+**Last plan update:** 2026-10-12 (front **7** language **80–92**; **5** sudoers **51–55**; **6** self-management **64** **65** **66** **68**; ship **1.8.46**)  
+**Ship unit VERSION:** 1.8.46  
 **Suite baseline:** `reviews/test-plan.md`
 
 ---
@@ -15,7 +15,7 @@
 | # | Check | Notes |
 |---|--------|--------|
 | P1 | Read `docs/requirements/index.md` | Class + architecture + shell + domain grok-cli + grok-auth-backup + three-layer |
-| P2 | Confirm ship unit `src/grok-cli` | `APP_NAME` / `VERSION` hard-assign (**1.8.45**) |
+| P2 | Confirm ship unit `src/grok-cli` | `APP_NAME` / `VERSION` hard-assign (**1.8.46**) |
 | P3 | Load `reviews/lessons.md` and re-check every open L-* | Mandatory (esp. **L-MAP-01** · **L-EXPOSE-01** · **L-SUDOERS-01/02** · **L-SUDOERS-06** · **L-OUTPUT-01** · **L-AUTH-01** · **L-PROMPT-CAPTURE-01** · **L-MENU-06**) |
 | P4 | Run `./tests/run.sh` | Record PASS/FAIL/SKIP; **must include TP-GROK-CLI-22e** and **TP-24*/25*** when generate/submit is in scope |
 | P5 | Confirm install **channel** | `SCRIPT_URL` default github raw `src/grok-cli`; companion `.sha256`; dual-mode matrix |
@@ -34,8 +34,8 @@
 | P18 | **`run` without auto-update** | Dispatcher `gc_run_grok`; inject `--no-auto-update`; `--json` fail-closed Next `run`; missing grok Next `setup`; dual mention grok-setup + CLI-interface + domain; TP-GROK-CLI-46 · TP-CLI-04 |
 | P18b | **TTY `setup` reinstall** | Already-installed TTY list keep / reinstall / Exit; `--json` skip; `--force` skips list; no `$()` of `prompt_ask`; no wipe of `auth.*`; TP-VCLI-37..39 |
 | P18c | **`reinstall` verb + menu** | Routed Type 0; grok-auth **16**; missing grok still fetches; `auth.*` kept; JSON `reinstall`/`reinstalled`; `setup` is grok-auth **15**; TP-VCLI-40..42 · TP-CLI-31 |
-| P18c | **Invalid menu-choice retry** | Unused number / unknown name on the start list **and** the sudoers list: `[ERROR]`, reprint **this** layer, re-prompt; MUST NOT `out_die` / unknown argv; TP-CLI-30. Unused front integer is **4**. On Termux the unused integer that replaced language is **6**. Sudoers unused **6** stays |
-| P18d | **Menu language** | Front **5** on every host. Block **50–69**. Assigned **51** English through **63** Ελληνικά. **50** and **64–69** are not printed. Front **6** warns and does not write. Save `${HOME}/.local/grok-cli/language` mode 0600. `GROK_CLI_LANG` does not write. Human help and about follow the code. JSON and argv `version` stay English. `language` is not an argv verb. TP-CLI-32 · TP-CLI-13 · TP-CLI-19 · TP-CLI-20 |
+| P18c | **Invalid menu-choice retry** | Unused number / unknown name on the start list **and** the sudoers list: `[ERROR]`, reprint **this** layer, re-prompt; MUST NOT `out_die` / unknown argv; TP-CLI-30. Unused front integer is **4**. Front **8** is the unused integer that replaced the omitted sudoers row (**6** opens self-management). Sudoers unused child is **56** |
+| P18d | **Menu language** | Front **7** on every host. Assigned **80** English through **92** Ελληνικά. **70–79** and **93–98** are not printed. Front **8** warns and does not write. Save `${HOME}/.local/grok-cli/language` mode 0600. `GROK_CLI_LANG` does not write. Human help and about follow the code. JSON and argv `version` stay English. `language` is not an argv verb. TP-CLI-32 · TP-CLI-13 · TP-CLI-19 · TP-CLI-20 |
 | P19 | **Dest maps vs disk** | `AGENTS.md` + `docs/README.md` live inventory = this dest class/REQ/incident **file** count; no `/home/<login>/`; no phantom `incident-*.md`; **L-MAP-01** · **L-EXPOSE-01** · **INC-20260910-001** |
 
 ---

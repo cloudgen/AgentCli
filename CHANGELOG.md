@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.46] - 2026-10-12
+
+### Changed
+
+- **Menu numbers.** Front integers **1–4** stay the domain band. **1** is grok-auth. **2** run is this-login-only. **3** and **4** stay reserved. Multi-user front is **1** grok-auth, **5** sudoers (**51–55**), **6** self-management (**64** version-check, **65** self-update, **66** self-uninstall, **68** where-is-me), **7** language (**80** English through **92** Greek), **9** Exit. This-login-only omits **5** and lists **2** run. Front **8** is not a row. **70–79** and **93–98** stay reserved language slots. **61–63** and **67** stay unprinted. Law: `requirement-shell-cli-default-interaction` **2.27.0** · `requirement-shell-cli-language` **1.2.0** · `requirement-shell-cli-interface` **2.15.7** · `requirement-domain-grok-cli` **1.10.4**. Suite **TP-CLI-13** · **TP-CLI-19** · **TP-CLI-20** · **TP-CLI-30** · **TP-CLI-32**.
+
 ## [1.8.45] - 2026-10-10
 
 ### Changed
