@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.47] - 2026-10-12
+
+### Added
+
+- **Shell startup files.** The family covers Linux bash, Alpine ash, macOS and Linux zsh, Fish, Termux, Git Bash, and Windows cmd / PowerShell User PATH. A missing `.profile` is generated (bash, zsh, and fish do not put PATH on that new file; ash does). A missing `.zshenv` is created when the shell is zsh. A missing `.zprofile` is created when the shell is zsh, with the same `~/.local/bin` PATH line, so a zsh login still sees it after `path_helper`. Setting `ZSHENV` alone does not create `.zprofile`. A bash-only login does not invent the zsh files. An existing note is appended, not replaced. `.zshrc` is not the PATH file. `grok-cli rc-test --file zprofile` writes a throw-away folder only. Law: `requirement-shell-startup-files` **1.0.0** · `requirement-shell-cli-interface` **2.15.8** · `requirement-shell-path-and-shell-support` **1.2.1** · `requirement-shell-zshenv` **1.0.1** · `requirement-shell-alpine` **1.0.1** · `requirement-shell-modular-function-design` **1.1.2** · `requirement-class-software-dev` **1.3.7**. Suite **TP-LC-43** · **TP-LC-44** · **TP-LC-45** · **TP-LC-46**.
+
 ## [1.8.46] - 2026-10-12
 
 ### Changed

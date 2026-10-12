@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-zshenv.md  
-**Status**: Active (Version 1.0.0)  
+**Status**: Active (Version 1.0.1)  
 **Area**: shell  
 **Key**: `requirement-shell-zshenv`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -8,7 +8,7 @@
 
 This file is the **topic-owner** for **zsh PATH** on grok-cli. After a **user-bin** install, a zsh login (macOS default, SSH `%` prompt, `zsh -c`) can run `grok-cli` and a `USER_BIN` grok symlink by name because `~/.zshenv` carries the shared `USER_BIN` line.
 
-It owns **zshenv path-ensure**: one shared `USER_BIN` export on `.zshenv` (`ZSHENV`). It does **not** write PATH to `.zshrc`. Bash PATH, Fish PATH, and profile-ensure stay on `requirement-shell-path-and-shell-support`. Peer grok’s `# >>> grok installer >>>` block for `~/.grok/bin` is a **second** directory; when `$SHELL` is zsh, that block **MUST** land on `.zshenv` too (dual mention `requirement-grok-setup`).
+It owns **zshenv path-ensure**: one shared `USER_BIN` export on `.zshenv` (`ZSHENV`). It does **not** write PATH to `.zshrc` and it does **not** write `.zprofile`. Login `.zprofile` is owned by `requirement-shell-startup-files`. Bash PATH, Fish PATH, and profile-ensure stay on `requirement-shell-path-and-shell-support`. Peer grok’s `# >>> grok installer >>>` block for `~/.grok/bin` is a **second** directory; when `$SHELL` is zsh, that block **MUST** land on `.zshenv` too (dual mention `requirement-grok-setup`).
 
 **Scope:** Which zsh file this product writes for PATH; create / append / no-op; `ZSHENV` env; `rc-test --file zshenv`; uninstall of this product’s stickers on `.zshenv` (and leftover `.zshrc` stickers).  
 **Out of scope (cited, not re-owned):** Bash / Fish / `.profile` (`requirement-shell-path-and-shell-support`); placing the binary (`requirement-shell-local-self-management` · `requirement-shell-online-install`); peer grok fetch (`requirement-grok-setup`).
@@ -270,6 +270,7 @@ Work claiming zsh PATH support for grok-cli is **not done** if any of the follow
 | `docs/requirements/requirement-shell-modular-function-design.md` | `path_add_zshenv` prefix |
 | `docs/requirements/requirement-grok-setup.md` | Vendor grok PATH block on `.zshenv` when `$SHELL` is zsh |
 | `docs/requirements/requirement-class-software-dev.md` | Leftover pointer |
+| `docs/requirements/requirement-shell-startup-files.md` | `.zprofile` PATH; this file does not write `.zprofile` |
 | `./src/grok-cli` | Implementation under test |
 
 ## Design-time verification
@@ -286,12 +287,23 @@ Work claiming zsh PATH support for grok-cli is **not done** if any of the follow
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`
 
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the family of files a POSIX-like shell reads at login or when a new session starts. `.zshenv` is the always-on member. `.zprofile` is the zsh login member and is not written by this file.
+
+**Human daily-life explanation:** The always-on light note is this file’s note. The zsh door note is hung by the family owner. This file does not invent that door note.
+
+**Daily-life example:** A zsh login gets “look in the side drawer” on the light. The door note is a sibling file.
+
 ## 7. Status history
 
 | Date | Status | Note |
 |------|--------|------|
 | 2026-09-17 | Active (1.0.0) | Independent zsh PATH owner: `.zshenv` instead of `.zshrc` |
+| 2026-10-12 | Active (1.0.1) | `.zprofile` **points** at `requirement-shell-startup-files`; this file still does not write `.zprofile` |
 
-**Last Updated**: 2026-09-17  
+**Last Updated**: 2026-10-12  
 **Owner**: grok-cli project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

@@ -5,6 +5,7 @@
 # requirement-shell-interactive-vs-noninteractive,
 # requirement-shell-path-and-shell-support (TP-LC-11..14, 20..22, 25..33, rc-test)
 # requirement-shell-zshenv (TP-LC-23, 24, 34, 35, 36, rc-test --file zshenv)
+# requirement-shell-startup-files (TP-LC-43..46, rc-test --file zprofile)
 # TP family: TP-LC-*
 # =============================================================================
 
@@ -461,6 +462,42 @@ run_test_local_lifecycle() {
     HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" sh "${CI_USER_BIN}/${APP_NAME}" uninstall --force >/dev/null 2>&1 || true
     ci_cleanup_env
 
+    # TP-LC-43 missing .zprofile when SHELL is zsh: create it with PATH; also .zshenv
+    ci_isolated_env
+    _path_line=$(ci_bashrc_path_line)
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" SHELL=/bin/zsh sh "${SCRIPT}" install >/dev/null 2>&1
+    assert_file_exists "TP-LC-43 created HOME/.zprofile" "${CI_HOME}/.zprofile"
+    assert_file_exists "TP-LC-43 created HOME/.zshenv" "${CI_HOME}/.zshenv"
+    _zp=$(cat "${CI_HOME}/.zprofile" 2>/dev/null || true)
+    _ze=$(cat "${CI_HOME}/.zshenv" 2>/dev/null || true)
+    assert_contains "TP-LC-43 zprofile PATH" "$_zp" "${_path_line}"
+    assert_contains "TP-LC-43 zshenv PATH" "$_ze" "${_path_line}"
+    assert_file_missing "TP-LC-43 did not invent .zshrc" "${CI_HOME}/.zshrc"
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" SHELL=/bin/zsh sh "${SCRIPT}" install >/dev/null 2>&1
+    _zp2=$(grep -F -c "${_path_line}" "${CI_HOME}/.zprofile" 2>/dev/null || true)
+    assert_eq "TP-LC-43 second install does not duplicate zprofile PATH" 1 "${_zp2}"
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" sh "${CI_USER_BIN}/${APP_NAME}" uninstall --force >/dev/null 2>&1 || true
+    ci_cleanup_env
+
+    # TP-LC-44 bash-only does not invent .zprofile or .zshenv
+    ci_isolated_env
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" SHELL=/bin/bash sh "${SCRIPT}" install >/dev/null 2>&1
+    assert_file_missing "TP-LC-44 did not invent HOME/.zprofile" "${CI_HOME}/.zprofile"
+    assert_file_missing "TP-LC-44 did not invent HOME/.zshenv" "${CI_HOME}/.zshenv"
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" sh "${CI_USER_BIN}/${APP_NAME}" uninstall --force >/dev/null 2>&1 || true
+    ci_cleanup_env
+
+    # TP-LC-45 existing .zprofile: append PATH, keep the old body
+    ci_isolated_env
+    printf '%s\n' "# user-kept-zprofile" > "${CI_HOME}/.zprofile"
+    _path_line=$(ci_bashrc_path_line)
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" SHELL=/bin/bash sh "${SCRIPT}" install >/dev/null 2>&1
+    _zp=$(cat "${CI_HOME}/.zprofile" 2>/dev/null || true)
+    assert_contains "TP-LC-45 kept existing body" "$_zp" "# user-kept-zprofile"
+    assert_contains "TP-LC-45 appended PATH" "$_zp" "${_path_line}"
+    HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" sh "${CI_USER_BIN}/${APP_NAME}" uninstall --force >/dev/null 2>&1 || true
+    ci_cleanup_env
+
     # rc-test routed --root (does not write HOME/.bashrc)
     ci_isolated_env
     CI_RCT=$(mktemp -d "${TMPDIR:-/tmp}/gc-rct.XXXXXX")
@@ -488,6 +525,14 @@ run_test_local_lifecycle() {
     assert_contains "TP-LC-40 ash fixture keeps body" "$_prof" "keep-existing-profile"
     assert_contains "TP-LC-40 ash fixture PATH" "$_prof" "export PATH="
     assert_file_missing "TP-LC-40 did not write HOME/.profile" "${CI_HOME}/.profile"
+    _out=$(HOME="${CI_HOME}" USER_BIN="${CI_USER_BIN}" SHELL=/bin/bash sh "${SCRIPT}" rc-test --root "${CI_RCT}" --file zprofile --case create 2>&1)
+    _ec=$?
+    assert_eq "TP-LC-46 rc-test zprofile exit 0" 0 "$_ec"
+    assert_file_exists "TP-LC-46 created fixture zprofile" "${CI_RCT}/.zprofile"
+    _zp=$(cat "${CI_RCT}/.zprofile" 2>/dev/null || true)
+    assert_contains "TP-LC-46 fixture PATH" "$_zp" "export PATH="
+    assert_file_missing "TP-LC-46 did not write HOME/.zprofile" "${CI_HOME}/.zprofile"
+    assert_contains "TP-LC-46 success text" "$_out" "rc-test zprofile create"
     rm -rf "${CI_RCT}"
     ci_cleanup_env
 }

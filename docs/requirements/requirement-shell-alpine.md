@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-alpine.md  
-**Status**: Active (Version 1.0.0)  
+**Status**: Active (Version 1.0.1)  
 **Area**: shell  
 **Key**: `requirement-shell-alpine`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -114,13 +114,25 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 | `requirement-shell-path-and-shell-support.md` | Orchestrator; bash source-bashrc block; not the ash PATH line |
 | `requirement-shell-cli-interface.md` | `rc-test --file ash` dual mention |
 | `requirement-shell-zshenv.md` | Zsh peer; does not own `.profile` |
+| `requirement-shell-startup-files.md` | Family matrix names this file’s missing-`.profile` row; ash PATH stays here |
 | `src/grok-cli` | `path_invoking_is_ash`, `path_add_profile_ash` |
+
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the family a shell reads at login or session start. On Alpine ash the file is `.profile`.
+
+**Human daily-life explanation:** Ash hangs the door note and writes the drawer line on it. Bash hangs the same kind of note without that line.
+
+**Daily-life example:** A missing `.profile` on Alpine gets both the source note and `~/.local/bin`. A missing `.profile` on bash gets the source note only.
 
 ## 7. Status history
 
 | Date | Status | Note |
 |------|--------|------|
 | 2026-09-22 | Active (1.0.0) | Ash `$0` (and Alpine `sh`) writes `USER_BIN` PATH into `.profile` |
+| 2026-10-12 | Active (1.0.1) | Family matrix **points** at `requirement-shell-startup-files`; ash PATH stays here |
 
 ## Design-time verification
 
@@ -136,6 +148,6 @@ When grok-cli runs on Termux, Git Bash, Windows cmd, or the same class (this log
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`.
 
-**Last Updated**: 2026-09-22 (1.0.0 — ash PATH on `.profile`)  
+**Last Updated**: 2026-10-12 (1.0.1 — family pointer; ash PATH unchanged)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

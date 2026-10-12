@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-path-and-shell-support.md  
-**Status**: Active (Version 1.2.0 – ash PATH points at alpine)  
+**Status**: Active (Version 1.2.1 – startup-file family points at requirement-shell-startup-files)  
 **Area**: shell  
 **Key**: `requirement-shell-path-and-shell-support`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -11,7 +11,7 @@ This file is the **topic-owner** for **shell-rc** edits on grok-cli: after a **u
 It owns **path-ensure** (one shared `USER_BIN` line on interactive rc) and **profile-ensure** (create `~/.profile` if missing so a login shell sources `.bashrc`). It also owns **sibling unify** so another similar CLI does not, *by design*, make `.bashrc` non-compliant; **heal** on every user-bin `install` / channel ensure / `self-update` (including already-installed skip); **scoped uninstall**; and **detect** via a Type 0 `rc-test` (not a lock on the file).
 
 **Scope:** Which rc files this product writes; the exact PATH line; create / append / no-op; profile create-if-absent; write-path env; sibling comments; uninstall of **this** product’s stickers; fixture tests; `rc-test`.  
-**Out of scope (cited, not re-owned):** Placing or removing the binary (`requirement-shell-local-self-management` · `requirement-shell-online-install` · `requirement-shell-self-management`); peer grok vendor PATH block for `~/.grok/bin` (`requirement-grok-setup`); Termux host writing (`requirement-shell-termux-coding`); scratch/cache (`requirement-shell-cli-storage`); ash PATH on `.profile` (`requirement-shell-alpine`).
+**Out of scope (cited, not re-owned):** Placing or removing the binary (`requirement-shell-local-self-management` · `requirement-shell-online-install` · `requirement-shell-self-management`); peer grok vendor PATH block for `~/.grok/bin` (`requirement-grok-setup`); Termux host writing (`requirement-shell-termux-coding`); scratch/cache (`requirement-shell-cli-storage`); ash PATH on `.profile` (`requirement-shell-alpine`); the startup-file family and `.zprofile` (`requirement-shell-startup-files`).
 
 **Not claimed:** login-review hook; Type 1 `setup` `chown` of another login’s rc; `/etc/environment`; crontab.
 
@@ -153,7 +153,7 @@ grok-cli rc-test --root "$tmpdir" --file profile --case create
 | Flag | Meaning |
 |------|---------|
 | `--root` | Fixture directory (tmp/cache). Keep real `HOME`. |
-| `--file` | `bashrc` \| `zshenv` \| `profile` (Fish when claimed). **`zshrc` MUST fail closed** (Next: `--file zshenv`; owner `requirement-shell-zshenv`) |
+| `--file` | `bashrc` \| `zshenv` \| `zprofile` \| `profile` (Fish when claimed) \| `ash`. **`zshrc` MUST fail closed** (Next: `--file zshenv`; zsh PATH is `.zshenv` and `.zprofile`; `.zprofile` owner `requirement-shell-startup-files`) |
 | `--case` | `create` \| `modify` \| `noop` |
 | `--feature` | Optional: `path-ensure` \| `profile-ensure` (default from `--file`) |
 
@@ -167,13 +167,14 @@ Help **MUST** list `rc-test` under a heading **apart** from operational verbs (i
 |----------|---------|-------|
 | `BASHRC` | `${HOME}/.bashrc` | Fixture file; **MUST** honor a non-empty override |
 | `ZSHENV` | `${HOME}/.zshenv` | Fixture; honor override — **owner `requirement-shell-zshenv`** |
+| `ZPROFILE` | `${HOME}/.zprofile` | Fixture; honor override — **owner `requirement-shell-startup-files`**. Do not default this before `path_add_zprofile` |
 | `ZSHRC` | `${HOME}/.zshrc` | Uninstall may still strip leftover grok-cli comments. PATH ensure **MUST NOT** write this file |
 | `FISH_CONFIG` | `${HOME}/.config/fish/config.fish` | Fixture; honor override when Fish PATH is claimed |
 | `PROFILE` | `${HOME}/.profile` | Fixture; honor override when profile-ensure is claimed |
 
 **MUST NOT** ignore a non-empty `BASHRC` (always write `${HOME}/.bashrc` instead). Same for `ZSHRC` / `FISH_CONFIG` / `PROFILE` when those helpers run.
 
-Helpers: `path_add_shell` (orchestrator), `path_add_bashrc`, `path_add_zshenv` (body: `requirement-shell-zshenv`), `path_add_fish`, `path_ensure_profile`, `path_rc_test`. Prefix ownership: `requirement-shell-modular-function-design`.
+Helpers: `path_add_shell` (orchestrator), `path_add_bashrc`, `path_add_zshenv` (body: `requirement-shell-zshenv`), `path_add_zprofile` (body: `requirement-shell-startup-files`), `path_add_fish`, `path_ensure_profile`, `path_rc_test`. Prefix ownership: `requirement-shell-modular-function-design`.
 
 ### 2.8 Implementation Notes (this project)
 
@@ -315,6 +316,7 @@ Work claiming PATH / login-rc support for grok-cli is **not done** if any of the
 | `docs/requirements/index.md` | Registry SSOT |
 | `docs/requirements/requirement-shell-cli-interface.md` | Dispatcher, `BASHRC` env, dual mention `install` / `rc-test` |
 | `docs/requirements/requirement-shell-zshenv.md` | Independent zsh PATH (`.zshenv`, not `.zshrc`); `path_add_zshenv` |
+| `docs/requirements/requirement-shell-startup-files.md` | Family matrix and `.zprofile` (`path_add_zprofile`); this file points |
 | `docs/requirements/requirement-shell-local-self-management.md` | Checkout place/remove; companion **call site** |
 | `docs/requirements/requirement-shell-online-install.md` | Channel place / already-installed skip **call site** |
 | `docs/requirements/requirement-shell-self-management.md` | `self-update` / `self-uninstall` **call site** |
@@ -343,11 +345,22 @@ Work claiming PATH / login-rc support for grok-cli is **not done** if any of the
 | **TP-LC-32** uninstall while `USER_BIN` still has a file | `tests/test_local_lifecycle.sh` | have |
 | **TP-LC-33** sudoer-cli login-hook block kept | `tests/test_local_lifecycle.sh` | have |
 | **TP-LC-23 / 24 / 34 / 35 / 36** zsh PATH | `tests/test_local_lifecycle.sh` | **pointed** — `requirement-shell-zshenv` |
+| **TP-LC-43 / 44 / 45 / 46** `.zprofile` and `rc-test --file zprofile` | `tests/test_local_lifecycle.sh` | **pointed** — `requirement-shell-startup-files` |
 | **TP-LC-25 / 26** `PROFILE` env create / keep-body | `tests/test_local_lifecycle.sh` | have |
 | **`rc-test`** routed `--root` | `tests/test_local_lifecycle.sh` | have |
 
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`
+
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the family of files a POSIX-like shell reads at login or when a new session starts. The family includes `.bashrc`, `.zshenv`, `.zprofile`, `.zshrc`, `.profile`, and Fish `config.fish` when claimed. Windows cmd and PowerShell User PATH are not files in this family.
+
+**Human daily-life explanation:** A shell startup file is one sticky note the kitchen reads at the door, when the light comes on, or at the desk. This file writes the bash desk note and hangs the door note. The zsh door note is another file’s job.
+
+**Daily-life example:** A second install does not write the drawer line twice on the bash desk note.
 
 ## 7. Status history
 
@@ -356,7 +369,8 @@ Work claiming PATH / login-rc support for grok-cli is **not done** if any of the
 | 2026-09-09 | Active (1.0.0) | Topic-owner: path-ensure + profile-ensure; sibling unify; scoped uninstall; heal on already-installed; routed `rc-test` |
 | 2026-09-17 | Active (1.1.0) | Zsh PATH **points** at `requirement-shell-zshenv` (`.zshenv`, not `.zshrc`) |
 | 2026-09-22 | Active (1.2.0) | Ash PATH **points** at `requirement-shell-alpine` (`.profile` when `$0` is ash) |
+| 2026-10-12 | Active (1.2.1) | `.zprofile` and the startup-file family **point** at `requirement-shell-startup-files`; `ZPROFILE`; `rc-test --file zprofile` |
 
-**Last Updated**: 2026-09-22  
+**Last Updated**: 2026-10-12  
 **Owner**: grok-cli project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

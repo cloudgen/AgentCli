@@ -33,6 +33,7 @@
 # - requirement-shell-path-and-shell-support.md  (PATH / profile / sibling unify / rc-test)
 # - requirement-shell-alpine.md  (ash $0 writes USER_BIN PATH into .profile)
 # - requirement-shell-zshenv.md  (zsh PATH on .zshenv, not .zshrc)
+# - requirement-shell-startup-files.md  (shell startup files; missing .profile / .zprofile / .zshenv)
 # - requirement-shell-termux-coding.md  (Termux/Android: PREFIX, pkg, noexec; not FHS)
 # - requirement-shell-internal-volatile-timer.md  (named volatile stages; --debug menu elapsed)
 # - requirement-grok-auth-backup.md  (session check + deposit + sync-auth ops)
@@ -45,7 +46,7 @@
 # Single-file ship unit under src/; local install to ~/.local/bin.
 #
 # APP NAME: hard-assign APP_NAME="grok-cli"
-# VERSION: hard-assign VERSION="1.8.46"
+# VERSION: hard-assign VERSION="1.8.47"
 #
 # =============================================================================
 set -u  # Treat unset variables as error (defensive)
@@ -61,7 +62,7 @@ APP_NAME="grok-cli"
 : "${SHORT_DESCRIPTION:=${APP_DESC}}"
 : "${DESCRIPTION:=POSIX /bin/sh CLI: install, uninstall, where-is-me, version, about, help, menu, version-check, self-update, self-uninstall, setup, update-grok, reinstall, run, check-session, backup, sync-auth, sync-auth-from-remote, sync-auth-to-remote, add-crontab, print-sudoers, print-sudoers-install-script, remove-project-sudoers, generate-sudoer-request, submit-sudoer-request, rc-test.}"
 # Product version SSOT (semver). Extractors use: grep '^VERSION="'
-VERSION="1.8.46"
+VERSION="1.8.47"
 : "${VERSION:=1.8.43}"
 APP_VERSION="${VERSION}"
 # Repository identity SSOT (git host owner/repo for project-repository alignment).
@@ -783,8 +784,87 @@ path_add_zshenv() {
     return 1
 }
 
-# path_add_zshrc is unused for PATH (zsh PATH is .zshenv). Kept as a no-op so
-# leftover callers cannot write .zshrc. ALIGNMENT: requirement-shell-zshenv.md
+# =============================================================================
+# path_add_zprofile() - Add ~/.local/bin to ~/.zprofile
+# =============================================================================
+#
+# GENERAL PURPOSE:
+# Appends the PATH export to ~/.zprofile (zsh login startup file).
+# Creates the file when zsh environment is detected or ZPROFILE is set.
+# Does not invent ${HOME}/.zprofile for a bash-only login with no override.
+# Does not replace an existing body. Setting ZSHENV alone is not enough.
+#
+# ALIGNMENT: requirement-shell-startup-files.md
+# Last reviewed: 2026-10-12
+# =============================================================================
+
+path_add_zprofile() {
+    _paz_explicit=0
+    if [ -n "${ZPROFILE+x}" ]; then
+        _paz_explicit=1
+    fi
+    : "${HOME:=/tmp}"
+    : "${USER_BIN:=${HOME}/.local/bin}"
+    : "${ZPROFILE:=${HOME}/.zprofile}"
+    : "${APP_NAME:=grok-cli}"
+    : "${VERSION:=0}"
+    : "${JSON:=0}"
+    _paz_zprofile="${ZPROFILE}"
+    _paz_path=$(printf 'export PATH="%s:$PATH"' "${USER_BIN}")
+    _paz_comment=$(printf '# Added by %s installer (%s)' "${APP_NAME}" "${VERSION}")
+    _paz_zsh_shell=0
+    case "$(basename "${SHELL:-}")" in
+        zsh) _paz_zsh_shell=1 ;;
+    esac
+    _paz_created=0
+
+    if [ ! -f "${_paz_zprofile}" ]; then
+        if [ "${_paz_explicit}" -eq 0 ] && [ "${_paz_zsh_shell}" -eq 0 ]; then
+            unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+            return 1
+        fi
+        if ! printf '# Zsh login rc created by %s installer (%s)\n' "${APP_NAME}" "${VERSION}" > "${_paz_zprofile}"; then
+            if [ "${JSON}" -eq 0 ]; then
+                out_warn "Could not create ${_paz_zprofile}. Next: create that file as this login, then re-run ${APP_NAME} install."
+            fi
+            unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+            return 1
+        fi
+        chmod 0644 "${_paz_zprofile}" 2>/dev/null || true
+        _paz_created=1
+        if [ "${JSON}" -eq 0 ]; then
+            out_plain "→ Created ${_paz_zprofile}"
+        fi
+    fi
+
+    if ! grep -qF "${_paz_path}" "${_paz_zprofile}" 2>/dev/null; then
+        printf "\n%s\n" "${_paz_comment}" >> "${_paz_zprofile}"
+        printf '%s\n' "${_paz_path}" >> "${_paz_zprofile}"
+        if [ "${JSON}" -eq 0 ]; then
+            out_plain "→ Added ${USER_BIN} to PATH for zsh (.zprofile)"
+        fi
+        unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+        return 0
+    fi
+    if ! grep -qF "${_paz_comment}" "${_paz_zprofile}" 2>/dev/null; then
+        printf "\n%s\n" "${_paz_comment}" >> "${_paz_zprofile}"
+        if [ "${JSON}" -eq 0 ]; then
+            out_plain "→ Noted ${APP_NAME} installer on zsh login PATH"
+        fi
+        unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+        return 0
+    fi
+    if [ "${_paz_created}" -eq 1 ]; then
+        unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+        return 0
+    fi
+    unset _paz_explicit _paz_zprofile _paz_path _paz_comment _paz_zsh_shell _paz_created
+    return 1
+}
+
+# path_add_zshrc is unused for PATH (zsh PATH is .zshenv and .zprofile).
+# Kept as a no-op so leftover callers cannot write .zshrc.
+# ALIGNMENT: requirement-shell-zshenv.md
 path_add_zshrc() {
     return 1
 }
@@ -878,6 +958,18 @@ path_add_shell() {
             shell_config="${ZSHENV:-${HOME}/.zshenv}"
         else
             shell_config="${shell_config} ${ZSHENV:-${HOME}/.zshenv}"
+        fi
+    fi
+
+    # Do not default ZPROFILE here: path_add_zprofile treats a set ZPROFILE
+    # as "zsh environment" (tests). Bash-only with no override must not invent.
+    # Setting ZSHENV alone does not create .zprofile.
+    if path_add_zprofile; then
+        added=1
+        if [ "$shell_config" = "N/A" ]; then
+            shell_config="${ZPROFILE:-${HOME}/.zprofile}"
+        else
+            shell_config="${shell_config} ${ZPROFILE:-${HOME}/.zprofile}"
         fi
     fi
 
@@ -1079,7 +1171,7 @@ path_rc_test() {
                 shift
                 ;;
             --file)
-                [ $# -ge 2 ] || out_die "rc-test --file requires bashrc|zshenv|profile|ash. Next: ${APP_NAME} rc-test --root \"\$tmpdir\" --file ash --case create"
+                [ $# -ge 2 ] || out_die "rc-test --file requires bashrc|zshenv|zprofile|profile|ash. Next: ${APP_NAME} rc-test --root \"\$tmpdir\" --file zprofile --case create"
                 _prt_file="$2"
                 shift
                 ;;
@@ -1103,11 +1195,11 @@ path_rc_test() {
         out_die "rc-test requires --root a tmp/cache folder. Next: ${APP_NAME} rc-test --root \"\$tmpdir\" --file bashrc --case create"
     fi
     case "${_prt_file}" in
-        bashrc|zshenv|profile|fish|ash) ;;
+        bashrc|zshenv|zprofile|profile|fish|ash) ;;
         zshrc)
-            out_die "rc-test zshrc is not claimed (zsh PATH is .zshenv). Next: ${APP_NAME} rc-test --root \"\$tmpdir\" --file zshenv --case create"
+            out_die "rc-test zshrc is not claimed (zsh PATH is .zshenv and .zprofile). Next: ${APP_NAME} rc-test --root \"\$tmpdir\" --file zshenv --case create"
             ;;
-        *) out_die "rc-test --file must be bashrc, zshenv, profile, ash, or fish" ;;
+        *) out_die "rc-test --file must be bashrc, zshenv, zprofile, profile, ash, or fish" ;;
     esac
     case "${_prt_case}" in
         create|modify|noop) ;;
@@ -1120,12 +1212,15 @@ path_rc_test() {
     _prt_home_bashrc="${HOME}/.bashrc"
     _prt_home_profile="${HOME}/.profile"
     _prt_home_zshenv="${HOME}/.zshenv"
+    _prt_home_zprofile="${HOME}/.zprofile"
     _prt_snap_b=""
     _prt_snap_p=""
     _prt_snap_z=""
+    _prt_snap_zp=""
     [ -f "${_prt_home_bashrc}" ] && _prt_snap_b=$(cat "${_prt_home_bashrc}" 2>/dev/null || true)
     [ -f "${_prt_home_profile}" ] && _prt_snap_p=$(cat "${_prt_home_profile}" 2>/dev/null || true)
     [ -f "${_prt_home_zshenv}" ] && _prt_snap_z=$(cat "${_prt_home_zshenv}" 2>/dev/null || true)
+    [ -f "${_prt_home_zprofile}" ] && _prt_snap_zp=$(cat "${_prt_home_zprofile}" 2>/dev/null || true)
 
     : "${USER_BIN:=${HOME}/.local/bin}"
     _prt_path=$(printf 'export PATH="%s:$PATH"' "${USER_BIN}")
@@ -1133,10 +1228,11 @@ path_rc_test() {
 
     BASHRC="${_prt_root}/.bashrc"
     ZSHENV="${_prt_root}/.zshenv"
+    ZPROFILE="${_prt_root}/.zprofile"
     ZSHRC="${_prt_root}/.zshrc"
     PROFILE="${_prt_root}/.profile"
     FISH_CONFIG="${_prt_root}/config.fish"
-    export BASHRC ZSHENV ZSHRC PROFILE FISH_CONFIG
+    export BASHRC ZSHENV ZPROFILE ZSHRC PROFILE FISH_CONFIG
 
     case "${_prt_file}" in
         bashrc)
@@ -1170,6 +1266,22 @@ path_rc_test() {
                     ;;
             esac
             path_add_zshenv || true
+            ;;
+        zprofile)
+            case "${_prt_case}" in
+                create) rm -f "${ZPROFILE}" ;;
+                modify)
+                    printf '%s\n' "# dongle-zprofile-keep" > "${ZPROFILE}"
+                    ;;
+                noop)
+                    {
+                        printf '%s\n' "# dongle-already-good"
+                        printf '%s\n' "${_prt_comment}"
+                        printf '%s\n' "${_prt_path}"
+                    } > "${ZPROFILE}"
+                    ;;
+            esac
+            path_add_zprofile || true
             ;;
         profile)
             case "${_prt_case}" in
@@ -1222,10 +1334,12 @@ path_rc_test() {
     _prt_now_b=""
     _prt_now_p=""
     _prt_now_z=""
+    _prt_now_zp=""
     [ -f "${_prt_home_bashrc}" ] && _prt_now_b=$(cat "${_prt_home_bashrc}" 2>/dev/null || true)
     [ -f "${_prt_home_profile}" ] && _prt_now_p=$(cat "${_prt_home_profile}" 2>/dev/null || true)
     [ -f "${_prt_home_zshenv}" ] && _prt_now_z=$(cat "${_prt_home_zshenv}" 2>/dev/null || true)
-    if [ "${_prt_now_b}" != "${_prt_snap_b}" ] || [ "${_prt_now_p}" != "${_prt_snap_p}" ] || [ "${_prt_now_z}" != "${_prt_snap_z}" ]; then
+    [ -f "${_prt_home_zprofile}" ] && _prt_now_zp=$(cat "${_prt_home_zprofile}" 2>/dev/null || true)
+    if [ "${_prt_now_b}" != "${_prt_snap_b}" ] || [ "${_prt_now_p}" != "${_prt_snap_p}" ] || [ "${_prt_now_z}" != "${_prt_snap_z}" ] || [ "${_prt_now_zp}" != "${_prt_snap_zp}" ]; then
         out_die "rc-test wrote this login's real home rc. Fixture --root only."
     fi
 
@@ -1280,6 +1394,7 @@ inst_self_uninstall_cleanup_path() {
     : "${USER_BIN:=${HOME}/.local/bin}"
     : "${BASHRC:=${HOME}/.bashrc}"
     : "${ZSHENV:=${HOME}/.zshenv}"
+    : "${ZPROFILE:=${HOME}/.zprofile}"
     : "${ZSHRC:=${HOME}/.zshrc}"
     : "${FISH_CONFIG:=${HOME}/.config/fish/config.fish}"
     : "${PROFILE:=${HOME}/.profile}"
@@ -1297,7 +1412,7 @@ inst_self_uninstall_cleanup_path() {
     _cup_path=$(printf 'export PATH="%s:$PATH"' "${USER_BIN}")
     _cup_fish=$(printf 'set -gx PATH %s $PATH' "${USER_BIN}")
     _cup_prefix="# Added by ${APP_NAME} installer"
-    for _cup_cfg in "${BASHRC}" "${ZSHENV}" "${ZSHRC}" "${FISH_CONFIG}" "${PROFILE}"; do
+    for _cup_cfg in "${BASHRC}" "${ZSHENV}" "${ZPROFILE}" "${ZSHRC}" "${FISH_CONFIG}" "${PROFILE}"; do
         [ -f "${_cup_cfg}" ] || continue
         _cup_tmp=$(mktemp "${EFFECTIVE_STORAGE_DIR:-/tmp}/${APP_NAME}.rc.XXXXXX" 2>/dev/null || mktemp)
         while IFS= read -r _cup_line || [ -n "${_cup_line}" ]; do

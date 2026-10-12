@@ -2,6 +2,7 @@
 
 | Date | Report | Scope | Verdict | Suite |
 |------|--------|-------|---------|-------|
+| 2026-10-12 | `reports/2026-10-12-shell-startup-files.md` | Shell startup files; `.zprofile` PATH; missing `.profile` / `.zshenv` / `.zprofile`; REQ 1.0.0; product **1.8.47**; TP-LC-43..46 | **Pass** | lifecycle PASS=129 FAIL=0 SKIP=0 |
 | 2026-10-02 | `reports/2026-10-02-language-menu-5.md` | Front **5** language; thirteen codes **51–63**; REQ language 1.1.0 · default-interaction 2.22.0 · interface 2.15.3 · TP-CLI-32 | **Pass** (language rows) | PASS=998 FAIL=56 SKIP=0 |
 | 2026-09-13 | `reports/2026-09-13-menu-invalid-choice-coverage.md` | Invalid pick retries every main-menu layer; REQ 2.15.0 · molds · TP-CLI-30 · CL | **Pass (findings closed)** | PASS=848 FAIL=0 SKIP=0 |
 | 2026-09-13 | `reports/2026-09-13-checklist-cli-default-interaction-invalid-choice.md` | Filled `CL-CLI-DEFAULT-INTERACTION` for invalid-choice retry at every menu layer | **Pass** | 1.8.32 |

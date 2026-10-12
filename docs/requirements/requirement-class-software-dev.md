@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-class-software-dev.md  
-**Status**: Active (Version 1.3.6 – leftover ash PATH points at alpine)  
+**Status**: Active (Version 1.3.7 – leftover startup-file family points at requirement-shell-startup-files)  
 **Area**: class  
 **Key**: `requirement-class-software-dev`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (CIAO = Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -162,6 +162,7 @@ A **lockfile** is a frozen list of dependency versions.
 | PATH / profile / shell-rc sibling unify | `requirement-shell-path-and-shell-support` | One shared `USER_BIN` PATH line on bash/Fish; create `.profile` if missing; do not duplicate |
 | Zsh PATH (`.zshenv`, not `.zshrc`) | `requirement-shell-zshenv` | Independent zsh always-on rc; do not duplicate |
 | Ash / Alpine PATH (`.profile` when `$0` is ash) | `requirement-shell-alpine` | Login ash reads `.profile`; do not duplicate |
+| Shell startup files (missing `.profile` / `.zprofile` / `.zshenv`; zsh login PATH on `.zprofile`) | `requirement-shell-startup-files` | Family matrix; do not duplicate `.zshenv` or ash `.profile` |
 | Login-review hook | **this file** (leftover) | **considered — no login-hook**. This product has no dest review scrap. **MUST NOT** plant one or strip another product’s hook |
 | Privilege layers + sudoers files (print / install / stop if not allowed) | `requirement-three-layer-privilege-model` | Daily work as yourself + a narrow `sudo grok-cli backup` grant (**Type 0** + **Type 1** deposit: Type 1 = the command changes the computer). §2.3 sudoers workflow is the SSOT |
 | JSON sudoer file (grant body) | `requirement-sudoer-json-file` | **JSON** = a structured text format. `{{PRJ_NAME}}` only; no `cp` / `mkdir` / OS-tool commands |
@@ -254,6 +255,16 @@ A **lockfile** is a frozen list of dependency versions.
 
 ---
 
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the family of notes a shell reads at login or when a session starts. This class file does not own that family.
+
+**Human daily-life explanation:** The class rulebook points at the kitchen-note owner. It does not copy every note.
+
+**Daily-life example:** A missing zsh door note is hung by `requirement-shell-startup-files`, not by this leftover list.
+
 ## 8. Status History
 
 | Date | Status | Note |
@@ -270,9 +281,10 @@ A **lockfile** is a frozen list of dependency versions.
 | 2026-09-09 | Active (1.3.4) | Leftover: PATH / profile / sibling unify → `requirement-shell-path-and-shell-support`; login-hook considered none |
 | 2026-09-17 | Active (1.3.5) | Leftover: zsh PATH → `requirement-shell-zshenv` (`.zshenv`, not `.zshrc`) |
 | 2026-09-22 | Active (1.3.6) | Leftover: ash / Alpine PATH → `requirement-shell-alpine` (`.profile` when `$0` is ash) |
+| 2026-10-12 | Active (1.3.7) | Leftover: shell startup files → `requirement-shell-startup-files` |
 
 ---
 
-**Last Updated**: 2026-09-22  
+**Last Updated**: 2026-10-12  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

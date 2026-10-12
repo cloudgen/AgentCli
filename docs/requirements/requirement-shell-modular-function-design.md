@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-modular-function-design.md  
-**Status**: Active (Version 1.1.1)  
+**Status**: Active (Version 1.1.2)  
 **Area**: shell  
 **Key**: `requirement-shell-modular-function-design`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -50,7 +50,7 @@ One file `src/grok-cli` with prefixes: `out_`, `inst_`, `app_`, `gc_` for grok a
 | `inst_` | Installation lifecycle | Local install/uninstall detect and place/remove | `inst_local_install`, `inst_local_uninstall`, `inst_is_installed` |
 | `util_` | General utilities | Path resolve, storage, safe helpers, named volatile internal-timer | `util_resolve_storage`, `util_get_install_bin_path`, `util_int_timer_start` |
 | `app_` | Cross-cutting CLI surface | Entry, dispatch, about/help/version/where-is-me | `app_main`, `app_about`, `app_help`, `app_version`, `app_where_is_me` |
-| `path_` | Shell PATH & environment | PATH + profile ensure after user install | `path_add_shell`, `path_add_bashrc`, `path_add_zshenv`, `path_ensure_profile`, `path_rc_test` |
+| `path_` | Shell PATH & environment | PATH + profile ensure after user install | `path_add_shell`, `path_add_bashrc`, `path_add_zshenv`, `path_add_zprofile`, `path_ensure_profile`, `path_rc_test` |
 | `prompt_` | Interactive prompts | TTY-safe confirmations | `prompt_yes_no` |
 | `gc_` | Domain business logic | Grok auth backup/sync + sudoers fragment | `gc_backup`, `gc_check_session`, `gc_sync_auth`, `gc_print_sudoers` |
 
@@ -159,15 +159,26 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 
 ---
 
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the notes a shell reads at start. `path_add_zprofile` is the helper that writes the zsh login note.
+
+**Human daily-life explanation:** Prefixes are labels on the drawers. The zsh door-note helper sits in the `path_` drawer next to the always-on helper.
+
+**Daily-life example:** You find `path_add_zprofile` by the `path_` label. The note it writes is still one login’s `.zprofile`.
+
 ## 7. Status history
 
 | Date | Status | Note |
 |------|--------|------|
 | 2026-08-03 | Active | Modular prefixes for folder-backup |
 | 2026-09-17 | Active (1.1.1) | `path_add_zshenv` listed (zsh PATH owner `requirement-shell-zshenv`) |
+| 2026-10-12 | Active (1.1.2) | `path_add_zprofile` listed (owner `requirement-shell-startup-files`) |
 
 ---
 
-**Last Updated**: 2026-09-17  
+**Last Updated**: 2026-10-12  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

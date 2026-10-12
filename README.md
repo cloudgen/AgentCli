@@ -1,6 +1,6 @@
 # grok-cli - Alternative online installer for xAI grok
 
-![Version](https://img.shields.io/badge/Version-1.8.46-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.8.47-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![CIAO](https://img.shields.io/badge/Philosophy-CIAO%20(Caution%20%E2%80%A2%20Intentional%20%E2%80%A2%20Anti--fragile%20%E2%80%A2%20Over--engineered)-purple.svg)](https://github.com/cloudgen/ciao)
 [![Stars](https://img.shields.io/github/stars/cloudgen/grok-cli?style=flat-square)](https://github.com/cloudgen/grok-cli)
@@ -62,13 +62,29 @@ grok-cli setup
 
 Then open a **new terminal** if this session cannot find `grok`, and run `grok login`.
 
-On **Alpine** the login shell is ash (`echo $0` prints `-ash`). If `~/.profile` is missing, install creates it: bash, zsh, and fish get a login note that sources `~/.bashrc`; ash gets that same note and also `~/.local/bin` on `PATH`. If `~/.profile` is already there, only ash adds the `PATH` line. Open a new login, or run `. ~/.profile`, before `grok-cli setup`. The shell that ran `curl | sh` does not inherit the new PATH by itself.
+On **Alpine** the login shell is ash (`echo $0` prints `-ash`). If `~/.profile` is missing, install creates it: bash, zsh, and fish get a login note that sources `~/.bashrc`; ash gets that same note and also `~/.local/bin` on `PATH`. If `~/.profile` is already there, only ash adds the `PATH` line. A zsh login also gets that PATH line on `~/.zshenv` (every start) and on `~/.zprofile` (login, after the system `path_helper`). A bash-only login does not invent those zsh files. A missing `.zshenv` or `.zprofile` is created when this shell is zsh. Open a new login, or run `. ~/.profile`, before `grok-cli setup`. The shell that ran `curl | sh` does not inherit the new PATH by itself.
+
+These lines are the program’s own messages. `$tmpdir` stands for a throw-away folder, not this login’s home. `$HOME` in the PATH lines is that folder’s home:
+
+```text
+$ grok-cli rc-test --root "$tmpdir/profile" --file profile --case create
+→ Created $tmpdir/profile/.profile (login shell sources ~/.bashrc)
+[OK] rc-test profile create under $tmpdir/profile
+$ grok-cli rc-test --root "$tmpdir/zshenv" --file zshenv --case create
+→ Created $tmpdir/zshenv/.zshenv
+→ Added $HOME/.local/bin to PATH for zsh (.zshenv)
+[OK] rc-test zshenv create under $tmpdir/zshenv
+$ grok-cli rc-test --root "$tmpdir/zprofile" --file zprofile --case create
+→ Created $tmpdir/zprofile/.zprofile
+→ Added $HOME/.local/bin to PATH for zsh (.zprofile)
+[OK] rc-test zprofile create under $tmpdir/zprofile
+```
 
 If grok already **runs** on this host, a real terminal offers keep / reinstall / Exit (pick **2** to install again). Scripts and `--json` skip. `--force` skips the list.
 
 ```text
 $ grok-cli setup
-[INFO] **grok-cli**(*1.8.46*) — setup
+[INFO] **grok-cli**(*1.8.47*) — setup
 [INFO] grok is already installed at ~/.grok/bin/grok.
 1. keep: Leave the existing grok
 2. reinstall: Remove existing grok and install again
@@ -138,7 +154,7 @@ After install, on a terminal:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.47*) — Alternative online installer for xAI grok
 [INFO] logged out
 [INFO] backup features are not available for logged-out environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
@@ -164,7 +180,7 @@ On Termux / Git Bash / Windows cmd, **backup**, **sync-auth**, and **sudoers** a
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.47*) — Alternative online installer for xAI grok
 [INFO] logged out
 [INFO] backup, sync-auth and sudoers features are not available in termux.
 [INFO] backup features are not available for logged-out environment.
@@ -179,7 +195,7 @@ Live capture on a multi-user host that is **logged in**:
 
 ```text
 $ grok-cli menu
-[INFO] **grok-cli**(*1.8.46*) — Alternative online installer for xAI grok
+[INFO] **grok-cli**(*1.8.47*) — Alternative online installer for xAI grok
 [INFO] logged in
 [INFO] sync-auth and sync-auth-from-remote features are not available for logged-in environment.
 1. grok-auth: *Backup, sync, crontab, setup, and reinstall*
@@ -366,7 +382,7 @@ Studied from `https://x.ai/cli/install.sh` and `https://x.ai/cli/install.ps1`. g
 | Step | Linux `install.sh` | Termux grok-cli | PowerShell `install.ps1` | Git Bash grok-cli |
 |------|--------------------|-----------------|--------------------------|-------------------|
 | PATH now | symlink into `~/.local/bin` or `/usr/local/bin` if already on PATH | same + `${PREFIX}/bin` candidate | **User** `Path` + this session | **no** USER_BIN symlink (like official `install.sh` on windows) |
-| PATH later | `# >>> grok installer >>>` in bash/zsh/fish rc | bash `~/.bashrc`; zsh `~/.zshenv` (not `.zshrc`) | User PATH (cmd + PowerShell) | bash `~/.bashrc` vendor block; zsh `~/.zshenv`; INFO for cmd/PowerShell User PATH |
+| PATH later | `# >>> grok installer >>>` in bash/zsh/fish rc | bash `~/.bashrc`; zsh `~/.zshenv` and login `~/.zprofile` (not `.zshrc`) | User PATH (cmd + PowerShell) | bash `~/.bashrc` vendor block; zsh `~/.zshenv` and `~/.zprofile`; INFO for cmd/PowerShell User PATH |
 
 Then `grok login` or `XAI_API_KEY`. On Termux prefer `grok-cli run` and `grok-cli update-grok` instead of grok’s own updater.
 
@@ -450,4 +466,4 @@ MIT License — see [`LICENSE.md`](./LICENSE.md).
 
 ## Last Update
 
-2026-10-12 — version **1.8.46**: multi-user front is **1** grok-auth, **5** sudoers, **6** self-management, **7** language (**80** English through **92** Greek), **9** Exit. This-login-only lists **2** run and omits **5**. Front **8** is not a row. Full history: [`CHANGELOG.md`](./CHANGELOG.md).
+2026-10-12 — version **1.8.47**: shell startup files set PATH on the right file for each shell. A zsh login gets the line on `~/.zshenv` and `~/.zprofile`. A missing `.profile`, `.zshenv`, or `.zprofile` is created when that shell owns it. Bash-only does not invent the zsh files. Multi-user front is **1** grok-auth, **5** sudoers, **6** self-management, **7** language (**80** English through **92** Greek), **9** Exit. This-login-only lists **2** run and omits **5**. Front **8** is not a row. Full history: [`CHANGELOG.md`](./CHANGELOG.md).

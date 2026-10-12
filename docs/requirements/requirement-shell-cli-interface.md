@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-shell-cli-interface.md  
-**Status**: Active (Version 2.15.7)  
+**Status**: Active (Version 2.15.8)  
 **Area**: shell  
 **Key**: `requirement-shell-cli-interface`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -8,7 +8,7 @@
 
 This requirement is the **project Single Source of Truth** for the **POSIX shell CLI interface** of grok-cli: command surface, privilege typing, global flags, dispatcher behavior, help/about contracts, and mode rules.
 
-It defines a **Type 0 shell CLI** with **dual-mode install** (channel `curl|sh` plus checkout `install`), **domain grok-auth** commands, **`setup`** (peer `grok` via the studied xAI procedure, not `install.sh`), and a **narrow elevated deposit** path. Empty argv: TTY menu; off-TTY Type O ensure. Full domain semantics live in `requirement-domain-grok-cli.md`. Peer grok install lives in `requirement-grok-setup.md`. Channel place lives in `requirement-shell-online-install.md`. PATH / profile / `rc-test` live in `requirement-shell-path-and-shell-support.md`. Zsh PATH (`.zshenv`, not `.zshrc`) lives in `requirement-shell-zshenv.md`.
+It defines a **Type 0 shell CLI** with **dual-mode install** (channel `curl|sh` plus checkout `install`), **domain grok-auth** commands, **`setup`** (peer `grok` via the studied xAI procedure, not `install.sh`), and a **narrow elevated deposit** path. Empty argv: TTY menu; off-TTY Type O ensure. Full domain semantics live in `requirement-domain-grok-cli.md`. Peer grok install lives in `requirement-grok-setup.md`. Channel place lives in `requirement-shell-online-install.md`. PATH / profile / `rc-test` live in `requirement-shell-path-and-shell-support.md`. Zsh PATH (`.zshenv`, not `.zshrc`) lives in `requirement-shell-zshenv.md`. The startup-file family and `.zprofile` live in `requirement-shell-startup-files.md`.
 
 ---
 
@@ -96,7 +96,7 @@ In JSON mode, help **MUST NOT** dump long human text; return a short structured 
 | *(no command token — empty argv; overlay flags such as `--debug` allowed)* | Type 0 | TTY → `app_default`; off-TTY → `inst_channel_ensure` | TTY numbered menu; off-TTY Type O ensure (**MUST NOT** help). `--json` no-command is 0-argv **special case** → JSON help (TTY and off-TTY) |
 | `install` | Type 0 | `inst_local_install` | Checkout copy of the running ship unit; idempotent unless `--force`. User-bin: **always** `inst_ensure_companion` (PATH + profile), including already-installed skip. Dual mention: `requirement-shell-local-self-management` · `requirement-shell-path-and-shell-support` |
 | `uninstall` | Type 0 | `inst_local_uninstall` | Remove managed binary; confirm unless `--force`. User-bin: PATH cleanup per `requirement-shell-path-and-shell-support` |
-| `rc-test` | Type 0 **test-purpose** | `path_rc_test` | Fixture create / modify / no-op against `--root` tmp/cache. **MUST NOT** write this login’s real `{{HOME}}/.bashrc` or `{{HOME}}/.zshenv`. Help lists this **apart** from operational verbs. Dual mention: `requirement-shell-path-and-shell-support` · `requirement-shell-zshenv` · `requirement-shell-alpine`. Samples: `grok-cli rc-test --root "$tmpdir" --file bashrc --case create` · `grok-cli rc-test --root "$tmpdir" --file zshenv --case create` · `grok-cli rc-test --root "$tmpdir" --file ash --case create`. `--file zshrc` **MUST** fail closed (Next: `--file zshenv`) |
+| `rc-test` | Type 0 **test-purpose** | `path_rc_test` | Fixture create / modify / no-op against `--root` tmp/cache. **MUST NOT** write this login’s real `{{HOME}}/.bashrc`, `{{HOME}}/.zshenv`, or `{{HOME}}/.zprofile`. Help lists this **apart** from operational verbs. Dual mention: `requirement-shell-path-and-shell-support` · `requirement-shell-zshenv` · `requirement-shell-alpine` · `requirement-shell-startup-files`. Samples: `grok-cli rc-test --root "$tmpdir" --file bashrc --case create` · `grok-cli rc-test --root "$tmpdir" --file zshenv --case create` · `grok-cli rc-test --root "$tmpdir" --file zprofile --case create` · `grok-cli rc-test --root "$tmpdir" --file ash --case create`. `--file zshrc` **MUST** fail closed (Next: `--file zshenv`; zsh PATH is `.zshenv` and `.zprofile`) |
 | `version-check` | Type 0 | `ver_check` | Compare local vs remote VERSION on `SCRIPT_URL` |
 | `self-update` | Type 0 | `inst_self_update` | Re-download from `SCRIPT_URL` when remote is newer (or `--force`). Proceeding first INFO: `Starting the self-update of {{APP_NAME}}({{local}}) to new version:{{remote}}...` |
 | `self-uninstall` | Type 0 | `inst_self_uninstall` | Remove managed binary (channel name; same dest as `uninstall`). User-bin PATH cleanup: `requirement-shell-path-and-shell-support` |
@@ -245,6 +245,7 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | `requirement-shell-path-and-shell-support` | PATH / profile; `BASHRC`; dual mention `rc-test` |
 | `requirement-shell-zshenv` | Zsh PATH on `.zshenv`; dual mention `rc-test --file zshenv` |
 | `requirement-shell-alpine` | Ash PATH on `.profile`; dual mention `rc-test --file ash` |
+| `requirement-shell-startup-files` | Startup-file family; `.zprofile` PATH; dual mention `rc-test --file zprofile` |
 | `requirement-shell-output-requirements` | `out_*` catalog |
 | `requirement-domain-grok-cli` | Domain four pillars |
 | `requirement-grok-setup` | Dual mention of `setup`, `update-grok`, `reinstall`, and `run` |
@@ -272,6 +273,16 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 
 **Matrix:** `reviews/requirement-test-matrix.md`  
 **Map:** `reviews/test-plan.md`
+
+## Terminologies
+
+### Shell startup files
+
+**Definition:** Shell startup files are the family of files a POSIX-like shell reads at login or when a new session starts. One member is a shell rc-file. The family includes `.bashrc`, `.zshenv`, `.zprofile`, `.zshrc`, `.profile` (and `.bash_profile` when that file wins first), plus Fish `config.fish` when claimed. Windows cmd and PowerShell User PATH are not files in this family.
+
+**Human daily-life explanation:** A shell startup file is one sticky note the kitchen reads when you unlock the door (login `.profile` / `.zprofile`), when the light comes on (`.zshenv`), or when you sit down (`.bashrc` / `.zshrc`). Putting `{{HOME}}/.local/bin` on PATH writes that line on the always-on light (`.zshenv`) and, for a zsh login, again on the zsh door note (`.zprofile`). A missing door note is hung before you leave. A bash-only kitchen does not invent the zsh notes.
+
+**Daily-life example:** `rc-test --file zprofile` hangs a throw-away zsh door note. This login’s real notes stay on the wall.
 
 ## 7. Status history
 
@@ -316,9 +327,10 @@ Detect: Termux — `uname` contains Android, or `PREFIX` / `TERMUX_VERSION` is s
 | 2026-10-10 | Active 2.15.5 | This-login-only menu follows default-interaction **2.25.0** (auth **11** and **13** omitted; auth **12** when logged out; `sync-auth-to-remote` is not a row) |
 | 2026-10-10 | Active 2.15.6 | Logged-out not-available line follows default-interaction **2.26.0** (`backup features are not available for logged-out environment.`) |
 | 2026-10-12 | Active 2.15.7 | Menu language is front **7** / assigned **80–92** (dual mention `requirement-shell-cli-language` **1.2.0**). Front **8** is not a row. |
+| 2026-10-12 | Active 2.15.8 | `rc-test --file zprofile`; dual mention `requirement-shell-startup-files` **1.0.0** |
 
 ---
 
-**Last Updated**: 2026-10-12 (2.15.7 — menu language is front **7** / assigned **80–92**; front **8** is not a row. 2.15.6 followed default-interaction **2.26.0**.)  
+**Last Updated**: 2026-10-12 (2.15.8 — `rc-test --file zprofile` dual mention. 2.15.7 was menu language front **7**.)  
 **Owner**: project maintainers  
 **Alignment**: Registry `docs/requirements/index.md`; **CIAO** (https://github.com/cloudgen/ciao); CIAO-Lite (https://github.com/cloudgen/ciao-lite).

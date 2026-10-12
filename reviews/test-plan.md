@@ -3,7 +3,7 @@
 Maps **TP-*** coverage to `tests/`.  
 **Suite entry:** `./tests/run.sh`  
 **Ship unit:** `src/grok-cli`  
-**Product VERSION:** 1.8.46  
+**Product VERSION:** 1.8.47  
 **Last plan update:** 2026-10-12  
 **Last suite run:** CLI surface only, 2026-10-10: `run_test_cli` PASS=491 FAIL=0 SKIP=0 (logged-out line is `backup features are not available for logged-out environment.`). Full suite was not re-run. Previous full run 2026-10-02 was PASS=998 FAIL=56 SKIP=0; those 56 fails were **TP-VCLI-19** through **TP-VCLI-36** (Termux/proot grok place and Windows `.exe` place).
 
@@ -117,7 +117,11 @@ Status: **have** = automated today · **todo** = needed · **optional** · **n/a
 | TP-LC-40 | `rc-test --file ash` writes the fixture `.profile` only | test_local_lifecycle | requirement-shell-alpine · requirement-shell-cli-interface | **have** |
 | TP-LC-41 | Missing `.profile` for bash, zsh, and fish is generated (source `.bashrc`) with no PATH export | test_local_lifecycle | requirement-shell-alpine · requirement-shell-path-and-shell-support | **have** |
 | TP-LC-42 | Existing `.profile` plus ash appends PATH and keeps the old body | test_local_lifecycle | requirement-shell-alpine | **have** |
-| rc-test | routed `--root` create; real home rc untouched | test_local_lifecycle | requirement-shell-path-and-shell-support · requirement-shell-cli-interface · requirement-shell-zshenv | **have** |
+| TP-LC-43 | Zsh creates missing `.zprofile` (and `.zshenv`); no `.zshrc`; second install does not duplicate PATH | test_local_lifecycle | requirement-shell-startup-files | **have** |
+| TP-LC-44 | Bash-only does not invent `.zprofile` or `.zshenv` | test_local_lifecycle | requirement-shell-startup-files | **have** |
+| TP-LC-45 | Existing `.zprofile` appends PATH and keeps the body | test_local_lifecycle | requirement-shell-startup-files | **have** |
+| TP-LC-46 | `rc-test --file zprofile --case create` writes the fixture only | test_local_lifecycle | requirement-shell-startup-files · requirement-shell-cli-interface | **have** |
+| rc-test | routed `--root` create (`bashrc`, `zshenv`, `zprofile`, `profile`, `ash`); real home rc untouched | test_local_lifecycle | requirement-shell-path-and-shell-support · requirement-shell-cli-interface · requirement-shell-zshenv · requirement-shell-startup-files | **have** |
 
 ### TP-VCLI (vendor peer grok installer)
 
