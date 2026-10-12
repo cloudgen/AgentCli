@@ -68,7 +68,7 @@ If grok already **runs** on this host, a real terminal offers keep / reinstall /
 
 ```text
 $ grok-cli setup
-[INFO] **grok-cli**(*1.8.45*) — setup
+[INFO] **grok-cli**(*1.8.46*) — setup
 [INFO] grok is already installed at ~/.grok/bin/grok.
 1. keep: Leave the existing grok
 2. reinstall: Remove existing grok and install again
