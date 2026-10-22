@@ -1,11 +1,19 @@
-# Requirement ↔ test matrix — grok-cli
+# Requirement ↔ test matrix — AgentCli
 
-**Updated:** 2026-10-12 (1.8.47 shell startup files: `.zprofile` PATH; missing `.profile` / `.zshenv` / `.zprofile`)  
-**Product VERSION:** 1.8.47
-**Suite:** `tests/run.sh`
+**Updated:** 2026-10-22. Python ship unit **1.2.0**. Suite `tests/run_python.sh` (62 tests OK). POSIX reference suite remains `tests/run.sh` against `src/grok-cli` **1.8.47**.  
+**Python rows:** `requirement-python-cli-interface`, `requirement-python-tui`, `requirement-python-cli-language`, `requirement-python-about`, `requirement-python-readme`, `requirement-python-packaging`, `requirement-python-cli-logging`, `requirement-python-oop`, `requirement-python-coding-style`, `requirement-python-error-handling`, `requirement-python-project-structure`, `requirement-grok-auth-backup`, `requirement-grok-setup`, `requirement-grok-crontab` → `tests/test_hello.py`, `tests/test_entry.py`, `tests/test_tui.py`, `tests/test_language.py`, `tests/test_about.py`, `tests/test_docs.py`, `tests/test_domain.py`, `tests/test_shell_startup.py`, `tests/test_storage.py`.
+
+**Product VERSION (shell reference):** 1.8.47  
+**Shell suite:** `tests/run.sh`
 
 | Requirement key | Area | TP families | Coverage notes |
 |-----------------|------|-------------|----------------|
+| requirement-python-cli-interface | python | TP-PY-ENTRY-01 · TP-CLI-04 · TP-CLI-08 | `main(argv, basedir, logdir)`; `opens_text_screen`; overlay `--quiet` on a terminal |
+| requirement-python-cli-logging | python | TP-PY-ENTRY-01 | `is_quiet` is `opens_text_screen`; identity lines sit in `main` |
+| requirement-python-oop | python | TP-PY-ENTRY-01 | `Cli(logger)` then `run(argv)` |
+| requirement-python-coding-style | python | TP-PY-ENTRY-01 · TP-CLI-12 | `main` does not publish; `mktemp` refuses `$$` |
+| requirement-python-error-handling | python | TP-PY-ENTRY-02 | `Output.error` / `ok` / quiet `info` |
+| requirement-python-project-structure | python | TP-PY-ENTRY-01 | `__main__.py` calls `sys.exit(main())` |
 | requirement-class-software-dev | class | TP-CLI-01, TP-CLI-11 | Syntax + stack residual; dual-mode; leftover points at Termux writing |
 | requirement-bootstrap-chain | architecture | TP-CLI-04, TP-CLI-10 · TP-ONL-* | Channel + checkout; selfmanaged hop |
 | requirement-project-folder | architecture | TP-LC-01, TP-GROK-CLI-07, TP-VCLI-15 | src ship unit; `/var/grok-cli` store; Termux `PREFIX` / `~/.grok/downloads` |

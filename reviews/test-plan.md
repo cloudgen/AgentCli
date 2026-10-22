@@ -1,6 +1,43 @@
-# Test plan — grok-cli
+# Test plan — AgentCli
 
 Maps **TP-*** coverage to `tests/`.  
+**Python suite entry:** `./tests/run_python.sh`  
+**Python ship unit:** `src/AgentCli` package **1.2.0**  
+**POSIX reference suite:** `./tests/run.sh` against `src/grok-cli` (grok-cli **1.8.47**)  
+**Last plan update:** 2026-10-22
+
+## Python ship unit (2026-10-22)
+
+Same TP identity. The Python suite does not renumber shell IDs. Rows below are the ones this conversion executes in unittest.
+
+| TP-ID | Intent | Python suite | Status |
+|-------|--------|--------------|--------|
+| TP-DOC-01 | README badge, headings, absolute screenshot URLs | `tests/test_docs.py` | **have** |
+| TP-ABOUT-01..16 | About page, host check, cache tiers, star box | `tests/test_about.py` | **have** |
+| TP-LANG-01 | Front row 7, codes 80–92, save, env override | `tests/test_language.py` | **have** |
+| TP-TUI-09..12 | Path label, wide columns, unavailable band, resize | `tests/test_tui.py` | **have** |
+| TP-LC-43..46 | zsh `.zprofile` / `.zshenv`, bash does not invent zsh files, rc-test | `tests/test_shell_startup.py` | **have** |
+| TP-CLI-12 | Cache tiers and silent preferred skip | `tests/test_storage.py` | **have** |
+| TP-CLI-04 / TP-CLI-08 | Unknown `join`, `list-videos`, `restore` | `tests/test_hello.py`, `tests/test_domain.py` | **have** |
+| TP-CLI-13 / TP-CLI-19 / TP-CLI-20 | Front rows, this-login-only hides sudoers, auth 11–16 | `tests/test_language.py`, `tests/test_hello.py` | **have** |
+| TP-GROK-CLI-09 / 22 | sync-auth skip when logged in; sudoer JSON is `backup` only | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-26..29 | add-crontab grant gate and idempotent install | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-30..34 | Four remote SPEC forms and fake scp/ssh | `tests/test_domain.py` | **have** |
+| TP-VCLI-01 | setup does not contain `install.sh` | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-46 | `run` inserts `--no-auto-update`; `update-grok` needs grok | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-22 (python) | sudoer submit queues `backup` only; a wider grant is refused; missing sudoer-cli fails closed | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-23 (python) | `remove-project-sudoers` deletes the user draft with `--force` and refuses `/etc` | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-15 (python) | `print-sudoers-install-script` writes the draft and an admin script; `sh -n` passes | `tests/test_domain.py` | **have** |
+| TP-GROK-CLI-03 (python) | `proot` on `PATH` reads nested auth cookies and does not start `grok -p hello` | `tests/test_domain.py` | **have** |
+| TP-PY-ENTRY-01 | `main(argv, basedir, logdir)` uses `opens_text_screen` as `is_quiet`, writes `Cli(logger)`, and calls `run(argv)`. Overlay `--quiet` opens the screen on a terminal | `tests/test_entry.py` | **have** |
+| TP-PY-ENTRY-02 | `Output.error` writes `ERROR:` and `Next:`. `--json` uses `out_error` on stderr. `info` stays silent when quiet | `tests/test_entry.py` | **have** |
+
+**Residual:** shell TP-CLI-25 menu elapsed lines and the live Termux grok place (TP-VCLI-19..36, including Windows `.exe` and heal-on-skip) stay on `tests/run.sh`. They were not re-run in this conversion. The Python wrapper still contains `proot-exit-reaper`, `--kill-on-exit`, and the `start-services.sh` bind. The live non-PRoot probe is a 14-second subprocess timeout.
+
+---
+
+# Historical plan — grok-cli shell reference
+
 **Suite entry:** `./tests/run.sh`  
 **Ship unit:** `src/grok-cli`  
 **Product VERSION:** 1.8.47  

@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-10-22
+
+### Added
+
+- **Python ship unit.** Package `AgentCli`, console `agent-cli`, module `python -m AgentCli`. The text menu comes from HelloTui: path line, local clock `HH:MM:SS`, rounded input box, status line, CJK columns, thirteen languages, system-log, pip self-management, typed `hello`, about, and Exit. The front board is the grok-cli main menu: **1** grok-auth, **5** sudoers, **6** self-management, **7** language (**80–92**), **9** Exit. This-login-only adds **2** run and hides **5**. Choosing a listed row runs that verb. Empty arguments on a terminal open the menu. Empty arguments off a terminal print help and return 0. Install is pip. `src/grok-cli` stays the POSIX behavior reference. Peer binary remains `grok`. Auth files remain under `~/.grok`. Deposit is `/var/agent-cli`.
+- **Sudoer handoff.** `submit-sudoer-request` queues a backup-only grant when `sudoer-cli` and a writable inbound directory are present, and it does not write `/etc`. `remove-project-sudoers --force` deletes the user draft and refuses `/etc`. `print-sudoers-install-script` writes that draft and an admin script. A host with `proot` on `PATH`, and Termux, read `~/.grok/auth.json` cookies and do not run `grok -p hello`.
+
+### Changed
+
+- **Public repository.** The project repository is https://github.com/cloudgen/AgentCli (`git@github.com:cloudgen/AgentCli.git`). The README Stars badge, clone command, screenshot hosts, and package homepage use that URL.
+
 ## [1.8.47] - 2026-10-12
 
 ### Added

@@ -1,12 +1,25 @@
 # Requirements index
 
-**Product:** grok-cli (POSIX `/bin/sh` CLI — grok auth backup to `/var/grok-cli` with narrow sudo deposit + unprivileged sync-auth; dual-mode install)  
-**Workspace state:** Specialized product law (left genesis); **software-development** class; bootstrap **cli-template → folder-backup → grok-cli** (domain) **plus** selfmanaged online package specialized onto grok-cli (channel `curl\|sh`).  
-**Updated:** 2026-10-12 (30 Active + 4 superseded; shell startup files 1.0.0; front **1** grok-auth, **5** sudoers (**51–55**), **6** self-management (**64**, **65**, **66**, **68**), **7** language (**80–92**), **9** Exit; this-login-only adds **2** run and omits **5**; front **8** is not a row; auth **11–16** unchanged; logged-out line names `backup`)
+**Product:** AgentCli (Python package and text menu). It installs and runs peer `grok`, and it backs up `~/.grok` auth files. Console script `agent-cli`. Deposit `/var/agent-cli`. Renamed from grok-cli.  
+**Workspace state:** Specialized product law. **software-development** class. Bootstrap is HelloTui (text menu) plus this tree's grok-cli domain law. Direction is those two into AgentCli only. Do not edit HelloTui. `src/grok-cli` remains the POSIX behavior reference. Package install is pip.  
+**Product version:** **1.2.0** (Python package). Shell reference notes below remain at grok-cli **1.8.47**.  
+**Updated:** 2026-10-22 (Python ship unit; front **1** grok-auth, **5** sudoers (**51–55**), **6** self-management (**64**, **65**, **66**, **68**), **7** language (**80–92**), **9** Exit; this-login-only adds **2** run and omits **5**; HelloTui path line, clock, input box, system-log, hello, and pip lifecycle stay)
 
 | ID / key | Title | Area | Status | Path | Updated |
 |----------|-------|------|--------|------|---------|
-| requirement-class-software-dev | Software-development class law + leftover stack (posix-sh, dual-mode); no dest approver / no dest fence; leftover PATH/profile → path-and-shell-support; leftover zsh PATH → zshenv; leftover ash PATH → alpine; leftover startup files → shell-startup-files | class | Active (1.3.7) | `requirement-class-software-dev.md` | 2026-10-12 |
+| requirement-class-software-dev | Software-development class law. Primary language Python package AgentCli. Shell family remains behavior law. No dest approver | class | Active (1.3.8) | `requirement-class-software-dev.md` | 2026-10-22 |
+| requirement-python-about | About page, host check, cache lines, star box | python | Active (1.2.0) | `requirement-python-about.md` | 2026-10-22 |
+| requirement-python-cli-interface | Typed verbs. Empty argv is the menu on a terminal and help off a terminal | python | Active (1.2.0) | `requirement-python-cli-interface.md` | 2026-10-22 |
+| requirement-python-cli-language | Menu language. Front row 7. Codes 80–92 | python | Active (1.2.0) | `requirement-python-cli-language.md` | 2026-10-22 |
+| requirement-python-cli-logging | ChronicleLogger construct in `def main` | python | Active (1.2.0) | `requirement-python-cli-logging.md` | 2026-10-22 |
+| requirement-python-coding-style | Python style. No vendor shell installer | python | Active (1.2.0) | `requirement-python-coding-style.md` | 2026-10-22 |
+| requirement-python-error-handling | Fail-closed errors and remote SPEC forms | python | Active (1.2.0) | `requirement-python-error-handling.md` | 2026-10-22 |
+| requirement-python-oop | Class map. One class in each module. No Join class | python | Active (1.2.0) | `requirement-python-oop.md` | 2026-10-22 |
+| requirement-python-packaging | pyproject, version 1.2.0, console script `agent-cli` | python | Active (1.2.0) | `requirement-python-packaging.md` | 2026-10-22 |
+| requirement-python-project-structure | `src/AgentCli` layout | python | Active (1.2.0) | `requirement-python-project-structure.md` | 2026-10-22 |
+| requirement-python-readme | Root README sections and absolute screenshot URLs | python | Active (1.2.0) | `requirement-python-readme.md` | 2026-10-22 |
+| requirement-python-tui | Text menu. Front 1, 5, 6, 7, 9. HelloTui frame kept. Menu rows run the verbs | python | Active (1.2.0) | `requirement-python-tui.md` | 2026-10-22 |
+| requirement-runtime-prerequisites | ChronicleLogger floor. curl when setup downloads. No root auto-install | runtime | Active (1.2.0) | `requirement-runtime-prerequisites.md` | 2026-10-22 |
 | requirement-bootstrap-chain | Bootstrap: cli-template → folder-backup → grok-cli (domain) + selfmanaged online package | architecture | Active (4.0.0) | `requirement-bootstrap-chain.md` | 2026-09-02 |
 | requirement-project-folder | Project layout (`src/`), install bins, `/var/grok-cli` deposit; Termux `PREFIX` / `~/.grok` classes; cache leaves point at `requirement-shell-cli-storage`; persistence `${HOME}/.local/${APP_NAME}` | architecture | Active (1.2.1) | `requirement-project-folder.md` | 2026-09-27 |
 | requirement-three-layer-privilege-model | Type 0 + narrow Type 1 `grok-cli backup`; sudoers emit + install-script; per-user fragments; grant is backup only; samples use `id -un`; staging cache points at storage 1.4.0 | architecture | Active (2.0.2) | `requirement-three-layer-privilege-model.md` | 2026-09-27 |
@@ -47,7 +60,9 @@
 |---------|---------------------|
 | Type O-P payload installer | **Absent** (script-alone only) |
 
-**Install mode:** **dual-mode** (primary online channel; secondary checkout `install`). Matrix on `requirement-shell-online-install`.
+**Install mode:** pip for this package (`self-install`, `self-update`, `self-uninstall`). Empty argv off a terminal prints help and returns 0. Peer `grok` is downloaded by `setup` with curl. This package does not run a vendor shell installer. The POSIX file `src/grok-cli` remains the behavior reference for the shell suite.
+
+**Menu:** Multi-user front rows are 1 grok-auth, 5 sudoers, 6 self-management, 7 language, 9 Exit. This-login-only shows 2 run and hides 5. Language codes are 80–92. `system-log` is a typed token. `hello` prints a welcome line and does not draw the menu. Choosing a listed row runs that verb.
 
 **Rules for agents:**
 

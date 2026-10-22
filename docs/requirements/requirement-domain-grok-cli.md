@@ -4,6 +4,8 @@
 **Key**: `requirement-domain-grok-cli`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
 
+> Ship unit (2026-10-22): Python package **AgentCli**, console script **`agent-cli`**, module `python -m AgentCli`. The product was renamed from grok-cli. Where this file names the product command `grok-cli`, the console script is `agent-cli`. The deposit directory in the package is `/var/agent-cli`. Peer binary remains `grok`. Auth files remain under `~/.grok`. Behavioral MUST rules below stay. Empty argv on a terminal opens the text menu. Empty argv with no terminal prints help and returns 0. Package install is pip. This file does not run a vendor shell installer.
+
 ## 1. Purpose
 
 This requirement is the **domain surface Single Source of Truth** for grok-cli: which **specialized CLI verbs** exist, what **help** and **about** must show, and how domain routing is labeled.

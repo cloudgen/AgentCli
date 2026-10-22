@@ -1,5 +1,7 @@
 **file**: docs/requirements/requirement-class-software-dev.md  
-**Status**: Active (Version 1.3.7 – leftover startup-file family points at requirement-shell-startup-files)  
+**Status**: Active (Version 1.3.8 – ship unit is the Python package AgentCli; shell family remains behavior law)  
+
+> Ship unit (2026-10-22): primary language is Python. Package **AgentCli**. Console script **`agent-cli`**. Bootstrap parent for the text menu is HelloTui. Domain behavior is the grok-cli shell law in this tree. `src/grok-cli` remains the POSIX behavior reference. The install story for this package is pip. HelloTui features that stay are the path line, the local clock, the rounded input box, the status line, display columns, thirteen languages, system-log, the welcome verb `hello`, pip self-management, and Exit. The front board is the grok-cli main menu.
 **Area**: class  
 **Key**: `requirement-class-software-dev`  
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (CIAO = Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -121,22 +123,22 @@ A **lockfile** is a frozen list of dependency versions.
 | **Project display name** | `grok-cli` |
 | **Project class** | software-development |
 | **Class requirement filename** | `requirement-class-software-dev.md` |
-| **Primary language(s)** | `posix-sh` (`/bin/sh`) |
-| **Language role** | primary only — one shell script file under `src/` |
+| **Primary language(s)** | Python 2.7+ (not 3.0–3.4). 3.x recommended. Package AgentCli |
+| **Language role** | primary — `src/AgentCli/`. `src/grok-cli` is the POSIX behavior reference, not the install story |
 | **Execution model** | **interpreted** — no compile step |
 | **Toolchain / interpreter** | POSIX `/bin/sh` (dash / bash-as-sh compatible subset); no compiler |
 | **Toolchain version policy** | **unconstrained** among POSIX sh implementations that pass product tests |
 | **Cross-compile in scope?** | no |
 | **Primary project/package tool** | **none** — no language module system; the source file is the program people install |
 | **Lockfile policy** | not used |
-| **Test runner** | POSIX shell test suite under `tests/` when present (for example `tests/run.sh`) |
+| **Test runner** | `tests/run_python.sh` (unittest). `tests/run.sh` still runs the POSIX reference suite |
 | **Linter/formatter** | none as a project rule (shellcheck is optional for maintainers) |
 | **Primary runtime / OS family** | POSIX Linux (and compatible UNIX where `/bin/sh`, `tar`, `gzip` / `tar -z`, and `mktemp` exist); **Termux / Android userspace** writing owned by `requirement-shell-termux-coding` |
 | **Architectures supported** | any architecture with POSIX sh and the external tools the script uses |
 | **Git surface** | used when the product is published |
 | **Ship unit / install** | yes — the **ship unit** (the program file people install) is `src/grok-cli` → `${USER_BIN}/grok-cli`; **dual-mode** (two install methods: primary `curl \| sh`; secondary checkout + `install`) |
 | **Product version SSOT** | `VERSION=` hard-assigned in `src/grok-cli` (do not pin an old number here) |
-| **Bootstrap origin** | sibling product **folder-backup**; chain: cli-template → folder-backup → grok-cli (domain retarget: keep the shell framework, change the product’s job) |
+| **Bootstrap origin** | HelloTui (text menu) plus this tree’s grok-cli domain law. Do not edit HelloTui. Do not reverse-copy AgentCli onto HelloTui |
 
 **Leftover-ownership table** (who owns each topic):
 

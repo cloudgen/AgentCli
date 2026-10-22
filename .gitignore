@@ -1,6 +1,6 @@
 # =============================================================================
 # .gitignore — skill-create-gitignore (+ skill-commit-check)
-# Product: grok-cli (specialized software-dev; local shell CLI)
+# Product: AgentCli (specialized software-dev; Python package, console agent-cli)
 # Docs: track docs/requirements/** ; ignore skills/incidents/terminologies/policies/templates
 # Track: README, CHANGELOG, LICENSE, SECURITY, src/, tests/, reviews/
 # Artifacts: universal compiled/temp/secrets/caches; shell run debris

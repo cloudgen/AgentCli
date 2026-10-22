@@ -1,6 +1,28 @@
-# Tests — grok-cli
+# Tests — AgentCli
 
-## Run
+## Python ship unit
+
+```sh
+./tests/run_python.sh
+# or
+PYTHONPATH=src python3 -m unittest discover -s tests
+```
+
+Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **1.2.0**, console `agent-cli`).
+
+| File | Focus |
+|------|--------|
+| `test_docs.py` | README badge, headings, absolute screenshot URLs |
+| `test_about.py` | About page, host check, cache tiers, star box |
+| `test_tui.py` | Path label, wide columns, unavailable band, resize |
+| `test_language.py` | Front row 7, codes 80–92, save, this-login-only |
+| `test_hello.py` | Welcome line, unknown `join` / `restore`, front row 1 |
+| `test_entry.py` | `main(argv, basedir, logdir)`, `opens_text_screen`, `Output` lines |
+| `test_domain.py` | Session, backup, sync, setup, crontab, sudoer handoff, `run` |
+| `test_shell_startup.py` | `.zprofile` / `.zshenv`, rc-test |
+| `test_storage.py` | Cache tiers and silent preferred skip |
+
+## POSIX reference
 
 ```sh
 ./tests/run.sh
@@ -32,7 +54,7 @@ Exit **0** when all assertions pass; **1** on failure; **2** if ship unit missin
 
 ## Ship unit under test
 
-`src/grok-cli`
+Python: `src/AgentCli`. POSIX reference: `src/grok-cli`.
 
 ## Maps
 

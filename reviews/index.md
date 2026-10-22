@@ -2,6 +2,8 @@
 
 | Date | Report | Scope | Verdict | Suite |
 |------|--------|-------|---------|-------|
+| 2026-10-22 | Law-mold sample alignment | Python molds `LM-PYTHON-CLI-INTERFACE` 1.4.5, `LM-PYTHON-CLASSES` 1.1.3, `LM-PYTHON-CODING-STYLE` 1.2.4, `LM-PYTHON-OUTPUT-REQUIREMENTS` 1.0.4, `LM-PYTHON-PROJECT-STRUCTURE` 1.0.3. Requirements filled from `cli.py` and `output.py`. TP-PY-ENTRY-01/02 | **Pass** | `tests/run_python.sh` 62 tests OK |
+| 2026-10-22 | `reports/2026-10-22-shell-to-python-agentcli.md` | Shell grok-cli → Python AgentCli. HelloTui frame kept. Main menu is the text menu. Domain verbs run | **Pass with residuals** | `tests/run_python.sh` 60 tests OK |
 | 2026-10-12 | `reports/2026-10-12-shell-startup-files.md` | Shell startup files; `.zprofile` PATH; missing `.profile` / `.zshenv` / `.zprofile`; REQ 1.0.0; product **1.8.47**; TP-LC-43..46 | **Pass** | lifecycle PASS=129 FAIL=0 SKIP=0 |
 | 2026-10-02 | `reports/2026-10-02-language-menu-5.md` | Front **5** language; thirteen codes **51–63**; REQ language 1.1.0 · default-interaction 2.22.0 · interface 2.15.3 · TP-CLI-32 | **Pass** (language rows) | PASS=998 FAIL=56 SKIP=0 |
 | 2026-09-13 | `reports/2026-09-13-menu-invalid-choice-coverage.md` | Invalid pick retries every main-menu layer; REQ 2.15.0 · molds · TP-CLI-30 · CL | **Pass (findings closed)** | PASS=848 FAIL=0 SKIP=0 |
