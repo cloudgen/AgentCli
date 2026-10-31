@@ -118,6 +118,8 @@ class TestWideColumns(unittest.TestCase):
                 row = rows.setdefault(y, {})
                 col = x
                 for char in text:
+                    if unicodedata.category(char) == "Cf":
+                        continue
                     wide = unicodedata.east_asian_width(char) in ("W", "F")
                     width = 2 if wide else 1
                     for offset in range(width):

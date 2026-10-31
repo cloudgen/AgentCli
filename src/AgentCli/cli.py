@@ -97,7 +97,7 @@ class Cli:
     AUTHOR_NAME = "cloudgen"
     AUTHOR_EMAIL = "wongcf22@gmail.com"
     HOMEPAGE = "https://github.com/cloudgen/AgentCli"
-    LAST_UPDATE = "2026-10-12"
+    LAST_UPDATE = "2026-10-31"
     DOWNLOAD_URL = ""
     BASIC_USAGE = "agent-cli"
 

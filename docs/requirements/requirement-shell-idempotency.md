@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-This requirement is the **project Single Source of Truth** for **idempotency (re-run safety)** of state-changing operations in the grok-cli POSIX shell CLI.
+This requirement is the **project Single Source of Truth** for **idempotency (re-run safety)** of state-changing operations in the grok-cli POSIX shell CLI. The Python package re-run rules are `requirement-python-idempotency`.
 
 **Informal formula:** for ensure-style operation *f* and system state *x*, **f(f(x)) ≈ f(x)** for the **desired outcome** (logs and timestamps may differ).
 

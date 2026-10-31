@@ -2,21 +2,25 @@
 
 **Product:** AgentCli (Python package and text menu). It installs and runs peer `grok`, and it backs up `~/.grok` auth files. Console script `agent-cli`. Deposit `/var/agent-cli`. Renamed from grok-cli.  
 **Workspace state:** Specialized product law. **software-development** class. Bootstrap is HelloTui (text menu) plus this tree's grok-cli domain law. Direction is those two into AgentCli only. Do not edit HelloTui. `src/grok-cli` remains the POSIX behavior reference. Package install is pip.  
-**Product version:** **1.2.0** (Python package). Shell reference notes below remain at grok-cli **1.8.47**.  
-**Updated:** 2026-10-22 (Python ship unit; front **1** grok-auth, **5** sudoers (**51–55**), **6** self-management (**64**, **65**, **66**, **68**), **7** language (**80–92**), **9** Exit; this-login-only adds **2** run and omits **5**; HelloTui path line, clock, input box, system-log, hello, and pip lifecycle stay)
+**Product version:** **1.2.1** (Python package). Shell reference notes below remain at grok-cli **1.8.47**.  
+**Updated:** 2026-10-31 (known-requirement consider: light actor table, Python debug catalog, Python storage, Python idempotency. Front menu law unchanged.)
 
 | ID / key | Title | Area | Status | Path | Updated |
 |----------|-------|------|--------|------|---------|
-| requirement-class-software-dev | Software-development class law. Primary language Python package AgentCli. Shell family remains behavior law. No dest approver | class | Active (1.3.8) | `requirement-class-software-dev.md` | 2026-10-22 |
+| requirement-class-software-dev | Software-development class law. Primary language Python package AgentCli. Shell family remains behavior law. No dest approver. Actor catalog points at the light table | class | Active (1.3.9) | `requirement-class-software-dev.md` | 2026-10-31 |
+| requirement-actor-role-subject | Who runs the CLI. Columns Actor, Role, Subject. No Approver column | architecture | Active (1.0.0) | `requirement-actor-role-subject.md` | 2026-10-31 |
 | requirement-python-about | About page, host check, cache lines, star box | python | Active (1.2.0) | `requirement-python-about.md` | 2026-10-22 |
 | requirement-python-cli-interface | Typed verbs. Empty argv is the menu on a terminal and help off a terminal | python | Active (1.2.0) | `requirement-python-cli-interface.md` | 2026-10-22 |
 | requirement-python-cli-language | Menu language. Front row 7. Codes 80–92 | python | Active (1.2.0) | `requirement-python-cli-language.md` | 2026-10-22 |
-| requirement-python-cli-logging | ChronicleLogger construct in `def main` | python | Active (1.2.0) | `requirement-python-cli-logging.md` | 2026-10-22 |
+| requirement-python-cli-logging | ChronicleLogger construct in `def main`. Debug catalog is the peer key | python | Active (1.2.1) | `requirement-python-cli-logging.md` | 2026-10-31 |
+| requirement-python-cli-debug | Debug switch and the four identity lines. Logging still calls `isDebug()` | python | Active (1.0.0) | `requirement-python-cli-debug.md` | 2026-10-31 |
 | requirement-python-coding-style | Python style. No vendor shell installer | python | Active (1.2.0) | `requirement-python-coding-style.md` | 2026-10-22 |
 | requirement-python-error-handling | Fail-closed errors and remote SPEC forms | python | Active (1.2.0) | `requirement-python-error-handling.md` | 2026-10-22 |
 | requirement-python-oop | Class map. One class in each module. No Join class | python | Active (1.2.0) | `requirement-python-oop.md` | 2026-10-22 |
-| requirement-python-packaging | pyproject, version 1.2.0, console script `agent-cli` | python | Active (1.2.0) | `requirement-python-packaging.md` | 2026-10-22 |
+| requirement-python-packaging | pyproject, version 1.2.1, console script `agent-cli` | python | Active (1.2.0) | `requirement-python-packaging.md` | 2026-10-31 |
 | requirement-python-project-structure | `src/AgentCli` layout | python | Active (1.2.0) | `requirement-python-project-structure.md` | 2026-10-22 |
+| requirement-python-cli-storage | Class `Storage` cache tiers and persistence. Shell storage stays the POSIX reference | python | Active (1.0.0) | `requirement-python-cli-storage.md` | 2026-10-31 |
+| requirement-python-idempotency | Python re-run safety. Backup overwrites the same `auth.*` names | python | Active (1.0.0) | `requirement-python-idempotency.md` | 2026-10-31 |
 | requirement-python-readme | Root README sections and absolute screenshot URLs | python | Active (1.2.0) | `requirement-python-readme.md` | 2026-10-22 |
 | requirement-python-tui | Text menu. Front 1, 5, 6, 7, 9. HelloTui frame kept. Menu rows run the verbs | python | Active (1.2.0) | `requirement-python-tui.md` | 2026-10-22 |
 | requirement-runtime-prerequisites | ChronicleLogger floor. curl when setup downloads. No root auto-install | runtime | Active (1.2.0) | `requirement-runtime-prerequisites.md` | 2026-10-22 |

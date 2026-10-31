@@ -2,11 +2,11 @@
 
 Maps **TP-*** coverage to `tests/`.  
 **Python suite entry:** `./tests/run_python.sh`  
-**Python ship unit:** `src/AgentCli` package **1.2.0**  
+**Python ship unit:** `src/AgentCli` package **1.2.1**  
 **POSIX reference suite:** `./tests/run.sh` against `src/grok-cli` (grok-cli **1.8.47**)  
-**Last plan update:** 2026-10-22
+**Last plan update:** 2026-10-31
 
-## Python ship unit (2026-10-22)
+## Python ship unit (2026-10-31)
 
 Same TP identity. The Python suite does not renumber shell IDs. Rows below are the ones this conversion executes in unittest.
 
@@ -31,6 +31,16 @@ Same TP identity. The Python suite does not renumber shell IDs. Rows below are t
 | TP-GROK-CLI-03 (python) | `proot` on `PATH` reads nested auth cookies and does not start `grok -p hello` | `tests/test_domain.py` | **have** |
 | TP-PY-ENTRY-01 | `main(argv, basedir, logdir)` uses `opens_text_screen` as `is_quiet`, writes `Cli(logger)`, and calls `run(argv)`. Overlay `--quiet` opens the screen on a terminal | `tests/test_entry.py` | **have** |
 | TP-PY-ENTRY-02 | `Output.error` writes `ERROR:` and `Next:`. `--json` uses `out_error` on stderr. `info` stays silent when quiet | `tests/test_entry.py` | **have** |
+| TP-DBG-01 | `DEBUG=1` on `version` prints the four identity lines in order. `main` calls `isDebug()` and does not read `DEBUG` | `tests/test_debug.py` | **have** |
+| TP-DBG-02 | With `DEBUG` unset, those four lines stay off the console | `tests/test_debug.py` | **have** |
+| TP-DBG-03 | A text-screen run keeps the catalog off the console. The daily file still has the four lines | `tests/test_debug.py` | **have** |
+| TP-ARS-01 | Actor table columns are Actor, Role, and Subject | `tests/test_actor.py` | **have** |
+| TP-ARS-02 | Help uses Subject None. `install` is on the placed-files row | `tests/test_actor.py` | **have** |
+| TP-ARS-03 | No requirement file adds an Approver column on this catalog | `tests/test_actor.py` | **have** |
+| TP-STO-01 | `storage.py` defines class `Storage` only. About lines name the cache used and persistence | `tests/test_storage.py` | **have** |
+| TP-IDEM-01 | A second backup replaces the same `auth.json` and does not create a dated tar | `tests/test_idempotency.py` | **have** |
+| TP-IDEM-02 | A second `self-install` returns success when `agent-cli` is already on PATH | `tests/test_idempotency.py` | **have** |
+| TP-IDEM-03 | `Storage.mktemp` refuses a suffix that contains `$$` | `tests/test_storage.py` | **have** |
 
 **Residual:** shell TP-CLI-25 menu elapsed lines and the live Termux grok place (TP-VCLI-19..36, including Windows `.exe` and heal-on-skip) stay on `tests/run.sh`. They were not re-run in this conversion. The Python wrapper still contains `proot-exit-reaper`, `--kill-on-exit`, and the `start-services.sh` bind. The live non-PRoot probe is a 14-second subprocess timeout.
 

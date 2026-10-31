@@ -1,6 +1,6 @@
 # AgentCli - Install and run xAI grok, and back up its auth files
 
-[![Version](https://img.shields.io/badge/Version-1.2.0-blue?style=flat-square)](https://github.com/cloudgen/AgentCli)
+[![Version](https://img.shields.io/badge/Version-1.2.1-blue?style=flat-square)](https://github.com/cloudgen/AgentCli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE.md)
 [![CIAO](https://img.shields.io/badge/CIAO-Defensive%20Programming-orange?style=flat-square)](https://github.com/cloudgen/ciao)
 [![Stars](https://img.shields.io/github/stars/cloudgen/AgentCli?style=flat-square)](https://github.com/cloudgen/AgentCli)
@@ -22,7 +22,7 @@ AgentCli installs and runs the peer binary `grok`, and it backs up `~/.grok` aut
 
 ## Advantages
 
-1. **Two ways to do the work.** A menu number and the same typed verb share one action. `agent-cli hello` prints `Welcome to AgentCli 1.2.0.` and does not draw the menu. With no arguments on a terminal, the text menu opens and waits. With no terminal and no verb, the program prints help and returns 0.
+1. **Two ways to do the work.** A menu number and the same typed verb share one action. `agent-cli hello` prints `Welcome to AgentCli 1.2.1.` and does not draw the menu. With no arguments on a terminal, the text menu opens and waits. With no terminal and no verb, the program prints help and returns 0.
 2. **Built-in languages.** Row **7** lists thirteen languages. The numbers are **80** through **92**. **70** through **79** and **93** through **98** stay unprinted so a later language can be added. The choice is saved for the next run. Leaf shorts stay English.
 3. **Cache and persistence.** Linux prefers `/dev/shm/cache`, then `/tmp/cache`, then a leaf under the home cache directory. A missed tier is silent. Persistence is `~/.local/agent-cli`. The about page names the tier this process selected.
 4. **A narrow root path.** The only elevated action is `agent-cli backup`, and only after an administrator installs a sudoers fragment whose argument is `backup`. Other verbs stay this login. Peer `grok` is fetched by `setup` from the vendor channel, then the public fallback. This package does not run a vendor shell installer.
@@ -47,7 +47,7 @@ AgentCli installs and runs the peer binary `grok`, and it backs up `~/.grok` aut
 pip install AgentCli
 ```
 
-This installs the console entry **`agent-cli`** and the package **`AgentCli`**. Packaging name SSOT is `pyproject.toml` `[project].name` = `AgentCli`. This tree is **1.2.0**. The PyPI badge above shows the live index. Nothing in this tree uploads a release by itself.
+This installs the console entry **`agent-cli`** and the package **`AgentCli`**. Packaging name SSOT is `pyproject.toml` `[project].name` = `AgentCli`. This tree is **1.2.1**. The PyPI badge above shows the live index. Nothing in this tree uploads a release by itself.
 
 From a checkout:
 
@@ -99,11 +99,11 @@ agent-cli self-install
 agent-cli self-uninstall --force
 ```
 
-`version` prints `AgentCli 1.2.0` and does not call pip. `about` shows one English page: the product identity, a host check of this computer, the cache tiers, the persistence folder, and a star box. It does not call pip. `hello` prints `Welcome to AgentCli 1.2.0.` and does not draw the menu. `help` prints usage.
+`version` prints `AgentCli 1.2.1` and does not call pip. `about` shows one English page: the product identity, a host check of this computer, the cache tiers, the persistence folder, and a star box. It does not call pip. `hello` prints `Welcome to AgentCli 1.2.1.` and does not draw the menu. `help` prints usage.
 
 `setup` downloads peer `grok` for this platform and links `~/.grok/bin/grok`. `backup` copies `auth.*` into `/var/agent-cli` when this login may run that one command as root. `sync-auth` copies the deposit back and skips that copy when grok is already signed in. `add-crontab` stays closed until the backup grant is present.
 
-`version-check` runs `python -m pip index versions AgentCli`. `self-update` runs `python -m pip install --upgrade AgentCli`. `self-install` runs `python -m pip install AgentCli`. `self-uninstall` runs `python -m pip uninstall -y AgentCli` and needs `--force` on the command line. Those pip verbs do not use sudo. Empty arguments do not install or update.
+`version-check` runs `python -m pip index versions AgentCli`. `self-update` runs `python -m pip install --upgrade AgentCli`. `self-install` runs `python -m pip install AgentCli` when `agent-cli` is not already on PATH. A second run succeeds and does not call pip again. `self-uninstall` runs `python -m pip uninstall -y AgentCli` and needs `--force` on the command line. Those pip verbs do not use sudo. Empty arguments do not install or update.
 
 `agent-cli install` writes this login's shell startup files so `~/.local/bin` is on PATH. A zsh login gets that line on `.zshenv` and again on `.zprofile`. A bash-only login does not invent those zsh files. `.zshrc` is not a PATH file. `agent-cli rc-test` is test-purpose: it writes only under `--root` and leaves this login's real notes still. `agent-cli uninstall --force` may remove this product's installer stickers and does not delete the files.
 
@@ -114,7 +114,7 @@ main()
 
 ## Screenshots
 
-Each heading is the file name. The paragraph is what that picture shows. Package **1.2.0**. On these captures the path is `/tmp/agent-cli-shots` and the clock is `12:06:45`. Under the rounded input box, three light rows show the logged-out sentence `backup features are not available for logged-out environment.` The status line starts with `AgentCli 1.2.0`. Leaf shorts stay English. **1 grok-auth** is highlighted on each main menu.
+Each heading is the file name. The paragraph is what that picture shows. Package **1.2.1**. On these captures the path is `/tmp/agent-cli-shots` and the clock is `12:06:45`. Under the rounded input box, three light rows show the logged-out sentence `backup features are not available for logged-out environment.` The status line starts with `AgentCli 1.2.1`. Leaf shorts stay English. **1 grok-auth** is highlighted on each main menu.
 
 ### `language-menu.png`
 
@@ -226,7 +226,7 @@ Row **5** has opened sudoers. The rows are **51 generate-sudoer-request**, **52 
 
 ### `tui-about.png`
 
-**about** on the result page. The title is `AgentCli (1.2.0) — result`. The page prints `AgentCli 1.2.0`, `Domain: Install and run xAI grok, and back up its auth files.`, `Runtime tools: curl, grok`, and `Entry points: agent-cli, python -m AgentCli`. The host check is headed `[CHECK SYSTEM]:` and includes the cache lines. The footer says `Up/Down scrolls this page.` and `Press a key to return to the main menu.` There is no input box and no clock. The page stays in English.
+**about** on the result page. The title is `AgentCli (1.2.1) — result`. The page prints `AgentCli 1.2.1`, `Domain: Install and run xAI grok, and back up its auth files.`, `Runtime tools: curl, grok`, and `Entry points: agent-cli, python -m AgentCli`. The host check is headed `[CHECK SYSTEM]:` and includes the cache lines. The footer says `Up/Down scrolls this page.` and `Press a key to return to the main menu.` There is no input box and no clock. The page stays in English.
 
 ![About page with cache lines](https://raw.githubusercontent.com/cloudgen/AgentCli/main/screenshots/tui-about.png)
 
@@ -240,13 +240,13 @@ agent-cli about
 agent-cli setup
 ```
 
-`version` prints `AgentCli 1.2.0` and does not call pip. A run that is not the text menu can also print ChronicleLogger status lines above that. The text menu keeps those lines off the screen.
+`version` prints `AgentCli 1.2.1` and does not call pip. A run that is not the text menu can also print ChronicleLogger status lines above that. The text menu keeps those lines off the screen.
 
 ```bash
 agent-cli hello
 ```
 
-That prints `Welcome to AgentCli 1.2.0.` and does not draw the menu.
+That prints `Welcome to AgentCli 1.2.1.` and does not draw the menu.
 
 ## Platform Compatibility
 
@@ -278,4 +278,4 @@ Copyright (c) 2026 cloudgen.
 
 ## Last Update
 
-2026-10-22 — **1.2.0**. `submit-sudoer-request` queues a backup-only grant when sudoer-cli and the inbound directory are present, and it does not write `/etc`. `remove-project-sudoers --force` deletes the user draft. `print-sudoers-install-script` writes that draft and an admin script. A host with `proot` on `PATH` reads local auth cookies. 2026-10-12 — **1.2.0**. `agent-cli install` writes this login's shell startup files. A zsh login gets `~/.local/bin` on `.zshenv` and on `.zprofile`. A bash-only login does not invent those files. `rc-test --file zprofile` writes a fixture under `--root`. Front rows are **1 grok-auth**, **5 sudoers**, **6 self-management**, **7 language**, and **9 Exit**. Language codes are **80**–**92**, with **70**–**79** and **93**–**98** left unprinted. Self-management lists **64**, **65**, **66**, and **68**. Typing `system-log` opens **31**–**33**. Under the input box, three light rows name features that are not available. The path line, the local clock (`HH:MM:SS`), and the status line stay. Pictures in `screenshots/` match this menu.
+2026-10-31 — **1.2.1**. `self-install` succeeds when the console script is already on PATH and does not call pip again. A second `backup` still replaces the same `auth.*` names. Debug status stays on `DEBUG` and the four identity lines stay off the text menu. Screenshots show package 1.2.1, path `/tmp/agent-cli-shots`, and clock `12:06:45`. 2026-10-22 — **1.2.0**. `submit-sudoer-request` queues a backup-only grant when sudoer-cli and the inbound directory are present, and it does not write `/etc`. `remove-project-sudoers --force` deletes the user draft. `print-sudoers-install-script` writes that draft and an admin script. A host with `proot` on `PATH` reads local auth cookies. 2026-10-12 — **1.2.0**. `agent-cli install` writes this login's shell startup files. A zsh login gets `~/.local/bin` on `.zshenv` and on `.zprofile`. A bash-only login does not invent those files. `rc-test --file zprofile` writes a fixture under `--root`. Front rows are **1 grok-auth**, **5 sudoers**, **6 self-management**, **7 language**, and **9 Exit**. Language codes are **80**–**92**, with **70**–**79** and **93**–**98** left unprinted. Self-management lists **64**, **65**, **66**, and **68**. Typing `system-log` opens **31**–**33**. Under the input box, three light rows name features that are not available. The path line, the local clock (`HH:MM:SS`), and the status line stay. Pictures in `screenshots/` match this menu.

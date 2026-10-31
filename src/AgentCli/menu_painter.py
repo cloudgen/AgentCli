@@ -28,10 +28,7 @@ class MenuPainter:
         """
         total = 0
         for char in text:
-            if unicodedata.east_asian_width(char) in ("W", "F"):
-                total += 2
-            else:
-                total += 1
+            total += MenuPainter._column_width(char)
         return total
 
     @staticmethod
@@ -42,12 +39,24 @@ class MenuPainter:
         kept = []
         used = 0
         for char in text:
-            width = 2 if unicodedata.east_asian_width(char) in ("W", "F") else 1
+            width = MenuPainter._column_width(char)
+            if width == 0:
+                kept.append(char)
+                continue
             if used + width > columns:
                 break
             kept.append(char)
             used += width
         return "".join(kept)
+
+    @staticmethod
+    def _column_width(char: str) -> int:
+        """Columns for one character. Format marks take none. Wide and Fullwidth take two."""
+        if unicodedata.category(char) == "Cf":
+            return 0
+        if unicodedata.east_asian_width(char) in ("W", "F"):
+            return 2
+        return 1
 
     @staticmethod
     def clip_columns_right(text: str, columns: int) -> str:
@@ -57,7 +66,10 @@ class MenuPainter:
         kept = []
         used = 0
         for char in reversed(text):
-            width = 2 if unicodedata.east_asian_width(char) in ("W", "F") else 1
+            width = MenuPainter._column_width(char)
+            if width == 0:
+                kept.append(char)
+                continue
             if used + width > columns:
                 break
             kept.append(char)
@@ -340,13 +352,55 @@ class MenuPainter:
             return notice
         return getattr(model, "error", "") or ""
 
+    def _rtl_char(self, char: str) -> bool:
+        """True for Hebrew and Arabic letters. Greek and CJK stay left to right."""
+        return (
+            "\u0590" <= char <= "\u08FF"
+            or "\uFB50" <= char <= "\uFDFF"
+            or "\uFE70" <= char <= "\uFEFF"
+        )
+
+    def _isolate_rtl(self, text: str) -> str:
+        """Wrap each RTL run so a bidi terminal keeps the number column on the left.
+
+        Spaces between RTL letters stay inside the run. The marks are zero-width.
+        requirement-python-tui. The number field is drawn before the short name.
+        """
+        if not any(self._rtl_char(char) for char in text):
+            return text
+        marks = [self._rtl_char(char) for char in text]
+        chars = list(text)
+        for index, char in enumerate(chars):
+            if marks[index] or not char.isspace():
+                continue
+            left = index - 1
+            while left >= 0 and chars[left].isspace():
+                left -= 1
+            right = index + 1
+            while right < len(chars) and chars[right].isspace():
+                right += 1
+            if left >= 0 and right < len(chars) and marks[left] and marks[right]:
+                marks[index] = True
+        parts = []
+        start = 0
+        while start < len(chars):
+            end = start + 1
+            while end < len(chars) and marks[end] == marks[start]:
+                end += 1
+            chunk = "".join(chars[start:end])
+            if marks[start]:
+                chunk = "\u2067" + chunk + "\u2069"
+            parts.append(chunk)
+            start = end
+        return "".join(parts)
+
     def _put(self, screen, y: int, x: int, text: str, attr: int = 0) -> None:
         height, width = screen.getmaxyx()
         if y < 0 or y >= height or x >= width - 1:
             return
         clipped = self.clip_columns(text, max(0, width - x - 1))
         if clipped:
-            screen.addstr(y, x, clipped, attr)
+            screen.addstr(y, x, self._isolate_rtl(clipped), attr)
 
     def _result_overflow(self, height: int, line_count: int) -> bool:
         """True when the result text needs another row past the title and the hint."""

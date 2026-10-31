@@ -1,10 +1,17 @@
-# Cache tiers and silent preferred skip. Primary law: requirement-shell-cli-storage.
+# Cache tiers and silent preferred skip.
+# requirement-python-cli-storage. POSIX shapes stay on requirement-shell-cli-storage.
+# TP-CLI-12 tiers. TP-STO-01 one resolver. TP-IDEM-03 mktemp refuses $$.
+import ast
 import os
 import stat
 import tempfile
 import unittest
+from pathlib import Path
 
 from AgentCli.storage import Storage
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestStorage(unittest.TestCase):
@@ -37,6 +44,25 @@ class TestStorage(unittest.TestCase):
         path = store.mktemp("note")
         self.assertTrue(path.startswith(used))
         self.assertNotIn("$$", os.path.basename(path))
+
+    def test_tp_sto_01_one_resolver_and_about_lines(self):
+        source = (ROOT / "src" / "AgentCli" / "storage.py").read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        classes = [node.name for node in tree.body if isinstance(node, ast.ClassDef)]
+        functions = [node.name for node in tree.body if isinstance(node, ast.FunctionDef)]
+        self.assertEqual(classes, ["Storage"])
+        self.assertEqual(functions, [])
+        home = tempfile.mkdtemp(prefix="agabout-")
+        store = Storage(home=home, login="ada", pid=91031, environ={"AGENT_CLI_CACHE_HOST": "linux", "HOME": home})
+        lines = "\n".join(store.about_lines())
+        self.assertIn("Cache folder used:", lines)
+        self.assertIn("/dev/shm/cache/cache-agent-cli-", lines)
+        self.assertIn("Persistence storage:", lines)
+        self.assertIn(os.path.join(home, ".local", "agent-cli"), lines)
+        self.assertNotIn("/dev/shm/agent-cli", store.preferred_dir())
+        leaf = store.preferred_dir()
+        if os.path.isdir(leaf):
+            os.rmdir(leaf)
 
 
 if __name__ == "__main__":

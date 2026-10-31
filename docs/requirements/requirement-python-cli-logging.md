@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-cli-logging.md
-**Status**: Active (Version 1.2.0)
+**Status**: Active (Version 1.2.1)
 **Area**: python
 **Key**: `requirement-python-cli-logging`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -23,7 +23,8 @@ One ChronicleLogger instance, constructed in `def main`.
 3. Other modules **MUST NOT** construct ChronicleLogger at import.
 4. A missing ChronicleLogger **MUST** exit 1 and name `python -m pip install "ChronicleLogger>=1.3.1"`.
 5. system-log views, clears, and shows that log folder. It does not invent a second log library.
-6. `is_quiet` **MUST** be the return value of `Cli.opens_text_screen`. Identity lines **MUST** run only inside `isDebug()` and **MUST** name the resolved app name, the version, and `ChronicleLogger.class_version()`.
+6. `is_quiet` **MUST** be the return value of `Cli.opens_text_screen`. Identity lines **MUST** run only inside `isDebug()`. The switch and the message list are `requirement-python-cli-debug`. This file does not copy that list.
+7. The environment is already set before `ChronicleLogger(...)`. Product code asks `logger.isDebug()` and then `log_message`. It does not read the environment again.
 
 ## 3. Acceptance
 
@@ -37,7 +38,7 @@ One ChronicleLogger instance, constructed in `def main`.
 
 ### Chronicle logger
 
-**Definition:** Chronicle logger is the one process status logger, library ChronicleLogger, that `def main` instantiates by writing the statement `ChronicleLogger(...)` inside that function, before any product object. It records the resolved application name, the version, this file's path, `ChronicleLogger.class_version()`, the base folder, and a line whose message is `debug mode`, and those identity lines run only inside `isDebug()`.
+**Definition:** Chronicle logger is the one process status logger, library ChronicleLogger, that `def main` instantiates by writing the statement `ChronicleLogger(...)` inside that function, before any product object. Debug identity lines run only inside `isDebug()`, and `log_message` carries them. The words of those lines are `requirement-python-cli-debug`. The environment is already set before the constructor.
 
 **Human daily-life explanation:** A chronicle logger is the one kitchen notebook. When a new appliance arrives you write that it arrived. You do not start a second notebook. The guests in the dining room do not hear that line. The book still has it.
 
@@ -52,3 +53,4 @@ One ChronicleLogger instance, constructed in `def main`.
 | Date | Status | Note |
 |------|--------|------|
 | 2026-10-22 | Active 1.2.0 | Quiet boolean is `opens_text_screen` |
+| 2026-10-31 | Active 1.2.1 | Names `requirement-python-cli-debug`. The message list stays on that file |

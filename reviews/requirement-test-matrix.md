@@ -1,7 +1,7 @@
 # Requirement ↔ test matrix — AgentCli
 
-**Updated:** 2026-10-22. Python ship unit **1.2.0**. Suite `tests/run_python.sh` (62 tests OK). POSIX reference suite remains `tests/run.sh` against `src/grok-cli` **1.8.47**.  
-**Python rows:** `requirement-python-cli-interface`, `requirement-python-tui`, `requirement-python-cli-language`, `requirement-python-about`, `requirement-python-readme`, `requirement-python-packaging`, `requirement-python-cli-logging`, `requirement-python-oop`, `requirement-python-coding-style`, `requirement-python-error-handling`, `requirement-python-project-structure`, `requirement-grok-auth-backup`, `requirement-grok-setup`, `requirement-grok-crontab` → `tests/test_hello.py`, `tests/test_entry.py`, `tests/test_tui.py`, `tests/test_language.py`, `tests/test_about.py`, `tests/test_docs.py`, `tests/test_domain.py`, `tests/test_shell_startup.py`, `tests/test_storage.py`.
+**Updated:** 2026-10-31. Python ship unit **1.2.1**. Suite `tests/run_python.sh`. POSIX reference suite remains `tests/run.sh` against `src/grok-cli` **1.8.47**.  
+**Python rows:** `requirement-python-cli-interface`, `requirement-python-tui`, `requirement-python-cli-language`, `requirement-python-about`, `requirement-python-readme`, `requirement-python-packaging`, `requirement-python-cli-logging`, `requirement-python-cli-debug`, `requirement-python-cli-storage`, `requirement-python-idempotency`, `requirement-actor-role-subject`, `requirement-python-oop`, `requirement-python-coding-style`, `requirement-python-error-handling`, `requirement-python-project-structure`, `requirement-grok-auth-backup`, `requirement-grok-setup`, `requirement-grok-crontab` → `tests/test_hello.py`, `tests/test_entry.py`, `tests/test_debug.py`, `tests/test_actor.py`, `tests/test_idempotency.py`, `tests/test_tui.py`, `tests/test_language.py`, `tests/test_about.py`, `tests/test_docs.py`, `tests/test_domain.py`, `tests/test_shell_startup.py`, `tests/test_storage.py`.
 
 **Product VERSION (shell reference):** 1.8.47  
 **Shell suite:** `tests/run.sh`
@@ -9,7 +9,11 @@
 | Requirement key | Area | TP families | Coverage notes |
 |-----------------|------|-------------|----------------|
 | requirement-python-cli-interface | python | TP-PY-ENTRY-01 · TP-CLI-04 · TP-CLI-08 | `main(argv, basedir, logdir)`; `opens_text_screen`; overlay `--quiet` on a terminal |
-| requirement-python-cli-logging | python | TP-PY-ENTRY-01 | `is_quiet` is `opens_text_screen`; identity lines sit in `main` |
+| requirement-python-cli-logging | python | TP-PY-ENTRY-01 · TP-DBG-03 | `is_quiet` is `opens_text_screen`; identity lines sit in `main` |
+| requirement-python-cli-debug | python | TP-DBG-01 · TP-DBG-02 · TP-DBG-03 | Catalog on, catalog off, text-screen file |
+| requirement-python-cli-storage | python | TP-CLI-12 · TP-STO-01 · TP-IDEM-03 | Class `Storage` only. Tiers, about lines, `mktemp` refuses `$$` |
+| requirement-python-idempotency | python | TP-IDEM-01 · TP-IDEM-02 · TP-IDEM-03 | Backup overwrite. Second `self-install`. Scratch names |
+| requirement-actor-role-subject | architecture | TP-ARS-01 · TP-ARS-02 · TP-ARS-03 | Three columns. Help is None. `install` is placed files. No Approver column |
 | requirement-python-oop | python | TP-PY-ENTRY-01 | `Cli(logger)` then `run(argv)` |
 | requirement-python-coding-style | python | TP-PY-ENTRY-01 · TP-CLI-12 | `main` does not publish; `mktemp` refuses `$$` |
 | requirement-python-error-handling | python | TP-PY-ENTRY-02 | `Output.error` / `ok` / quiet `info` |

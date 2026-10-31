@@ -2,9 +2,11 @@
 # Pip lifecycle for the self-management verbs.
 # requirement-python-oop — class SelfManage.
 # requirement-python-cli-interface — version-check and self-update call pip.
+# requirement-python-idempotency — self-install succeeds when agent-cli is already present.
 # =============================================================================
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 
@@ -20,6 +22,7 @@ class SelfManage:
     """
 
     DISTRIBUTION = "AgentCli"
+    CONSOLE_SCRIPT = "agent-cli"
 
     def __init__(self, app_name: str, version: str, runner=None, logger=None) -> None:
         self.logger = logger
@@ -47,8 +50,17 @@ class SelfManage:
             return [py, "-m", "pip", "uninstall", "-y", dist]
         raise ValueError(verb)
 
+    def console_present(self) -> bool:
+        """General Purpose: True when this login can already run the console script."""
+        return shutil.which(self.CONSOLE_SCRIPT) is not None
+
     def run_pip(self, verb: str) -> tuple:
-        """General Purpose: Run that pip command and return the exit code and text."""
+        """General Purpose: Run that pip command and return the exit code and text.
+
+        A second self-install skips pip when the console script is already present.
+        """
+        if verb == "self-install" and self.console_present():
+            return 0, "{0} is already present.".format(self.CONSOLE_SCRIPT)
         argv = self.argv_for(verb)
         code, out, err = self.runner(argv)
         chunks = ["$ {}".format(" ".join(argv))]

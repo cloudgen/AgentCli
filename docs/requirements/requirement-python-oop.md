@@ -20,7 +20,7 @@ One class in each module. The class that owns a job is the only place that job i
 
 1. `Cli` owns parse and dispatch. `Tui` owns the screen. `MenuPainter` owns rows and the frame. `MenuModel` owns keystrokes. `MenuSession` owns the loop. `MenuLanguage` owns the saved language.
 2. `GrokDomain` owns setup, session, backup, sync, crontab, and sudoer JSON.
-3. `Host` owns this-login-only detect. `Storage` owns cache tiers. `Output` owns human lines and JSON. `ShellStartup` owns rc files. `SelfManage` owns pip. `SystemLog` owns log files. `AboutPage` and `CheckSystem` own the about page.
+3. `Host` owns this-login-only detect. `Storage` owns cache tiers. The tier law is `requirement-python-cli-storage`. `Output` owns human lines and JSON. `ShellStartup` owns rc files. `SelfManage` owns pip. `SystemLog` owns log files. `AboutPage` and `CheckSystem` own the about page.
 4. **MUST NOT** add class `Join`.
 5. `def main` constructs `ChronicleLogger`. Other modules **MUST NOT** construct it at import time.
 6. `main` **MUST** write `Cli(logger)` at the site. `Cli.run` **MUST NOT** take a logger argument.

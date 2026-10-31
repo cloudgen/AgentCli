@@ -8,7 +8,7 @@
 
 Define the command-line entry, empty-argv behavior, and typed verbs for the AgentCli Python package.
 
-The text-menu picture is `requirement-python-tui`. Domain verbs are `requirement-domain-grok-cli`. The about page is `requirement-python-about`. The logger construct is `requirement-python-cli-logging`.
+The text-menu picture is `requirement-python-tui`. Domain verbs are `requirement-domain-grok-cli`. The about page is `requirement-python-about`. The logger construct is `requirement-python-cli-logging`. The debug catalog is `requirement-python-cli-debug`. Who runs the verbs is `requirement-actor-role-subject`.
 
 ### 1.1 Human-facing
 

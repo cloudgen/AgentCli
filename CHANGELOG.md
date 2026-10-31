@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-10-31
+
+### Added
+
+- **Debug catalog.** When `DEBUG` is `1`, `true`, or `show` before a run that does not open the text menu, four identity lines print: the package version, the ChronicleLogger class version, the base directory at level DEBUG, and `debug mode`. The text menu keeps those lines off the console. The daily log file still receives them.
+- **Actor table.** Who runs AgentCli is three columns: Actor, Role, and Subject. There is no approver column.
+
+### Changed
+
+- **`self-install` again.** When the console script `agent-cli` is already on PATH, `self-install` returns success and does not call pip. When it is absent, the command is still `python -m pip install AgentCli`.
+- **`backup` again.** A second backup replaces the same `auth.*` basenames. It does not create a dated archive.
+- **Screenshots.** The pictures under `screenshots/` show package 1.2.1. The path on those captures is `/tmp/agent-cli-shots` and the clock is `12:06:45`.
+- **Arabic menu rows.** Hebrew and Arabic runs stay in their columns, so the number stays on the left when the terminal reorders bidirectional text.
+
 ## [1.2.0] - 2026-10-22
 
 ### Added

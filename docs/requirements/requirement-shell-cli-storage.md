@@ -6,7 +6,7 @@
 
 ## 1. Purpose
 
-This requirement is the **project Single Source of Truth** for **shell CLI storage** of grok-cli. **Storage** means **two** classes:
+This requirement is the **project Single Source of Truth** for **shell CLI storage** of grok-cli. The Python package class `Storage` follows `requirement-python-cli-storage`. **Storage** means **two** classes:
 
 | Class | Role | Survives reboot |
 |-------|------|-----------------|

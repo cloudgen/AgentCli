@@ -1,6 +1,7 @@
 # =============================================================================
 # Cache folder and persistence storage.
-# requirement-shell-cli-storage — one resolver, per-login per-process leaves.
+# requirement-python-cli-storage — class Storage is the only resolver.
+# requirement-shell-cli-storage — POSIX tier shapes. This class does not copy them.
 # requirement-python-oop — class Storage. No module-level helpers.
 # A missed tier is silent. The preferred leaf is not /dev/shm/${APP_NAME}.
 # =============================================================================

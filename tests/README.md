@@ -8,7 +8,7 @@
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
-Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **1.2.0**, console `agent-cli`).
+Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **1.2.1**, console `agent-cli`).
 
 | File | Focus |
 |------|--------|
@@ -18,9 +18,12 @@ Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **
 | `test_language.py` | Front row 7, codes 80–92, save, this-login-only |
 | `test_hello.py` | Welcome line, unknown `join` / `restore`, front row 1 |
 | `test_entry.py` | `main(argv, basedir, logdir)`, `opens_text_screen`, `Output` lines |
+| `test_debug.py` | Debug catalog on, off, and the text-screen file |
+| `test_actor.py` | Actor, Role, Subject. No Approver column |
+| `test_idempotency.py` | Second backup overwrite. Second `self-install` |
 | `test_domain.py` | Session, backup, sync, setup, crontab, sudoer handoff, `run` |
 | `test_shell_startup.py` | `.zprofile` / `.zshenv`, rc-test |
-| `test_storage.py` | Cache tiers and silent preferred skip |
+| `test_storage.py` | Cache tiers, one resolver, silent preferred skip |
 
 ## POSIX reference
 
