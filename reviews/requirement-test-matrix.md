@@ -1,6 +1,6 @@
 # Requirement ↔ test matrix — AgentCli
 
-**Updated:** 2026-10-31. Python ship unit **1.2.1**. Suite `tests/run_python.sh`. POSIX reference suite remains `tests/run.sh` against `src/grok-cli` **1.8.47**.  
+**Updated:** 2026-11-01. Python ship unit **1.2.3**. Suite `tests/run_python.sh`. POSIX reference suite remains `tests/run.sh` against `src/grok-cli` **1.8.47**.  
 **Python rows:** `requirement-python-cli-interface`, `requirement-python-tui`, `requirement-python-cli-language`, `requirement-python-about`, `requirement-python-readme`, `requirement-python-packaging`, `requirement-python-cli-logging`, `requirement-python-cli-debug`, `requirement-python-cli-storage`, `requirement-python-idempotency`, `requirement-actor-role-subject`, `requirement-python-oop`, `requirement-python-coding-style`, `requirement-python-error-handling`, `requirement-python-project-structure`, `requirement-grok-auth-backup`, `requirement-grok-setup`, `requirement-grok-crontab` → `tests/test_hello.py`, `tests/test_entry.py`, `tests/test_debug.py`, `tests/test_actor.py`, `tests/test_idempotency.py`, `tests/test_tui.py`, `tests/test_language.py`, `tests/test_about.py`, `tests/test_docs.py`, `tests/test_domain.py`, `tests/test_shell_startup.py`, `tests/test_storage.py`.
 
 **Product VERSION (shell reference):** 1.8.47  
@@ -9,7 +9,7 @@
 | Requirement key | Area | TP families | Coverage notes |
 |-----------------|------|-------------|----------------|
 | requirement-python-cli-interface | python | TP-PY-ENTRY-01 · TP-CLI-04 · TP-CLI-08 | `main(argv, basedir, logdir)`; `opens_text_screen`; overlay `--quiet` on a terminal |
-| requirement-python-cli-logging | python | TP-PY-ENTRY-01 · TP-DBG-03 | `is_quiet` is `opens_text_screen`; identity lines sit in `main` |
+| requirement-python-cli-logging | python | TP-PY-ENTRY-01 · TP-DBG-03 | `is_quiet` is `opens_text_screen`; identity lines sit in `main`. Law 1.3.0 AC-4 (exception record before a generic sentence) has no Python assert. `tui.py` still uses a bare `except Exception` for the menu-open sentence |
 | requirement-python-cli-debug | python | TP-DBG-01 · TP-DBG-02 · TP-DBG-03 | Catalog on, catalog off, text-screen file |
 | requirement-python-cli-storage | python | TP-CLI-12 · TP-STO-01 · TP-IDEM-03 | Class `Storage` only. Tiers, about lines, `mktemp` refuses `$$` |
 | requirement-python-idempotency | python | TP-IDEM-01 · TP-IDEM-02 · TP-IDEM-03 | Backup overwrite. Second `self-install`. Scratch names |
@@ -18,13 +18,16 @@
 | requirement-python-coding-style | python | TP-PY-ENTRY-01 · TP-CLI-12 | `main` does not publish; `mktemp` refuses `$$` |
 | requirement-python-error-handling | python | TP-PY-ENTRY-02 | `Output.error` / `ok` / quiet `info` |
 | requirement-python-project-structure | python | TP-PY-ENTRY-01 | `__main__.py` calls `sys.exit(main())` |
+| requirement-python-about | python | TP-ABOUT-01..17 | Host check, cache tiers, star box. `Cython .so` is `AgentCli.` plus the SOABI plus `.so`. JSON field `cython_so` |
+| requirement-python-readme | python | TP-DOC-01 | Badge matches `__version__`. Headings. Absolute screenshot URLs. Local clock `HH:MM:SS` |
+| requirement-python-packaging | python | TP-DOC-01 | `pyproject.toml` `[project].version` equals `__version__`. README badge uses that string |
 | requirement-class-software-dev | class | TP-CLI-01, TP-CLI-11 | Syntax + stack residual; dual-mode; leftover points at Termux writing |
 | requirement-bootstrap-chain | architecture | TP-CLI-04, TP-CLI-10 · TP-ONL-* | Channel + checkout; selfmanaged hop |
 | requirement-project-folder | architecture | TP-LC-01, TP-GROK-CLI-07, TP-VCLI-15 | src ship unit; `/var/grok-cli` store; Termux `PREFIX` / `~/.grok/downloads` |
 | requirement-three-layer-privilege-model | architecture | TP-GROK-CLI-01, 01b, 02, 12, 14, 15, 15b, 19, 20, 21, 21b, 22e, 23, 23b, 23c, 24* | Trust tiers; submit; independent generate; inbound; host-probe add/update |
 | requirement-sudoer-json-file | architecture | TP-GROK-CLI-22* · 24* | JSON grant is `grok-cli backup` only |
 | requirement-grok-auth-backup | backup | TP-GROK-CLI-03..10, 12 · 30..45 · 47 · 48 · 49 · 50 | Live `grok -p hello` session gate (before `auth.json`); always bounded (default 14s); timeout is not logged-out; `proot` on PATH → TSTP-safe reaper else simple `-p`; elevated probe uses `SUDO_USER` home; grant-present child fail is not missing sudoers; deposit; sync-auth; sync-auth-from-remote; sync-auth-to-remote (still pushes when logged in); skip pull when already logged in; preferred SPEC in persistence; TTY menu SPEC prompt; production dest fail-closed |
-| requirement-grok-setup | domain | TP-VCLI-01..09 · 11..42 · TP-CLI-04 · TP-CLI-13 · TP-CLI-31 · TP-GROK-CLI-46 | Peer grok channel + artifact; TTY keep / reinstall / Exit; `update-grok`; `reinstall` on grok-auth **16**; Git Bash `windows-*` `.exe`; Android ET_EXEC wrapper; Termux proot `--kill-on-exit` + `proot-exit-reaper` / `start-services.sh` bind; heal wrapper; `run` without auto-update |
+| requirement-grok-setup | domain | TP-VCLI-01..09 · 11..42 · TP-CLI-04 · TP-CLI-13 · TP-CLI-31 · TP-GROK-CLI-46 · TP-VCLI-05 / 24 (python) | Peer grok channel + artifact; TTY keep / reinstall / Exit; `update-grok`; `reinstall` on grok-auth **16**; Git Bash `windows-*` `.exe`; Android ET_EXEC wrapper; Termux proot `--kill-on-exit` + `proot-exit-reaper` / `start-services.sh` bind; heal wrapper; `run` without auto-update. Python `tests/test_domain.py` asserts the flat artifact URL, `HTTP 404`, and `.gz` decode |
 | requirement-grok-crontab | domain | TP-GROK-CLI-26..29 · TP-CLI-04 · TP-CLI-13 | Per-login crontab jobs; grant gate is this `id -un` |
 | requirement-shell-cli-interface | shell | TP-CLI-* · TP-VCLI-01 · TP-VCLI-33 · TP-VCLI-37..42 · TP-ONL-* · TP-GROK-CLI-46 · TP-LC-46 | Commands, flags, dispatch; `setup` (TTY reinstall); `update-grok`; `reinstall`; `run`; online verbs; TP-CLI-18 no frozen login in Active REQ samples; `--debug` dual mention TP-CLI-25..28; `rc-test --file zprofile` |
 | requirement-shell-cli-zero-arguments | shell | TP-CLI-07 · TP-CLI-13 · TP-CLI-29 · TP-ONL-01 | TTY numbered menu; off-TTY Type O ensure; overlay `--debug` / `--quiet` follow empty argv |

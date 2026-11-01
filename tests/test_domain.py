@@ -1,7 +1,9 @@
 # Domain verbs stay off the text screen. Primary law: requirement-domain-grok-cli.
+import gzip
 import io
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -76,6 +78,114 @@ class TestDomain(unittest.TestCase):
         with open(path, encoding="utf-8") as handle:
             source = handle.read()
         self.assertNotIn("install.sh", source)
+
+    def test_setup_artifact_url_is_not_a_version_directory(self):
+        home = tempfile.mkdtemp(prefix="agurl-")
+        seen = []
+
+        def runner(argv):
+            if argv[0] == "pointer":
+                self.assertNotIn("/9.9.9/", argv[1])
+                return "9.9.9\n"
+            if argv[0] == "fetch":
+                seen.append(argv[1])
+                self.assertNotIn("/9.9.9/", argv[1])
+                if argv[1].endswith("/grok-9.9.9-linux-x86_64"):
+                    with open(argv[2], "w", encoding="utf-8") as handle:
+                        handle.write("#!/bin/sh\nexit 0\n")
+                    return "ok"
+                return ""
+            if argv[0] == "smoke":
+                return True
+            return ""
+
+        domain = GrokDomain(
+            output=Output(),
+            runner=runner,
+            grok_home=os.path.join(home, ".grok"),
+            environ={
+                "HOME": home,
+                "AGENT_CLI_PLATFORM": "linux-x86_64",
+                "PATH": os.environ.get("PATH", ""),
+            },
+        )
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            code = domain.setup(force=True)
+        self.assertEqual(code, 0, buf.getvalue())
+        self.assertTrue(any(url.endswith("/grok-9.9.9-linux-x86_64") for url in seen))
+        self.assertTrue(os.path.isfile(os.path.join(home, ".grok", "bin", "grok")))
+
+    def test_setup_names_http_status_when_the_artifact_is_missing(self):
+        home = tempfile.mkdtemp(prefix="aghttp-")
+        bindir = tempfile.mkdtemp(prefix="agcurl-")
+        log_path = os.path.join(home, "curl.log")
+        curl = os.path.join(bindir, "curl")
+        with open(curl, "w", encoding="utf-8") as handle:
+            handle.write(
+                "#!/bin/sh\n"
+                "out=\n"
+                "url=\n"
+                "prev=\n"
+                "for arg in \"$@\"; do\n"
+                "  if [ \"$prev\" = \"-o\" ]; then out=$arg; prev=; continue; fi\n"
+                "  if [ \"$prev\" = \"-w\" ]; then prev=; continue; fi\n"
+                "  case \"$arg\" in\n"
+                "    -o|-w) prev=$arg ;;\n"
+                "    -*) ;;\n"
+                "    *) url=$arg ;;\n"
+                "  esac\n"
+                "done\n"
+                "printf '%s\\n' \"$url\" >> \"{0}\"\n"
+                "case \"$url\" in\n"
+                "  */stable)\n"
+                "    printf '%s\\n' '9.9.9' > \"$out\"\n"
+                "    printf '200'\n"
+                "    exit 0\n"
+                "    ;;\n"
+                "esac\n"
+                "printf 'missing' > \"$out\"\n"
+                "printf '404'\n"
+                "exit 22\n".format(log_path)
+            )
+        os.chmod(curl, 0o755)
+        domain = GrokDomain(
+            output=Output(),
+            grok_home=os.path.join(home, ".grok"),
+            environ={
+                "HOME": home,
+                "AGENT_CLI_PLATFORM": "linux-x86_64",
+                "PATH": bindir,
+            },
+        )
+        err = io.StringIO()
+        with redirect_stderr(err):
+            code = domain.setup(force=True)
+        self.assertEqual(code, 1)
+        text = err.getvalue()
+        self.assertIn("HTTP 404", text)
+        self.assertIn("grok-9.9.9-linux-x86_64", text)
+        self.assertIn("check network to x.ai", text)
+        with open(log_path, encoding="utf-8") as handle:
+            fetched = handle.read()
+        self.assertIn("/grok-9.9.9-linux-x86_64", fetched)
+        self.assertNotIn("/9.9.9/grok-", fetched)
+        self.assertNotIn("install.sh", fetched)
+
+    def test_setup_decodes_a_gzip_artifact_before_smoke(self):
+        if shutil.which("gzip") is None:
+            return
+        home = tempfile.mkdtemp(prefix="aggz-")
+        domain = GrokDomain(environ={"HOME": home, "AGENT_CLI_PLATFORM": "linux-x86_64"})
+        raw = b"#!/bin/sh\nexit 0\n"
+        src = os.path.join(home, "grok-9.9.9-linux-x86_64.gz")
+        with gzip.open(src, "wb") as handle:
+            handle.write(raw)
+        plain = domain._decode_download(src, ".gz")
+        self.assertTrue(plain.endswith("grok-9.9.9-linux-x86_64"))
+        with open(plain, "rb") as handle:
+            self.assertEqual(handle.read(), raw)
+        self.assertFalse(os.path.isfile(src))
 
     def test_deposit_copies_auth_files(self):
         home = tempfile.mkdtemp(prefix="agauth-")

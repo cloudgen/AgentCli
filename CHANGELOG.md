@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.3] - 2026-11-01
+
+### Added
+
+- **Cython `.so` name.** `agent-cli about` records it on the host-check line `Cython .so`, immediately after `Cython String`. The name is `AgentCli.` plus `sysconfig.get_config_var("SOABI")` plus `.so`. An empty SOABI leaves the value empty. The page does not compile an extension and does not require the file to exist. `agent-cli about --json` records the same string as `cython_so`. Law: `requirement-python-about` **1.3.0**.
+
+### Changed
+
+- **Screenshots.** The pictures under `screenshots/` show package 1.2.3. The path on those captures is `/tmp/agent-cli-shots` and the clock is `18:33:07`. The about picture includes the `Cython .so` line.
+- **Logging law.** `requirement-python-cli-logging` **1.3.0** requires an `ERROR` log line (exception type, text, and traceback) before a handler replaces a caught exception. The text menu still shows `The text menu could not open on this terminal.` from a bare `except Exception` and does not write that line yet.
+
+## [1.2.2] - 2026-11-01
+
+### Fixed
+
+- **`setup` artifact URL.** The download requested `https://x.ai/cli/{version}/grok-{version}-{os}-{arch}`, and that path is HTTP 404. The channel file is `https://x.ai/cli/grok-{version}-{os}-{arch}`. A `.gz` or `.zst` body is decoded before `--version`. A failed download names the HTTP status. Law: `requirement-grok-setup`.
+
 ## [1.2.1] - 2026-10-31
 
 ### Added

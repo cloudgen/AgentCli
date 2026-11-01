@@ -35,6 +35,7 @@ class GrokDomain:
     VENDOR_BASE = "https://x.ai/cli"
     VENDOR_FALLBACK = "https://storage.googleapis.com/grok-build-public-artifacts/cli"
     CHANNEL = "stable"
+    VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9._]+)?$")
     PROMPT_TIMEOUT = 14
     SESSION_WORDS = ("valid", "timeout", "invalid", "missing")
 
@@ -64,6 +65,7 @@ class GrokDomain:
         self.deposit_root = deposit_root or self.environ.get("AGENT_CLI_DEPOSIT") or self.DEPOSIT
         self.runner = runner
         self.grok_home = grok_home
+        self._fetch_detail = ""
         self.startup = ShellStartup(
             version=version,
             output=self.output,
@@ -609,16 +611,32 @@ class GrokDomain:
                 "grok is already installed at {0}.".format(peer),
                 {"peer": peer, "skipped": True},
             )
-        if shutil.which("curl") is None and self.runner is None:
+        if self._which("curl") is None and self.runner is None:
             return self.output.error(
                 "curl is required to download grok.",
                 "Install curl, then agent-cli setup",
             )
-        version = self._read_pointer(self.VENDOR_BASE) or self._read_pointer(self.VENDOR_FALLBACK)
+        pinned = (self.environ.get("GROK_SETUP_VERSION") or "").strip()
+        if pinned:
+            if self.VERSION_RE.match(pinned) is None:
+                return self.output.error(
+                    "GROK_SETUP_VERSION is not a version ({0}).".format(pinned),
+                    "Set GROK_SETUP_VERSION to X.Y.Z, then agent-cli setup",
+                )
+            version = pinned
+        else:
+            if not self._channel_name():
+                return self.output.error(
+                    "GROK_CHANNEL must be stable, alpha, or enterprise.",
+                    "Set GROK_CHANNEL to stable, then agent-cli setup",
+                )
+            primary, fallback = self._vendor_bases()
+            version = self._read_pointer(primary) or self._read_pointer(fallback)
         if not version:
+            detail = self._fetch_detail or "no HTTP status"
             return self.output.error(
-                "The grok version pointer could not be read.",
-                "agent-cli setup --force",
+                "The grok version pointer could not be read ({0}).".format(detail),
+                "check network to x.ai, then agent-cli setup",
             )
         dest_dir = os.path.join(self.auth_home(), "downloads")
         try:
@@ -629,11 +647,29 @@ class GrokDomain:
                 "agent-cli setup",
             )
         artifact = "grok-{0}-{1}".format(version, token)
+        if self.logger is not None:
+            self.logger.log_message(
+                "fetch start artifact={0} dest={1}".format(artifact, dest_dir),
+                component="GrokDomain",
+            )
         saved = self._fetch_artifact(version, artifact, dest_dir)
         if not saved:
+            detail = self._fetch_detail or "no HTTP status"
             return self.output.error(
-                "The grok artifact could not be downloaded.",
-                "agent-cli setup --force",
+                "Download of the grok binary failed ({0} for {1}).".format(detail, artifact),
+                "check network to x.ai, then agent-cli setup",
+            )
+        if self.logger is not None:
+            self.logger.log_message(
+                "fetch finished dest={0}".format(saved),
+                component="GrokDomain",
+            )
+        try:
+            os.chmod(saved, 0o755)
+        except OSError:
+            return self.output.error(
+                "Could not chmod the downloaded grok under {0}.".format(dest_dir),
+                "agent-cli setup",
             )
         if not self._smoke(saved):
             return self.output.error(
@@ -660,50 +696,185 @@ class GrokDomain:
             os.chmod(link, 0o755)
         return self.output.ok("setup", "Installed grok {0}.".format(version), {"peer": link})
 
+    def _which(self, name: str) -> str:
+        return shutil.which(name, path=self.environ.get("PATH"))
+
+    def _run_env(self):
+        """Child environment. A replaced mapping still inherits certs and HOME."""
+        if self.environ is os.environ:
+            return None
+        merged = dict(os.environ)
+        merged.update(self.environ)
+        return merged
+
+    def _vendor_bases(self):
+        primary = (self.environ.get("GROK_VENDOR_BASE_URL") or self.VENDOR_BASE).strip()
+        fallback = (self.environ.get("GROK_VENDOR_FALLBACK_URL") or self.VENDOR_FALLBACK).strip()
+        return primary, fallback
+
+    def _channel_name(self) -> str:
+        name = (self.environ.get("GROK_CHANNEL") or self.CHANNEL).strip()
+        if name in ("stable", "alpha", "enterprise"):
+            return name
+        return ""
+
     def _read_pointer(self, base: str) -> str:
-        url = "{0}/{1}".format(base.rstrip("/"), self.CHANNEL)
+        channel = self._channel_name() or self.CHANNEL
+        url = "{0}/{1}".format(base.rstrip("/"), channel)
         if self.runner is not None:
             text = self.runner(["pointer", url])
             if not isinstance(text, str) or not text.strip():
+                self._fetch_detail = "version pointer was empty"
                 return ""
-            return text.splitlines()[0].strip()
+            line = text.splitlines()[0].strip()
+            if self.VERSION_RE.match(line) is None:
+                self._fetch_detail = "invalid version pointer"
+                return ""
+            return line
+        try:
+            dest = self.storage.mktemp("ptr")
+        except OSError:
+            self._fetch_detail = "could not create a pointer file"
+            return ""
+        try:
+            if not self._curl_to_file(url, dest, timeout=30):
+                return ""
+            with open(dest, "r", encoding="utf-8", errors="replace") as handle:
+                lines = handle.read().splitlines()
+            line = lines[0].strip() if lines else ""
+        except OSError:
+            self._fetch_detail = "could not read the version pointer"
+            return ""
+        finally:
+            try:
+                os.remove(dest)
+            except OSError:
+                pass
+        if self.VERSION_RE.match(line) is None:
+            self._fetch_detail = "invalid version pointer"
+            return ""
+        return line
+
+    def _artifact_stems(self, artifact: str):
+        if "-windows-" in artifact:
+            return (artifact + ".exe", artifact)
+        return (artifact,)
+
+    def _artifact_suffixes(self):
+        suffixes = []
+        if self._which("zstd") is not None:
+            suffixes.append(".zst")
+        if self._which("gzip") is not None:
+            suffixes.append(".gz")
+        suffixes.append("")
+        return tuple(suffixes)
+
+    def _discard_file(self, path: str) -> None:
+        try:
+            if path and os.path.isfile(path):
+                os.remove(path)
+        except OSError:
+            pass
+
+    def _curl_to_file(self, url: str, dest: str, timeout: int = 120) -> bool:
+        """Save one URL. Success is HTTP 200 and a non-empty file."""
+        self._fetch_detail = ""
         try:
             proc = subprocess.run(
-                ["curl", "-fsSL", url],
+                ["curl", "-sS", "-L", "-o", dest, "-w", "%{http_code}", url],
                 stdout=subprocess.PIPE,
-                stderr=subprocess.DEVNULL,
-                timeout=30,
+                stderr=subprocess.PIPE,
+                timeout=timeout,
                 check=False,
                 universal_newlines=True,
+                env=self._run_env(),
             )
+        except subprocess.TimeoutExpired:
+            self._fetch_detail = "HTTP 000 (curl exit timeout)"
+            self._discard_file(dest)
+            return False
+        except OSError:
+            self._fetch_detail = "curl could not start"
+            self._discard_file(dest)
+            return False
+        code = (proc.stdout or "").strip() or "000"
+        if proc.returncode != 0:
+            self._fetch_detail = "HTTP {0} (curl exit {1})".format(code, proc.returncode)
+            self._discard_file(dest)
+            return False
+        if code != "200":
+            self._fetch_detail = "HTTP {0}".format(code)
+            self._discard_file(dest)
+            return False
+        if not os.path.isfile(dest) or os.path.getsize(dest) == 0:
+            self._fetch_detail = "HTTP {0} empty body".format(code)
+            self._discard_file(dest)
+            return False
+        self._fetch_detail = "HTTP 200"
+        return True
+
+    def _decode_download(self, path: str, suffix: str) -> str:
+        """Turn a compressed download into the plain file. Leave a raw file as it is."""
+        if not suffix:
+            return path
+        if suffix == ".gz":
+            argv = ["gzip", "-dc", path]
+        elif suffix == ".zst":
+            argv = ["zstd", "-q", "-dc", path]
+        else:
+            return ""
+        plain = path[: -len(suffix)]
+        try:
+            with open(plain, "wb") as handle:
+                proc = subprocess.run(
+                    argv,
+                    stdout=handle,
+                    stderr=subprocess.DEVNULL,
+                    timeout=120,
+                    check=False,
+                    env=self._run_env(),
+                )
         except (OSError, subprocess.TimeoutExpired):
+            self._discard_file(plain)
             return ""
-        if proc.returncode != 0 or not proc.stdout:
+        if proc.returncode != 0 or not os.path.isfile(plain) or os.path.getsize(plain) == 0:
+            self._discard_file(plain)
             return ""
-        return proc.stdout.splitlines()[0].strip()
+        self._discard_file(path)
+        return plain
 
     def _fetch_artifact(self, version: str, artifact: str, dest_dir: str) -> str:
-        for suffix in (".zst", ".gz", ""):
-            name = artifact + suffix
-            for base in (self.VENDOR_BASE, self.VENDOR_FALLBACK):
-                url = "{0}/{1}/{2}".format(base.rstrip("/"), version, name)
-                dest = os.path.join(dest_dir, name)
-                if self.runner is not None:
-                    body = self.runner(["fetch", url, dest])
-                    if body:
+        """Fetch base/grok-version-os-arch. The version is not a directory."""
+        if not version or not artifact:
+            self._fetch_detail = "missing version or artifact name"
+            return ""
+        primary, fallback = self._vendor_bases()
+        for stem in self._artifact_stems(artifact):
+            for suffix in self._artifact_suffixes():
+                name = stem + suffix
+                for base in (primary, fallback):
+                    url = "{0}/{1}".format(base.rstrip("/"), name)
+                    dest = os.path.join(dest_dir, name)
+                    if self.runner is not None:
+                        body = self.runner(["fetch", url, dest])
+                        if not body:
+                            self._fetch_detail = "download refused"
+                            continue
+                        if suffix:
+                            decoded = self._decode_download(dest, suffix)
+                            if decoded:
+                                return decoded
+                            continue
                         return dest
-                    continue
-                try:
-                    proc = subprocess.run(
-                        ["curl", "-fsSL", "-o", dest, url],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                        timeout=120,
-                        check=False,
-                    )
-                except (OSError, subprocess.TimeoutExpired):
-                    continue
-                if proc.returncode == 0 and os.path.isfile(dest) and os.path.getsize(dest) > 0:
+                    if not self._curl_to_file(url, dest):
+                        continue
+                    if suffix:
+                        decoded = self._decode_download(dest, suffix)
+                        if decoded:
+                            return decoded
+                        self._fetch_detail = "compressed download could not be decoded"
+                        self._discard_file(dest)
+                        continue
                     return dest
         return ""
 
@@ -717,6 +888,7 @@ class GrokDomain:
                 stderr=subprocess.DEVNULL,
                 timeout=30,
                 check=False,
+                env=self._run_env(),
             )
         except (OSError, subprocess.TimeoutExpired):
             return False

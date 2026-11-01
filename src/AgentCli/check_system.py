@@ -386,6 +386,18 @@ class CheckSystem:
         value = sysconfig.get_config_var("SOABI") or ""
         return value
 
+    def cython_so_name(self):
+        """General Purpose: Cython shared-object filename for this package.
+
+        The stem is the package name. An empty SOABI leaves the name empty.
+        This read does not compile an extension and does not look for the file.
+        """
+        soabi = self.cpython_soabi()
+        if soabi == "":
+            return ""
+        stem = self.app_name or "AgentCli"
+        return "{0}.{1}.so".format(stem, soabi)
+
     def process_id(self):
         """General Purpose: This process id as decimal text."""
         return str(os.getpid())
@@ -522,6 +534,7 @@ class CheckSystem:
             "    pyenv location: {}".format(self.about_tool_location("pyenv")),
             "    Inside docker container: {}".format(self.inside_docker()),
             "    Cython String: {}".format(self.cpython_soabi()),
+            "    Cython .so: {}".format(self.cython_so_name()),
             "    Binary Type: {}".format(self.binary_type(arch, libc)),
             "    Location: {}".format(self.self_location()),
             "    PID: {}".format(self.process_id()),

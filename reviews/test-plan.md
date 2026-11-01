@@ -2,11 +2,11 @@
 
 Maps **TP-*** coverage to `tests/`.  
 **Python suite entry:** `./tests/run_python.sh`  
-**Python ship unit:** `src/AgentCli` package **1.2.1**  
+**Python ship unit:** `src/AgentCli` package **1.2.3**  
 **POSIX reference suite:** `./tests/run.sh` against `src/grok-cli` (grok-cli **1.8.47**)  
-**Last plan update:** 2026-10-31
+**Last plan update:** 2026-11-01
 
-## Python ship unit (2026-10-31)
+## Python ship unit (2026-11-01)
 
 Same TP identity. The Python suite does not renumber shell IDs. Rows below are the ones this conversion executes in unittest.
 
@@ -14,6 +14,7 @@ Same TP identity. The Python suite does not renumber shell IDs. Rows below are t
 |-------|--------|--------------|--------|
 | TP-DOC-01 | README badge, headings, absolute screenshot URLs | `tests/test_docs.py` | **have** |
 | TP-ABOUT-01..16 | About page, host check, cache tiers, star box | `tests/test_about.py` | **have** |
+| TP-ABOUT-17 | `Cython .so` is `AgentCli.` plus the SOABI plus `.so`, and `about --json` field `cython_so` is that same string | `tests/test_about.py` | **have** |
 | TP-LANG-01 | Front row 7, codes 80–92, save, env override | `tests/test_language.py` | **have** |
 | TP-TUI-09..12 | Path label, wide columns, unavailable band, resize | `tests/test_tui.py` | **have** |
 | TP-LC-43..46 | zsh `.zprofile` / `.zshenv`, bash does not invent zsh files, rc-test | `tests/test_shell_startup.py` | **have** |
@@ -24,6 +25,7 @@ Same TP identity. The Python suite does not renumber shell IDs. Rows below are t
 | TP-GROK-CLI-26..29 | add-crontab grant gate and idempotent install | `tests/test_domain.py` | **have** |
 | TP-GROK-CLI-30..34 | Four remote SPEC forms and fake scp/ssh | `tests/test_domain.py` | **have** |
 | TP-VCLI-01 | setup does not contain `install.sh` | `tests/test_domain.py` | **have** |
+| TP-VCLI-05 / 24 (python) | `setup --force` fetches `{base}/grok-{version}-{os}-{arch}` and not a `/{version}/` directory. A miss names `HTTP 404`. A `.gz` body is decoded before smoke | `tests/test_domain.py` | **have** |
 | TP-GROK-CLI-46 | `run` inserts `--no-auto-update`; `update-grok` needs grok | `tests/test_domain.py` | **have** |
 | TP-GROK-CLI-22 (python) | sudoer submit queues `backup` only; a wider grant is refused; missing sudoer-cli fails closed | `tests/test_domain.py` | **have** |
 | TP-GROK-CLI-23 (python) | `remove-project-sudoers` deletes the user draft with `--force` and refuses `/etc` | `tests/test_domain.py` | **have** |

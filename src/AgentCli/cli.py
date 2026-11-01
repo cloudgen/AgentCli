@@ -97,7 +97,7 @@ class Cli:
     AUTHOR_NAME = "cloudgen"
     AUTHOR_EMAIL = "wongcf22@gmail.com"
     HOMEPAGE = "https://github.com/cloudgen/AgentCli"
-    LAST_UPDATE = "2026-10-31"
+    LAST_UPDATE = "2026-11-01"
     DOWNLOAD_URL = ""
     BASIC_USAGE = "agent-cli"
 
@@ -324,6 +324,7 @@ class Cli:
             "version": Cli.VERSION,
         }
         body.update(fields)
+        body["cython_so"] = self.about.check.cython_so_name()
         print(json.dumps(body, ensure_ascii=False))
         return 0
 

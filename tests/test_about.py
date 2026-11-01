@@ -3,6 +3,7 @@
 # TP-ABOUT-09..12 — pyenv and conda paths. Those reads stay on requirement-python-about.
 # TP-ABOUT-13..14 — PID, cache chain, persistence, and TTY. No --json case.
 # TP-ABOUT-16 — in_venv, in_pyenv, and in_conda come from the process logger.
+# TP-ABOUT-17 — Cython .so is AgentCli plus the SOABI plus .so. JSON key cython_so.
 # CheckSystem owns the host-check methods. That assert does not use an OOP proof id.
 from __future__ import print_function, unicode_literals
 
@@ -55,6 +56,7 @@ class TestAbout(unittest.TestCase):
             "pyenv location:",
             "Inside docker container:",
             "Cython String:",
+            "Cython .so:",
             "Binary Type:",
             "Location:",
             "PID:",
@@ -124,6 +126,7 @@ class TestAbout(unittest.TestCase):
                 "pyenv location",
                 "Inside docker container",
                 "Cython String",
+                "Cython .so",
                 "Binary Type",
                 "Location",
                 "PID",
@@ -135,6 +138,53 @@ class TestAbout(unittest.TestCase):
                 "TTY / Interactive",
             ],
         )
+
+    def test_cython_so_name_follows_the_soabi(self):
+        """TP-ABOUT-17: Cython .so is AgentCli plus the SOABI plus .so."""
+        import io
+        import json
+        import sysconfig
+        from contextlib import redirect_stdout
+        from unittest.mock import patch
+
+        from AgentCli.check_system import CheckSystem
+
+        soabi = sysconfig.get_config_var("SOABI") or ""
+        expected = "" if soabi == "" else "AgentCli.{0}.so".format(soabi)
+        host = CheckSystem(
+            app_name=Cli.APP_NAME,
+            version=Cli.VERSION,
+            console_name=Cli.CONSOLE_NAME,
+        )
+        self.assertEqual(host.cpython_soabi(), soabi)
+        self.assertEqual(host.cython_so_name(), expected)
+        text = self._page().framework_about()
+        string_at = text.index("    Cython String: {0}".format(soabi))
+        so_at = text.index("    Cython .so: {0}".format(expected))
+        binary_at = text.index("    Binary Type:")
+        self.assertLess(string_at, so_at)
+        self.assertLess(so_at, binary_at)
+        with patch("sysconfig.get_config_var", return_value=None):
+            blank = CheckSystem(
+                app_name=Cli.APP_NAME,
+                version=Cli.VERSION,
+                console_name=Cli.CONSOLE_NAME,
+            )
+            self.assertEqual(blank.cpython_soabi(), "")
+            self.assertEqual(blank.cython_so_name(), "")
+            rows = blank.check_system_lines(
+                now=datetime.datetime(2026, 11, 1, 12, 0, 0)
+            )
+            self.assertIn("    Cython String: ", rows)
+            self.assertIn("    Cython .so: ", rows)
+        held = io.StringIO()
+        with redirect_stdout(held):
+            code = Cli()._json_about()
+        self.assertEqual(code, 0)
+        body = json.loads(held.getvalue())
+        self.assertEqual(body["cython_so"], expected)
+        self.assertIn("cache_used", body)
+        self.assertIn("persistence_storage", body)
 
     def test_about_box_is_a_rectangle(self):
         """TP-ABOUT-03: the star box is one rectangle."""
@@ -771,6 +821,7 @@ class TestAbout(unittest.TestCase):
             "os_text",
             "inside_docker",
             "cpython_soabi",
+            "cython_so_name",
             "self_location",
             "process_id",
             "cache_folder_preferred",

@@ -1,5 +1,5 @@
 **file**: docs/requirements/requirement-python-packaging.md
-**Status**: Active (Version 1.2.0)
+**Status**: Active (Version 1.2.1)
 **Area**: python
 **Key**: `requirement-python-packaging`
 **Philosophy**: CIAO **v2.10.2** / CIAO-Lite (Caution • Intentional • Anti-fragile • Over-engineered / Over-protect)
@@ -19,7 +19,7 @@ Packaging SSOT for AgentCli. Version, name, and the console script live in `pypr
 ## 2. Core Rules
 
 1. `[project].name` **MUST** be `AgentCli`.
-2. `[project].version` **MUST** equal `src/AgentCli/__init__.py` `__version__`. This tree is **1.2.1**.
+2. `[project].version` **MUST** equal `src/AgentCli/__init__.py` `__version__`. This tree is **1.2.3**.
 3. The console script **MUST** be `agent-cli = AgentCli.cli:main`.
 4. `requires-python` **MUST** allow 2.7 and 3.x except 3.0 through 3.4.
 5. Dependency **MUST** include `ChronicleLogger>=1.3.1`.
@@ -34,3 +34,10 @@ Packaging SSOT for AgentCli. Version, name, and the console script live in `pypr
 | AC-1 | pyproject version equals `__version__` |
 | AC-2 | README badge uses that version |
 | AC-3 | README does not say `sudo pip` or `curl \| sh` |
+
+## 4. Status history
+
+| Date | Status | Note |
+|------|--------|------|
+| 2026-10-22 | Active 1.2.0 | pyproject name, version, and console script |
+| 2026-11-01 | Active 1.2.1 | This tree is 1.2.3 |

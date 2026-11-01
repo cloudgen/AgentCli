@@ -8,7 +8,7 @@
 PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
-Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **1.2.1**, console `agent-cli`).
+Exit **0** when the unittest modules pass. Ship unit: `src/AgentCli` (package **1.2.3**, console `agent-cli`).
 
 | File | Focus |
 |------|--------|

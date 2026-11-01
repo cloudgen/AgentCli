@@ -4,7 +4,7 @@
 
 | Version | Supported |
 |---------|-----------|
-| 1.2.1 (Python package, current) | Yes |
+| 1.2.3 (Python package, current) | Yes |
 | 1.8.47 (shell reference) | Yes |
 | 1.8.46 | Yes |
 | 1.8.45 | Yes |
